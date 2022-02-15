@@ -26,17 +26,17 @@ public class SQLiteImageStore implements ImageStore {
     }
 
     /**
-     * @param uuid     Issuer url
+     * @param issuerId     Issuer url
      * @param jsonData Image data
      * @return true if the image was written to file successfully
      */
     @Override
-    public boolean saveImage(String uuid, String jsonData) {
-        if (StringUtils.isEmpty(uuid) || StringUtils.isEmpty(jsonData)) {
+    public boolean saveImage(String issuerId, String jsonData) {
+        if (StringUtils.isEmpty(issuerId) || StringUtils.isEmpty(jsonData)) {
             return false;
         }
 
-        String filename = ImageUtils.getImageFilename(uuid);
+        String filename = ImageUtils.getImageFilename(issuerId);
         if (StringUtils.isEmpty(filename)) {
             return false;
         }
