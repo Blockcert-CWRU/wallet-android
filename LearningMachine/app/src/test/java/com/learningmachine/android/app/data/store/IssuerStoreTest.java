@@ -34,7 +34,7 @@ public class IssuerStoreTest {
 
     @Before
     public void setup() throws Exception {
-        ImageStore imageStore = mock(ImageStore.class);
+        SQLiteImageStore imageStore = mock(SQLiteImageStore.class);
         Context context = RuntimeEnvironment.application;
         SQLiteDatabase database = new LMDatabaseHelper(context).getWritableDatabase();
 
