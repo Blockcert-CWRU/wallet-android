@@ -30,6 +30,7 @@ public class SQLiteImageStore implements ImageStore {
      * @param jsonData Image data
      * @return true if the image was written to file successfully
      */
+    @Override
     public boolean saveImage(String uuid, String jsonData) {
         if (StringUtils.isEmpty(uuid) || StringUtils.isEmpty(jsonData)) {
             return false;

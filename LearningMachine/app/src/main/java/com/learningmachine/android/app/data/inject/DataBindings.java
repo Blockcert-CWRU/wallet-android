@@ -16,5 +16,7 @@ interface DataBindings {
     @Binds
     @Singleton
     CertificateStore bindCertificateStore(SQLiteCertificateStore certStore);
+    @Binds
+    @Singleton
     ImageStore bindImageStore(SQLiteImageStore imageStore);
 }
