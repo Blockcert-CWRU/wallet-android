@@ -17,7 +17,7 @@ import dagger.assisted.AssistedInject;
 @Singleton
 public class PdaCertificateStore implements CertificateStore {
 
-    private static final PdaStoreComponent component = DaggerPdaStoreComponent.create();
+    private static final PdaStoreComponent COMPONENT = DaggerPdaStoreComponent.create();
     private final PdaIndexService mIndexService;
     private final PdaCertificateStoreService mStoreService;
     private final String mHatName;
@@ -36,7 +36,7 @@ public class PdaCertificateStore implements CertificateStore {
     }
 
     public static PdaCertificateStore create(String hatName, String authToken) {
-        return component.getCertFactory().create(hatName, authToken);
+        return COMPONENT.getCertFactory().create(hatName, authToken);
     }
 
     @Override

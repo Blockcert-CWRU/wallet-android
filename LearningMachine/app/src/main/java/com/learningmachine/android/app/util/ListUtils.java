@@ -12,7 +12,7 @@ public class ListUtils {
         return list == null || list.isEmpty();
     }
 
-    public static  <T> Collector<T, ?, List<T>> toImmutableList() {
+    public static <T> Collector<T, ?, List<T>> toImmutableList() {
         return Collectors.collectingAndThen(Collectors.toList(), ImmutableList::copyOf);
     }
 }
