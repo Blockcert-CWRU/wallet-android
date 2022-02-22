@@ -1,6 +1,8 @@
 package com.learningmachine.android.app.data.inject;
 
 import com.learningmachine.android.app.LMConstants;
+import com.learningmachine.android.app.data.store.pda.PdaCertificateStoreService;
+import com.learningmachine.android.app.data.store.pda.PdaIndexService;
 import com.learningmachine.android.app.data.webservice.BlockchainService;
 import com.learningmachine.android.app.data.webservice.CertificateInterceptor;
 import com.learningmachine.android.app.data.webservice.CertificateService;
@@ -60,6 +62,56 @@ public class ApiModule {
 
             return response;
         };
+    }
+
+    @Provides
+    @Singleton
+    @Named("certStoreService")
+    OkHttpClient provideCertStoreServiceClient(Interceptor interceptor) {
+        return new OkHttpClient.Builder().addInterceptor(interceptor).build();
+    }
+
+    @Provides
+    @Singleton
+    @Named("certStoreService")
+    Retrofit provideCertStoreRetrofit(@Named("certStoreService") OkHttpClient client) {
+        return new Retrofit.Builder()
+                .baseUrl(LMConstants.BASE_PDA_URL)
+                .client(client)
+                .addConverterFactory(LMGsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
+                .build();
+    }
+
+    @Provides
+    @Singleton
+    PdaCertificateStoreService provideCertStoreService(@Named("certStoreService") Retrofit retrofit) {
+        return retrofit.create(PdaCertificateStoreService.class);
+    }
+
+    @Provides
+    @Singleton
+    @Named("indexService")
+    OkHttpClient provideIndexServiceClient(Interceptor interceptor) {
+        return new OkHttpClient.Builder().addInterceptor(interceptor).build();
+    }
+
+    @Provides
+    @Singleton
+    @Named("indexService")
+    Retrofit provideIndexServiceRetrofit(@Named("indexService") OkHttpClient client) {
+        return new Retrofit.Builder()
+                .baseUrl(LMConstants.BASE_PDA_URL)
+                .client(client)
+                .addConverterFactory(LMGsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
+                .build();
+    }
+
+    @Provides
+    @Singleton
+    PdaIndexService provideIndexService(@Named("indexService") Retrofit retrofit) {
+        return retrofit.create(PdaIndexService.class);
     }
 
     @Provides
