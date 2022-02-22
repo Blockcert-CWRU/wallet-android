@@ -16,18 +16,18 @@ public class DevDataModule {
 
     @Provides
     @Singleton
-    Timber.Tree provideLoggingTree() {
+    static Timber.Tree loggingTree() {
         return new DebugTree();
     }
 
     @Provides
     @Singleton
-    NetworkParameters providesBitcoinNetworkParameters() {
+    static NetworkParameters bitcoinNetworkParameters() {
         return MainNetParams.get();
     }
 
     @Provides
-    HttpLoggingInterceptor.Level providesLogLevel() {
+    static HttpLoggingInterceptor.Level logLevel() {
         return HttpLoggingInterceptor.Level.BODY;
     }
 }

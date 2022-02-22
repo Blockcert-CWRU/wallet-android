@@ -9,12 +9,9 @@ import com.learningmachine.android.app.util.ListUtils;
 
 import java.util.List;
 
-import javax.inject.Singleton;
-
 import dagger.assisted.Assisted;
 import dagger.assisted.AssistedInject;
 
-@Singleton
 public class PdaCertificateStore implements CertificateStore {
 
     private static final PdaStoreComponent COMPONENT = DaggerPdaStoreComponent.create();

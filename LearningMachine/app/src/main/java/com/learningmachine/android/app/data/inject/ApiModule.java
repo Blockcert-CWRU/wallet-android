@@ -7,10 +7,9 @@ import com.learningmachine.android.app.data.webservice.BlockchainService;
 import com.learningmachine.android.app.data.webservice.CertificateInterceptor;
 import com.learningmachine.android.app.data.webservice.CertificateService;
 import com.learningmachine.android.app.data.webservice.IssuerService;
-import com.learningmachine.android.app.data.webservice.LMGsonConverterFactory;
 import com.learningmachine.android.app.data.webservice.VersionService;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -35,7 +34,7 @@ public class ApiModule {
 
     @Provides
     @Singleton
-    Interceptor provideLoggingInterceptor() {
+    static Interceptor loggingInterceptor() {
         return chain -> {
             Request request = chain.request();
 
@@ -56,147 +55,134 @@ public class ApiModule {
                 BufferedSource source = responseBody.source();
                 source.request(Long.MAX_VALUE);
                 Buffer buffer = source.buffer();
-                String responseBodyString = buffer.clone().readString(Charset.forName("UTF-8"));
+                String responseBodyString = buffer.clone().readString(StandardCharsets.UTF_8);
                 Timber.d(String.format("response body: %s", responseBodyString));
             }
-
             return response;
         };
     }
 
     @Provides
     @Singleton
-    @Named("certStoreService")
-    OkHttpClient provideCertStoreServiceClient(Interceptor interceptor) {
-        return new OkHttpClient.Builder().addInterceptor(interceptor).build();
+    @Named("certStore")
+    static OkHttpClient certStoreServiceClient(Interceptor loggingInterceptor) {
+        return okHttpClient(loggingInterceptor);
     }
 
     @Provides
     @Singleton
-    @Named("certStoreService")
-    Retrofit provideCertStoreRetrofit(@Named("certStoreService") OkHttpClient client) {
-        return new Retrofit.Builder()
-                .baseUrl(LMConstants.BASE_PDA_URL)
-                .client(client)
-                .addConverterFactory(LMGsonConverterFactory.create())
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
-                .build();
+    @Named("certStore")
+    static Retrofit certStoreRetrofit(@Named("certStore") OkHttpClient client) {
+        return retrofit(LMConstants.BASE_PDA_URL, client);
     }
 
     @Provides
     @Singleton
-    PdaCertificateStoreService provideCertStoreService(@Named("certStoreService") Retrofit retrofit) {
+    static PdaCertificateStoreService certStoreService(@Named("certStore") Retrofit retrofit) {
         return retrofit.create(PdaCertificateStoreService.class);
     }
 
     @Provides
     @Singleton
-    @Named("indexService")
-    OkHttpClient provideIndexServiceClient(Interceptor interceptor) {
-        return new OkHttpClient.Builder().addInterceptor(interceptor).build();
+    @Named("index")
+    static OkHttpClient indexServiceClient(Interceptor loggingInterceptor) {
+        return okHttpClient(loggingInterceptor);
     }
 
     @Provides
     @Singleton
-    @Named("indexService")
-    Retrofit provideIndexServiceRetrofit(@Named("indexService") OkHttpClient client) {
-        return new Retrofit.Builder()
-                .baseUrl(LMConstants.BASE_PDA_URL)
-                .client(client)
-                .addConverterFactory(LMGsonConverterFactory.create())
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
-                .build();
+    @Named("index")
+    static Retrofit provideIndexServiceRetrofit(@Named("index") OkHttpClient client) {
+        return retrofit(LMConstants.BASE_PDA_URL, client);
     }
 
     @Provides
     @Singleton
-    PdaIndexService provideIndexService(@Named("indexService") Retrofit retrofit) {
+    static PdaIndexService provideIndexService(@Named("index") Retrofit retrofit) {
         return retrofit.create(PdaIndexService.class);
     }
 
     @Provides
     @Singleton
     @Named("issuer")
-    OkHttpClient provideIssuerOkHttpClient(Interceptor loggingInterceptor) {
-        return new OkHttpClient.Builder().addInterceptor(loggingInterceptor)
-                .build();
+    static OkHttpClient issuerClient(Interceptor loggingInterceptor) {
+        return okHttpClient(loggingInterceptor);
     }
 
     @Provides
     @Singleton
     @Named("issuer")
-    Retrofit provideIssuerRetrofit(@Named("issuer") OkHttpClient okHttpClient) {
-        return new Retrofit.Builder().baseUrl(LMConstants.BASE_URL)
-                .client(okHttpClient)
-                .addConverterFactory(LMGsonConverterFactory.create())
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
-                .build();
+    static Retrofit issuerRetrofit(@Named("issuer") OkHttpClient client) {
+        return retrofit(LMConstants.BASE_URL, client);
     }
 
     @Provides
     @Singleton
-    IssuerService provideIssuerService(@Named("issuer") Retrofit retrofit) {
+    static IssuerService issuerService(@Named("issuer") Retrofit retrofit) {
         return retrofit.create(IssuerService.class);
     }
 
     @Provides
     @Singleton
     @Named("certificate")
-    OkHttpClient provideCertificateOkHttpClient(Interceptor loggingInterceptor, CertificateInterceptor certificateInterceptor) {
-        return new OkHttpClient.Builder()
-                .addInterceptor(loggingInterceptor)
-                .addInterceptor(certificateInterceptor)
-                .build();
+    static OkHttpClient certificateClient(
+            Interceptor loggingInterceptor, CertificateInterceptor certificateInterceptor) {
+        return okHttpClient(loggingInterceptor, certificateInterceptor);
     }
 
     @Provides
     @Singleton
     @Named("certificate")
-    Retrofit provideCertificateRetrofit(@Named("certificate") OkHttpClient okHttpClient) {
-        return new Retrofit.Builder().baseUrl(LMConstants.BASE_URL)
-                .client(okHttpClient)
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
-                .build();
+    static Retrofit certificateRetrofit(@Named("certificate") OkHttpClient client) {
+        return retrofit(LMConstants.BASE_URL, client);
     }
 
     @Provides
     @Singleton
-    CertificateService provideCertificateService(@Named("certificate") Retrofit retrofit) {
+    static CertificateService certificateService(@Named("certificate") Retrofit retrofit) {
         return retrofit.create(CertificateService.class);
     }
 
     @Provides
     @Singleton
     @Named("blockchain")
-    Retrofit provideBlockchainRetrofit(@Named("issuer") OkHttpClient okHttpClient) {
-        return new Retrofit.Builder().baseUrl(LMConstants.BLOCKCHAIN_SERVICE_URL)
-                .client(okHttpClient)
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
-                .build();
+    static Retrofit blockchainRetrofit(@Named("issuer") OkHttpClient client) {
+        return retrofit(LMConstants.BLOCKCHAIN_SERVICE_URL, client);
     }
 
     @Provides
     @Singleton
-    BlockchainService provideBlockchainService(@Named("blockchain") Retrofit retrofit) {
+    static BlockchainService blockchainService(@Named("blockchain") Retrofit retrofit) {
         return retrofit.create(BlockchainService.class);
     }
 
     @Provides
     @Singleton
     @Named("version")
-    Retrofit provideVersionRetrofit(@Named("issuer") OkHttpClient okHttpClient) {
-        return new Retrofit.Builder().baseUrl(LMConstants.VERSION_BASE_URL)
-                .client(okHttpClient)
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
-                .build();
+    static Retrofit versionRetrofit(@Named("issuer") OkHttpClient client) {
+        return retrofit(LMConstants.VERSION_BASE_URL, client);
     }
 
     @Provides
     @Singleton
-    VersionService provideVersionService(@Named("version") Retrofit retrofit) {
+    static VersionService versionService(@Named("version") Retrofit retrofit) {
         return retrofit.create(VersionService.class);
+    }
+
+    private static Retrofit retrofit(String baseUrl, OkHttpClient client) {
+        return new Retrofit.Builder().baseUrl(baseUrl)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(
+                        RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
+                .build();
+    }
+
+    private static OkHttpClient okHttpClient(Interceptor... interceptors) {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        for (Interceptor interceptor : interceptors) {
+            builder = builder.addInterceptor(interceptor);
+        }
+        return builder.build();
     }
 }

@@ -14,7 +14,7 @@ public class DataModule {
 
     @Provides
     @Singleton
-    SQLiteDatabase provideDatabase(LMDatabaseHelper helper) {
+    static SQLiteDatabase database(LMDatabaseHelper helper) {
         return helper.getWritableDatabase();
     }
 }
