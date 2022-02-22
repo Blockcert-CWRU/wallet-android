@@ -1,8 +1,8 @@
 package com.learningmachine.android.app.data.store.pda;
 
-import java.util.List;
+import java.util.Set;
 
 public abstract class Index {
 
-    public abstract List<IndexRecord> records();
+    public abstract Set<IndexRecord> records();
 }
