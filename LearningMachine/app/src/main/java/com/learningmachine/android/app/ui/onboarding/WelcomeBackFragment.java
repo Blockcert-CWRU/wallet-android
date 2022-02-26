@@ -1,11 +1,12 @@
 package com.learningmachine.android.app.ui.onboarding;
 
 import android.content.Context;
-import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.databinding.DataBindingUtil;
 
 import com.learningmachine.android.app.R;
 import com.learningmachine.android.app.databinding.FragmentWelcomeBackBinding;

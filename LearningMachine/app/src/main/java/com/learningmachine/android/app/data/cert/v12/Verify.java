@@ -1,11 +1,12 @@
 
 package com.learningmachine.android.app.data.cert.v12;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
 
 /**

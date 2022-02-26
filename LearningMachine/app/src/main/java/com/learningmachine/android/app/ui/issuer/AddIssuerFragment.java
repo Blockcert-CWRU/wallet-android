@@ -1,9 +1,7 @@
 package com.learningmachine.android.app.ui.issuer;
 
 import android.content.Intent;
-import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -13,6 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 
 import com.learningmachine.android.app.R;
 import com.learningmachine.android.app.databinding.FragmentAddIssuerBinding;

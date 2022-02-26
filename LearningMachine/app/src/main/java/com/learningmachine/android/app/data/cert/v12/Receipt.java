@@ -1,10 +1,11 @@
 
 package com.learningmachine.android.app.data.cert.v12;
 
-import java.util.ArrayList;
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**

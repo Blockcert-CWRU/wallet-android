@@ -2,7 +2,6 @@ package com.learningmachine.android.app.ui.onboarding;
 
 import android.content.Context;
 import android.content.Intent;
-import androidx.databinding.DataBindingUtil;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,6 +12,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+
+import androidx.databinding.DataBindingUtil;
 
 import com.learningmachine.android.app.R;
 import com.learningmachine.android.app.data.bitcoin.BitcoinManager;

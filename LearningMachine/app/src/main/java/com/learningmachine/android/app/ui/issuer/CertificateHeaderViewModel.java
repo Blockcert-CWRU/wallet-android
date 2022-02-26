@@ -2,9 +2,10 @@ package com.learningmachine.android.app.ui.issuer;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.view.View;
+
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
-import android.view.View;
 
 import com.learningmachine.android.app.R;
 import com.learningmachine.android.app.data.model.IssuerRecord;

@@ -1,9 +1,10 @@
 
 package com.learningmachine.android.app.data.cert.v20;
 
-import java.net.URI;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.net.URI;
 
 
 /**

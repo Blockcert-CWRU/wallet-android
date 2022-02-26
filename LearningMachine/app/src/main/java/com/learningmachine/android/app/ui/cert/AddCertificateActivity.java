@@ -2,15 +2,16 @@ package com.learningmachine.android.app.ui.cert;
 
 import android.content.Context;
 import android.content.Intent;
-import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+
 import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-import android.view.Menu;
-import android.view.MenuInflater;
 
 import com.learningmachine.android.app.R;
 import com.learningmachine.android.app.databinding.ActivityAddCertificateBinding;

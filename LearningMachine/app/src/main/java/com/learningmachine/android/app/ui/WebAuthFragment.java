@@ -2,14 +2,15 @@ package com.learningmachine.android.app.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 
 import com.learningmachine.android.app.R;
 import com.learningmachine.android.app.databinding.FragmentWebBinding;

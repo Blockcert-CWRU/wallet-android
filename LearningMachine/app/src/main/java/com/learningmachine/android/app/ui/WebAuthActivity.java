@@ -2,8 +2,9 @@ package com.learningmachine.android.app.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import androidx.fragment.app.Fragment;
 import android.view.KeyEvent;
+
+import androidx.fragment.app.Fragment;
 
 import com.learningmachine.android.app.R;
 import com.learningmachine.android.app.data.webservice.request.IssuerIntroductionRequest;

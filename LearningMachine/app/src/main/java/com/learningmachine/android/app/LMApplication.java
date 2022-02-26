@@ -5,9 +5,10 @@ import android.content.pm.ApplicationInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.webkit.WebView;
+
 import androidx.annotation.NonNull;
 import androidx.multidex.MultiDexApplication;
-import android.webkit.WebView;
 
 import com.learningmachine.android.app.data.CertificateManager;
 import com.learningmachine.android.app.data.IssuerManager;

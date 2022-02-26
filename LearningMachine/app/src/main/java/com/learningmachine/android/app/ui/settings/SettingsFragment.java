@@ -1,22 +1,22 @@
 package com.learningmachine.android.app.ui.settings;
 
-import android.content.Intent;
-import androidx.databinding.DataBindingUtil;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
+import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 
-import androidx.annotation.Nullable;
-import androidx.core.content.FileProvider;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
+import androidx.databinding.DataBindingUtil;
 
 import com.learningmachine.android.app.BuildConfig;
 import com.learningmachine.android.app.R;
 import com.learningmachine.android.app.data.bitcoin.BitcoinManager;
 import com.learningmachine.android.app.data.inject.Injector;
-import com.learningmachine.android.app.data.passphrase.PassphraseManager;
 import com.learningmachine.android.app.databinding.FragmentSettingsBinding;
 import com.learningmachine.android.app.dialog.AlertDialogFragment;
 import com.learningmachine.android.app.ui.LMFragment;
@@ -34,10 +34,6 @@ import java.io.File;
 import javax.inject.Inject;
 
 import timber.log.Timber;
-
-import static android.app.Activity.RESULT_OK;
-import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
-import static android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
 
 
 public class SettingsFragment extends LMFragment {

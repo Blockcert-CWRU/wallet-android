@@ -1,7 +1,5 @@
 package com.learningmachine.android.app.data.cert.v20;
 
-import android.util.Log;
-
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

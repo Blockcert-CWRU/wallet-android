@@ -2,12 +2,9 @@ package com.learningmachine.android.app.ui.onboarding;
 
 import android.app.Activity;
 import android.content.Intent;
-import androidx.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
@@ -16,6 +13,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.databinding.DataBindingUtil;
 
 import com.learningmachine.android.app.R;
 import com.learningmachine.android.app.data.bitcoin.BitcoinManager;

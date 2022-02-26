@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
-import android.view.View;
 
 import com.learningmachine.android.app.R;
 import com.learningmachine.android.app.data.model.IssuerRecord;

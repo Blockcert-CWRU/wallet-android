@@ -2,12 +2,8 @@ package com.learningmachine.android.app.ui.cert;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import androidx.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
-import androidx.core.content.FileProvider;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Pair;
@@ -22,6 +18,11 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
+import androidx.databinding.DataBindingUtil;
+
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.learningmachine.android.app.R;
 import com.learningmachine.android.app.data.CertificateManager;
 import com.learningmachine.android.app.data.CertificateVerifier;

@@ -1,17 +1,21 @@
 package com.learningmachine.android.app.util;
 
+import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
+import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
+
 import android.app.AlertDialog;
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import com.google.gson.stream.MalformedJsonException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+
 import com.google.gson.JsonParseException;
+import com.google.gson.stream.MalformedJsonException;
 import com.learningmachine.android.app.R;
 import com.learningmachine.android.app.data.error.ExceptionWithResourceString;
 import com.learningmachine.android.app.dialog.AlertDialogFragment;
@@ -19,9 +23,6 @@ import com.learningmachine.android.app.dialog.AlertDialogFragment;
 import java.net.UnknownHostException;
 
 import retrofit2.HttpException;
-
-import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
-import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
 
 public class DialogUtils {
 

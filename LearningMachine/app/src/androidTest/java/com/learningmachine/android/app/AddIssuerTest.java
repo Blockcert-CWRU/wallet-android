@@ -1,10 +1,14 @@
 package com.learningmachine.android.app;
 
-import androidx.databinding.adapters.ViewBindingAdapter;
-import androidx.test.espresso.ViewAssertion;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.learningmachine.android.app.ui.home.HomeActivity;
 
@@ -15,13 +19,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import timber.log.Timber;
-
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 /**
  * Created by chris on 12/20/17.

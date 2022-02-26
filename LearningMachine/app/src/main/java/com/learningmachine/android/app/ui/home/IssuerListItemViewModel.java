@@ -2,6 +2,7 @@ package com.learningmachine.android.app.ui.home;
 
 import android.content.Context;
 import android.content.res.Resources;
+
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 

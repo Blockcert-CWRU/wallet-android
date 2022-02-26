@@ -1,10 +1,8 @@
 package com.learningmachine.android.app.ui.onboarding;
 
-import androidx.databinding.DataBindingUtil;
-
 import android.os.Bundle;
 
-import androidx.core.app.ActivityCompat;
+import androidx.databinding.DataBindingUtil;
 import androidx.viewpager.widget.ViewPager;
 
 import com.learningmachine.android.app.R;

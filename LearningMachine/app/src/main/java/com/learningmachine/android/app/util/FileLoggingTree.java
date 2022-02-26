@@ -4,10 +4,6 @@ package com.learningmachine.android.app.util;
 import android.content.Context;
 import android.util.Log;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 

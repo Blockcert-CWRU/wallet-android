@@ -1,5 +1,8 @@
 package com.learningmachine.android.app.ui;
 
+import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
+import static android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
+
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
@@ -7,18 +10,16 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
 import com.learningmachine.android.app.data.inject.Injector;
 import com.learningmachine.android.app.data.passphrase.PassphraseManager;
-import com.learningmachine.android.app.data.preferences.SharedPreferencesManager;
 import com.learningmachine.android.app.ui.home.HomeActivity;
 import com.learningmachine.android.app.ui.issuer.IssuerActivity;
 import com.learningmachine.android.app.ui.settings.SettingsActivity;
@@ -35,9 +36,6 @@ import javax.inject.Inject;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.BehaviorSubject;
-
-import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
-import static android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
 
 public abstract class LMActivity extends AppCompatActivity implements LifecycleProvider<ActivityEvent> {
     private static final int REQUEST_CREATE_BACKUP = 101;

@@ -2,9 +2,10 @@ package com.learningmachine.android.app.ui.onboarding;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import androidx.viewpager.widget.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+
+import androidx.viewpager.widget.ViewPager;
 
 /**
  * ViewPager that disables swiping.

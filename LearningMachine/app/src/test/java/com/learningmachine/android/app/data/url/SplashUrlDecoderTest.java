@@ -1,9 +1,11 @@
 package com.learningmachine.android.app.data.url;
 
-import org.junit.Test;
-
-import static com.learningmachine.android.app.data.url.LaunchType.*;
+import static com.learningmachine.android.app.data.url.LaunchType.ADD_CERTIFICATE;
+import static com.learningmachine.android.app.data.url.LaunchType.ADD_ISSUER;
+import static com.learningmachine.android.app.data.url.LaunchType.ONBOARDING;
 import static junit.framework.Assert.assertEquals;
+
+import org.junit.Test;
 
 public class SplashUrlDecoderTest {
 

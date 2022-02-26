@@ -2,6 +2,7 @@ package com.learningmachine.android.app.ui.onboarding;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 
 import com.learningmachine.android.app.data.inject.Injector;

@@ -3,6 +3,7 @@ package com.learningmachine.android.app.data.cert.v11;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
 import org.joda.time.DateTime;
 
 public class IssuerKey {

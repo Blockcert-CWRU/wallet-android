@@ -1,9 +1,10 @@
 package com.learningmachine.android.app.ui;
 
 import android.content.Context;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import android.util.AttributeSet;
 import android.widget.ImageView;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.learningmachine.android.app.R;
 import com.smallplanet.labalib.Laba;
