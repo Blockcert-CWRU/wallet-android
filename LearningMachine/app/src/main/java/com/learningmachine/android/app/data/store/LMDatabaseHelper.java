@@ -56,7 +56,7 @@ public class LMDatabaseHelper extends SQLiteOpenHelper {
             } else {
                 sqLiteDatabase.execSQL(String.format("alter table %s add column %s %s", tableName, columnName, typeName));
             }
-        }catch (Exception e) {
+        }catch (Exception ignored) {
 
         }
     }

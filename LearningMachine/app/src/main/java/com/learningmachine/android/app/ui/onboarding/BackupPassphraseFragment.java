@@ -277,7 +277,7 @@ public class BackupPassphraseFragment extends OnboardingFragment {
             try {
                 size.x = (Integer) Display.class.getMethod("getRawWidth").invoke(display);
                 size.y = (Integer) Display.class.getMethod("getRawHeight").invoke(display);
-            } catch (IllegalAccessException e) {} catch (InvocationTargetException e) {} catch (NoSuchMethodException e) {}
+            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ignored) {}
         }
 
         return size;
