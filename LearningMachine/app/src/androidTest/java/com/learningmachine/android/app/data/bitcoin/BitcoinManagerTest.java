@@ -56,9 +56,7 @@ public class BitcoinManagerTest {
         });
 
         BitcoinManager secondBitcoinManager = new BitcoinManager(context, networkParameters, null, null, null);
-        secondBitcoinManager.getFreshBitcoinAddress().subscribe(secondReceiveAddress -> {
-            assertNotEquals("Fresh receive address expected", stringHolder.string, secondReceiveAddress);
-        });
+        secondBitcoinManager.getFreshBitcoinAddress().subscribe(secondReceiveAddress -> assertNotEquals("Fresh receive address expected", stringHolder.string, secondReceiveAddress));
     }
 
     static class StringHolder {

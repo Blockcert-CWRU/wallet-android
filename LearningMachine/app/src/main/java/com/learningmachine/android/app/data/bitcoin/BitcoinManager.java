@@ -8,7 +8,6 @@ import androidx.annotation.VisibleForTesting;
 import com.learningmachine.android.app.LMConstants;
 import com.learningmachine.android.app.R;
 import com.learningmachine.android.app.data.error.ExceptionWithResourceString;
-import com.learningmachine.android.app.data.passphrase.PassphraseManager;
 import com.learningmachine.android.app.data.preferences.SharedPreferencesManager;
 import com.learningmachine.android.app.data.store.CertificateStore;
 import com.learningmachine.android.app.data.store.IssuerStore;
@@ -27,6 +26,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -37,27 +37,24 @@ import timber.log.Timber;
 @Singleton
 public class BitcoinManager {
 
-    private static final String PASSPHRASE_DELIMETER = " ";
+    private static final String PASSPHRASE_DELIMITER = " ";
 
     private final Context mContext;
     private final NetworkParameters mNetworkParameters;
     private final IssuerStore mIssuerStore;
     private final CertificateStore mCertificateStore;
     private final SharedPreferencesManager mSharedPreferencesManager;
-    private final PassphraseManager mPassphraseManager;
     private Wallet mWallet;
 
     @Inject
     public BitcoinManager(Context context, NetworkParameters networkParameters,
                           IssuerStore issuerStore, CertificateStore certificateStore,
-                          SharedPreferencesManager sharedPreferencesManager,
-                          PassphraseManager passphraseManager) {
+                          SharedPreferencesManager sharedPreferencesManager) {
         mContext = context;
         mNetworkParameters = networkParameters;
         mIssuerStore = issuerStore;
         mCertificateStore = certificateStore;
         mSharedPreferencesManager = sharedPreferencesManager;
-        mPassphraseManager = passphraseManager;
     }
 
     private Observable<Wallet> getWallet() {
@@ -89,9 +86,9 @@ public class BitcoinManager {
         return Observable.just(mWallet);
     }
 
-    private Observable<Wallet> buildWallet(byte[] entropy) {
+    private void buildWallet(byte[] entropy) {
         mWallet = BitcoinUtils.createWallet(mNetworkParameters, entropy);
-        return saveWallet();
+        saveWallet();
     }
 
     private Observable<Wallet> buildWallet(String seedPhrase) {
@@ -149,8 +146,8 @@ public class BitcoinManager {
     public Observable<String> getPassphrase() {
         return getWallet().map(wallet -> {
             DeterministicSeed seed = wallet.getKeyChainSeed();
-            List<String> mnemonicCode = seed.getMnemonicCode();
-            return StringUtils.join(PASSPHRASE_DELIMETER, mnemonicCode);
+            List<String> mnemonicCode = Objects.requireNonNull(seed.getMnemonicCode());
+            return StringUtils.join(PASSPHRASE_DELIMITER, mnemonicCode);
         });
     }
 
