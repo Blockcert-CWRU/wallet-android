@@ -201,14 +201,11 @@ public class CertificateVerificationTest {
 
     private Reader getResourceAsReader(String name) {
         InputStream inputStream = getResourceAsStream(name);
-        Reader reader = new InputStreamReader(inputStream);
-        return reader;
+        return new InputStreamReader(inputStream);
     }
 
     private InputStream getResourceAsStream(String name) {
         ClassLoader classLoader = getClass().getClassLoader();
-
-        InputStream inputStream = classLoader.getResourceAsStream(name);
-        return inputStream;
+        return classLoader.getResourceAsStream(name);
     }
 }

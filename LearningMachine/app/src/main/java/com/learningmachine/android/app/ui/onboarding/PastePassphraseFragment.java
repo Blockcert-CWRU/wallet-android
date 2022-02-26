@@ -67,8 +67,7 @@ public class PastePassphraseFragment extends OnboardingFragment {
                     @Override
                     public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
                         String toLowered = String.valueOf(source).toLowerCase();
-                        String sanitized = toLowered.replaceAll("[^a-zA-Z ]", "");
-                        return sanitized;
+                        return toLowered.replaceAll("[^a-zA-Z ]", "");
                     }
                 }
         });
