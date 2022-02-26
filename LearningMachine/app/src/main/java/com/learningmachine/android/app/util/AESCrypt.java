@@ -112,7 +112,7 @@ public final class AESCrypt {
      * Decrypt and decode ciphertext using 256-bit AES with key generated from password
      *
      * @param password used to generated key
-     * @param base64EncodedCipherText the encrpyted message encoded with base64
+     * @param base64EncodedCipherText the encrypted message encoded with base64
      * @return message in Plain text (String UTF-8)
      * @throws GeneralSecurityException if there's an issue decrypting
      */
@@ -179,7 +179,7 @@ public final class AESCrypt {
 
 
     /**
-     * Converts byte array to hexidecimal useful for logging and fault finding
+     * Converts byte array to hexadecimal useful for logging and fault finding
      * @param bytes
      * @return
      */

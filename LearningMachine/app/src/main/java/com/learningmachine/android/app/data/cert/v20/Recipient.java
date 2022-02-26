@@ -152,7 +152,7 @@ class Recipient {
         @SerializedName("email")
         EMAIL("email");
         private final String value;
-        private final static Map<String, Recipient.Type> CONSTANTS = new HashMap<String, Recipient.Type>();
+        private final static Map<String, Recipient.Type> CONSTANTS = new HashMap<>();
 
         static {
             for (Recipient.Type c: values()) {
@@ -160,7 +160,7 @@ class Recipient {
             }
         }
 
-        private Type(String value) {
+        Type(String value) {
             this.value = value;
         }
 

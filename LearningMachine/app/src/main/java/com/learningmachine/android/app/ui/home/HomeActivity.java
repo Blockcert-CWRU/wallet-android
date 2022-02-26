@@ -72,8 +72,8 @@ public class HomeActivity extends LMSingleFragmentActivity {
         String linkType = intent.getStringExtra(EXTRA_LINK_TYPE);
         if (LINK_TYPE_ISSUER.equals(linkType)) {
             String issuerUrl = intent.getStringExtra(EXTRA_ISSUER_URL);
-            String nounce = intent.getStringExtra(EXTRA_ISSUER_NONCE);
-            getLastFragment().updateArgsIssuer(issuerUrl, nounce);
+            String nonce = intent.getStringExtra(EXTRA_ISSUER_NONCE);
+            getLastFragment().updateArgsIssuer(issuerUrl, nonce);
         } else if (LINK_TYPE_CERT.equals(linkType)) {
             String certUrl = intent.getStringExtra(EXTRA_CERT_URL);
             getLastFragment().updateArgsCert(certUrl);

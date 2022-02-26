@@ -127,7 +127,7 @@ public class AddIssuerFragment extends LMIssuerBaseFragment {
 
     @Override
     protected void addIssuerOnIssuerAdded(String uuid) {
-        Timber.i("Issuer Added withh uuid: " + uuid);
+        Timber.i("Issuer Added with uuid: " + uuid);
         didAddIssuer(uuid);
     }
 

@@ -22,7 +22,7 @@ public class Issuer {
     @Expose
     private String image;
     /**
-     * Link to a JSON that details the issuer's issuing and recovation keys. Default is https://[domain]/issuer/[org_abbr]-issuer.json. Included for (near) backward compatibility with open badges specification 1.1
+     * Link to a JSON that details the issuer's issuing and revocation keys. Default is https://[domain]/issuer/[org_abbr]-issuer.json. Included for (near) backward compatibility with open badges specification 1.1
      * (Required)
      * 
      */
@@ -73,7 +73,7 @@ public class Issuer {
     }
 
     /**
-     * Link to a JSON that details the issuer's issuing and recovation keys. Default is https://[domain]/issuer/[org_abbr]-issuer.json. Included for (near) backward compatibility with open badges specification 1.1
+     * Link to a JSON that details the issuer's issuing and revocation keys. Default is https://[domain]/issuer/[org_abbr]-issuer.json. Included for (near) backward compatibility with open badges specification 1.1
      * (Required)
      * 
      */
@@ -82,7 +82,7 @@ public class Issuer {
     }
 
     /**
-     * Link to a JSON that details the issuer's issuing and recovation keys. Default is https://[domain]/issuer/[org_abbr]-issuer.json. Included for (near) backward compatibility with open badges specification 1.1
+     * Link to a JSON that details the issuer's issuing and revocation keys. Default is https://[domain]/issuer/[org_abbr]-issuer.json. Included for (near) backward compatibility with open badges specification 1.1
      * (Required)
      * 
      */
