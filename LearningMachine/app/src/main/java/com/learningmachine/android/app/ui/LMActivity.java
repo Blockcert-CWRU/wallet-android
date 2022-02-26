@@ -68,11 +68,6 @@ public abstract class LMActivity extends AppCompatActivity implements LifecycleP
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mLifecycleSubject.onNext(ActivityEvent.CREATE);

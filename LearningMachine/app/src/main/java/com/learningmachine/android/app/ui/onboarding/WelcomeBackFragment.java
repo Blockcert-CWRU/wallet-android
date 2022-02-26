@@ -35,14 +35,4 @@ public class WelcomeBackFragment extends OnboardingFragment {
 
         return mBinding.getRoot();
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
 }
