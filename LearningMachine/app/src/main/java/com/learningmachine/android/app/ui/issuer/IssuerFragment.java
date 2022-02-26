@@ -163,9 +163,9 @@ public class IssuerFragment extends LMFragment {
         }
     }
 
-    private class CertificateAdapter extends RecyclerView.Adapter {
+    private class CertificateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-        private List<CertificateRecord> mCertificateList;
+        private final List<CertificateRecord> mCertificateList;
 
         CertificateAdapter(List<CertificateRecord> certificateList) {
             mCertificateList = certificateList;

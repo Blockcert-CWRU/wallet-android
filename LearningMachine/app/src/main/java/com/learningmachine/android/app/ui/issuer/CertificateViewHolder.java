@@ -14,16 +14,13 @@ import timber.log.Timber;
 
 public class CertificateViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    private ListItemCertificateBinding mBinding;
-    private CertificateListItemViewModel mViewModel;
+    private final ListItemCertificateBinding mBinding;
+    private final CertificateListItemViewModel mViewModel;
 
     public CertificateViewHolder(ListItemCertificateBinding binding) {
         super(binding.getRoot());
-
         mBinding = binding;
-        mBinding.getRoot()
-                .setOnClickListener(this);
-
+        mBinding.getRoot().setOnClickListener(this);
         mViewModel = new CertificateListItemViewModel();
         mBinding.setViewModel(mViewModel);
     }

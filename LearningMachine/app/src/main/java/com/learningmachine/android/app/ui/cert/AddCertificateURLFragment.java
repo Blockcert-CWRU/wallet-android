@@ -132,7 +132,7 @@ public class AddCertificateURLFragment extends LMFragment {
 
 
 
-    private TextView.OnEditorActionListener mActionListener = (v, actionId, event) -> {
+    private final TextView.OnEditorActionListener mActionListener = (v, actionId, event) -> {
         if (actionId == getResources().getInteger(R.integer.action_done) || actionId == EditorInfo.IME_ACTION_DONE) {
             addCertificate();
             return false;

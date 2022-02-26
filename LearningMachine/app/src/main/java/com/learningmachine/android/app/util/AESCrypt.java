@@ -35,7 +35,7 @@ public final class AESCrypt {
     private static final byte[] ivBytes = {0x7F, 0x1A, 0x5D, 0x7A, 0x45, 0x03, 0x0A, 0x64, 0x2F, 0x4D, 0x1F, 0x00, 0x42, 0x70, 0x75, 0x33};
 
     //togglable log option (please turn off in live!)
-    public static boolean DEBUG_LOG_ENABLED = false;
+    public static final boolean DEBUG_LOG_ENABLED = false;
 
 
     /**

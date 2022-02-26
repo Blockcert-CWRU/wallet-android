@@ -152,7 +152,7 @@ public class AddIssuerFragment extends LMIssuerBaseFragment {
         getActivity().finish();
     }
 
-    private TextView.OnEditorActionListener mActionListener = (v, actionId, event) -> {
+    private final TextView.OnEditorActionListener mActionListener = (v, actionId, event) -> {
         if (actionId == getResources().getInteger(R.integer.action_done) || actionId == EditorInfo.IME_ACTION_DONE) {
             hideKeyboard();
             startIssuerIntroduction();

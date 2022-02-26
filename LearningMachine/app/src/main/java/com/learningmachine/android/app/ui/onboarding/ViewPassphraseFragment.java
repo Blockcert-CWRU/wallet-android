@@ -32,7 +32,7 @@ public class ViewPassphraseFragment extends OnboardingFragment {
 
     private Timer countingTimer;
 
-    private TimerTask timerTask = new TimerTask() {
+    private final TimerTask timerTask = new TimerTask() {
         @Override
         public void run() {
             Activity activity = getActivity();

@@ -9,7 +9,7 @@ public class IssuerIntroductionRequest {
     @SerializedName("nonce")
     private String mNonce;
 
-    private transient IssuerResponse mIssuerResponse;
+    private final transient IssuerResponse mIssuerResponse;
 
     public IssuerIntroductionRequest(String bitcoinAddress, String nonce, IssuerResponse issuerResponse) {
         mBitcoinAddress = bitcoinAddress;

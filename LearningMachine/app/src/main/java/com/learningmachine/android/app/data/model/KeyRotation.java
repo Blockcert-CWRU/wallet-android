@@ -17,13 +17,13 @@ public class KeyRotation {
     }
 
     @SerializedName("created")
-    private String mCreatedDate;
+    private final String mCreatedDate;
     @SerializedName("expires")
     private String mExpiresDate;
     @SerializedName("revoked")
     private String mRevokedDate;
     @SerializedName(value = "id", alternate = {"publicKey"})
-    private String mKey;
+    private final String mKey;
 
     public KeyRotation(String createdDate, String key) {
         mCreatedDate = createdDate;

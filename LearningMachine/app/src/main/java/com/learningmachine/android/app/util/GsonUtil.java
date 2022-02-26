@@ -14,20 +14,18 @@ import java.io.InputStreamReader;
  */
 public class GsonUtil {
 
-    private Context mContext;
+    private static final Gson GSON = new Gson();
+    private final Context mContext;
 
     public GsonUtil(Context context) {
         mContext = context;
     }
 
-    public <T> T loadModelObject(String file, Class clazz) throws IOException {
+    public <T> T loadModelObject(String file, Class<T> clazz) throws IOException {
         String filename = file + ".json";
-
         AssetManager assetManager = mContext.getAssets();
         InputStream inputStream = assetManager.open(filename);
         InputStreamReader reader = new InputStreamReader(inputStream);
-
-        Gson gson = new Gson();
-        return (T) gson.fromJson(reader, clazz);
+        return (T) GSON.fromJson(reader, clazz);
     }
 }

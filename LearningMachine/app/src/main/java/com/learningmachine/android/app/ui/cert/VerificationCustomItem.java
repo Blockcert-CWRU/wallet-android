@@ -26,7 +26,7 @@ public class VerificationCustomItem extends RelativeLayout {
     public static final int EXTRA_HEIGHT_FOR_STATUS_BAR = 28;
     private TextView mItemTitle;
     private LinearLayout mSubItemsContainer;
-    private Context mContext;
+    private final Context mContext;
     private View mItemStatusBar;
     private View mPlaceholderStatusBar;
     private int mSubItemHeight = 0;

@@ -18,8 +18,8 @@ public class CertificateRecord {
     private String mIssuerUuid;
     private String mIssuedOn;
     private String mUrlString;
-    private String mMetadata;
-    private String mExpirationDate;
+    private final String mMetadata;
+    private final String mExpirationDate;
 
     public CertificateRecord(String uuid, String issuerUuid, String name, String description,
                              String issuedOn, String urlString, String metadata, String expirationDate) {

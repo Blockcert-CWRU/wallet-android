@@ -14,7 +14,7 @@ import java.util.List;
 public class OnboardingFlow implements Serializable {
 
     private int mPosition;
-    private List<OnboardingScreen> mScreens;
+    private final List<OnboardingScreen> mScreens;
 
     public enum FlowType {
         UNKNOWN(Collections.singletonList(ACCOUNT_CHOOSER)),
@@ -23,7 +23,7 @@ public class OnboardingFlow implements Serializable {
         EXISTING_ACCOUNT(Arrays.asList(ACCOUNT_CHOOSER, PASTE_PASSPHRASE));
 
 
-        private List<OnboardingScreen> mScreens;
+        private final List<OnboardingScreen> mScreens;
 
         FlowType(List<OnboardingScreen> mScreens) {
             this.mScreens = mScreens;

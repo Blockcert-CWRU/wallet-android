@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class BlockCertParser {
-    private Gson mGson;
+    private final Gson mGson;
 
     public BlockCertParser() {
         mGson = new GsonBuilder()

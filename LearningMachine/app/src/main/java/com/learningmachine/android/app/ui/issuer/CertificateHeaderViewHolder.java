@@ -17,20 +17,15 @@ import java.io.File;
 
 public class CertificateHeaderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    private Context mContext;
-    private ListCertificateHeaderBinding mBinding;
-    private CertificateHeaderViewModel mViewModel;
+    private final Context mContext;
+    private final ListCertificateHeaderBinding mBinding;
+    private final CertificateHeaderViewModel mViewModel;
 
     public CertificateHeaderViewHolder(ListCertificateHeaderBinding binding) {
         super(binding.getRoot());
-
         mBinding = binding;
-        mBinding.getRoot()
-                .setOnClickListener(this);
-
-        mContext = mBinding.getRoot()
-                .getContext();
-
+        mBinding.getRoot().setOnClickListener(this);
+        mContext = mBinding.getRoot().getContext();
         mViewModel = new CertificateHeaderViewModel();
         mBinding.setViewModel(mViewModel);
     }

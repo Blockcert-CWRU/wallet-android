@@ -8,7 +8,7 @@ import com.learningmachine.android.app.util.DateUtils;
 
 public class IssuerInfoViewModel extends BaseObservable {
 
-    private IssuerRecord mIssuer;
+    private final IssuerRecord mIssuer;
 
     public IssuerInfoViewModel(IssuerRecord issuer) {
         mIssuer = issuer;

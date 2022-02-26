@@ -193,9 +193,9 @@ public class HomeFragment extends LMIssuerBaseFragment {
         }
     }
 
-    private class IssuerAdapter extends RecyclerView.Adapter {
+    private class IssuerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-        private List<IssuerRecord> mIssuerList;
+        private final List<IssuerRecord> mIssuerList;
 
         IssuerAdapter(List<IssuerRecord> issuerList) {
             mIssuerList = issuerList;

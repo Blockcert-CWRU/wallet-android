@@ -82,7 +82,7 @@ public class AddCertificateActivity extends LMActivity {
         URL(R.string.add_certificate_by_url),
         FILE(R.string.add_certificate_by_file);
 
-        private int mTitleResId;
+        private final int mTitleResId;
 
         CertificateType(int titleResId) {
             mTitleResId = titleResId;
@@ -94,8 +94,8 @@ public class AddCertificateActivity extends LMActivity {
     }
 
     private class AddCertificateViewPagerAdapter extends FragmentStatePagerAdapter {
-        private List<CertificateType> mCertificateTypes;
-        private Context mContext;
+        private final List<CertificateType> mCertificateTypes;
+        private final Context mContext;
 
         public AddCertificateViewPagerAdapter(Context context, FragmentManager manager, List<CertificateType> certificateTypes) {
             super(manager);

@@ -3,7 +3,8 @@ package com.learningmachine.android.app.data.error;
 import androidx.annotation.StringRes;
 
 public class ExceptionWithResourceString extends Exception {
-    private @StringRes int mErrorMessageResId;
+    @StringRes
+    private final int mErrorMessageResId;
 
     public ExceptionWithResourceString(int errorMessageResId) {
         mErrorMessageResId = errorMessageResId;

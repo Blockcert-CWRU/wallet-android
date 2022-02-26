@@ -1,8 +1,8 @@
 package com.learningmachine.android.app.data.cert.metadata;
 
 public class Field {
-    private String mTitle;
-    private String mValue;
+    private final String mTitle;
+    private final String mValue;
 
     public Field(String title, String value) {
         mTitle = title;

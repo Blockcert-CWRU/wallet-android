@@ -23,7 +23,7 @@ public class PropertyType {
         NULL
     }
 
-    private List<JsonType> possibleJsonTypes;
+    private final List<JsonType> possibleJsonTypes;
 
     public PropertyType(List<String> types) {
         this.possibleJsonTypes = new ArrayList<>();

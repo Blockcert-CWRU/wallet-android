@@ -12,7 +12,7 @@ public class IssuerResponse extends IssuerRecord {
     private static final String WEB_AUTH_METHOD = "web";
 
     @SerializedName("image")
-    private String mImageData;
+    private final String mImageData;
     @SerializedName("introductionAuthenticationMethod")
     private String mIntroductionMethod;
     @SerializedName("introductionSuccessURL")

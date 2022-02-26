@@ -1,5 +1,6 @@
 package com.learningmachine.android.app.data.model;
 
+import com.google.common.base.Strings;
 import com.google.gson.annotations.SerializedName;
 import com.learningmachine.android.app.LMConstants;
 import com.learningmachine.android.app.util.ImageUtils;
@@ -13,28 +14,28 @@ public class IssuerRecord {
 
     /** The name of the issuer. */
     @SerializedName("name")
-    private String mName;
+    private final String mName;
 
     /** The email address where you can contact the issuer */
     @SerializedName("email")
-    private String mEmail;
+    private final String mEmail;
 
     @SerializedName("issuerURL")
-    private String mIssuerURL;
+    private final String mIssuerURL;
 
     /** Unique identifier for an Issuer. Also, the URL where you can re-request data.
      * This is useful if an instance of this struct only has partial data, or if you want to see that the keys are still valid. */
     @SerializedName("id")
-    private String mUuid;
+    private final String mUuid;
 
     /** Where you can go to check a list of certificates issued by this issuer. */
     @SerializedName("url")
-    private String mCertsUrl;
+    private final String mCertsUrl;
 
     /** The URL where you can make a POST request with recipient data in order to introduce a Recipient to an Issuer.
      * For more information, look at `IssuerIntroductionRequest` */
     @SerializedName("introductionURL")
-    private String mIntroUrl;
+    private final String mIntroUrl;
 
     /** An ordered list of KeyRotation objects, with the most recent key rotation first.
      * These represent the keys used to issue certificates during specific date ranges */
@@ -46,13 +47,12 @@ public class IssuerRecord {
     @SerializedName("revocationKeys")
     private List<KeyRotation> mRevocationKeys;
 
-
     /** A URL pointing to a list of certificate urls that have been revoked by the issuer */
     @SerializedName("revocationList")
     private String mRevocationList;
 
     @SerializedName("analyticsURL")
-    private String mAnalyticsUrlString;
+    private final String mAnalyticsUrlString;
 
     // created when added to DB
     private String mIntroducedOn;
@@ -79,7 +79,6 @@ public class IssuerRecord {
         return mIssuerURL;
     }
 
-
     public String getEmail() {
         return mEmail;
     }
@@ -93,10 +92,7 @@ public class IssuerRecord {
     }
 
     public String getIntroUrl() {
-        if (mIntroUrl == null) {
-            return "";
-        }
-        return mIntroUrl;
+        return Strings.nullToEmpty(mIntroUrl);
     }
 
     public List<KeyRotation> getIssuerKeys() {

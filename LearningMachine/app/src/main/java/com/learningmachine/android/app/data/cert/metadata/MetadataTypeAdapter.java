@@ -17,10 +17,10 @@ import java.util.Map;
 import timber.log.Timber;
 
 public class MetadataTypeAdapter implements JsonDeserializer<Metadata> {
-    private NumberFormat mNumberFormat;
-    private NumberFormat mIntegerFormat;
-    private String mTrueString;
-    private String mFalseString;
+    private final NumberFormat mNumberFormat;
+    private final NumberFormat mIntegerFormat;
+    private final String mTrueString;
+    private final String mFalseString;
 
     public MetadataTypeAdapter(NumberFormat numberFormat, NumberFormat integerFormat, String trueString, String falseString) {
         mNumberFormat = numberFormat;

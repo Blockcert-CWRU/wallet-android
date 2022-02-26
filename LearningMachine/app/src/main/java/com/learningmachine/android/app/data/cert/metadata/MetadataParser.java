@@ -10,7 +10,7 @@ import java.io.Reader;
 import java.text.NumberFormat;
 
 public class MetadataParser {
-    private Gson mGson;
+    private final Gson mGson;
 
     public MetadataParser(Context context) {
         NumberFormat numberFormat = NumberFormat.getInstance();

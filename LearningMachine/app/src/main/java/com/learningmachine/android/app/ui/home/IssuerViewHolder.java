@@ -22,9 +22,9 @@ import timber.log.Timber;
 
 public class IssuerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    private Context mContext;
-    private ListItemIssuerBinding mBinding;
-    private IssuerListItemViewModel mViewModel;
+    private final Context mContext;
+    private final ListItemIssuerBinding mBinding;
+    private final IssuerListItemViewModel mViewModel;
 
     public IssuerViewHolder(ListItemIssuerBinding binding) {
         super(binding.getRoot());

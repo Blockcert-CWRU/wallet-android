@@ -2,7 +2,7 @@ package com.learningmachine.android.app.data.url;
 
 public class LaunchData {
 
-    private LaunchType mLaunchType;
+    private final LaunchType mLaunchType;
 
     private String mIntroUrl;
     private String mNonce;
