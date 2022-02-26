@@ -96,9 +96,7 @@ public class BackupPassphraseFragment extends OnboardingFragment {
     public void onUserVisible() {
         super.onUserVisible();
 
-        mBitcoinManager.getPassphrase().subscribe(passphrase -> {
-            mPassphrase = passphrase;
-        });
+        mBitcoinManager.getPassphrase().subscribe(passphrase -> mPassphrase = passphrase);
 
     }
 
@@ -230,7 +228,7 @@ public class BackupPassphraseFragment extends OnboardingFragment {
             if (view.getVisibility() == View.VISIBLE) {
                 return;
             }
-            Laba.Animate(view, "!s!f!>", () -> { return null; });
+            Laba.Animate(view, "!s!f!>", () -> null);
             view.setVisibility(View.VISIBLE);
 
             numberOfBackupOptionsUsed++;

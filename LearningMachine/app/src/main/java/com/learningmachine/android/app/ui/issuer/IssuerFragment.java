@@ -95,9 +95,7 @@ public class IssuerFragment extends LMFragment {
                         startActivity(intent);
                         return null;
                     },
-                    (dialogContent) -> {
-                        return null;
-                    });
+                    (dialogContent) -> null);
         });
 
         setupRecyclerView();

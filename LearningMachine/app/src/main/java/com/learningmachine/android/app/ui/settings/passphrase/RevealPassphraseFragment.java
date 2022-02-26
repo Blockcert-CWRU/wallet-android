@@ -146,7 +146,7 @@ public class RevealPassphraseFragment extends LMFragment {
 
     public void HandleBackupOptionCompleted(View view) {
         if(view != null) {
-            Laba.Animate(view, "!s!f!>", () -> { return null; });
+            Laba.Animate(view, "!s!f!>", () -> null);
             view.setVisibility(View.VISIBLE);
         }
     }

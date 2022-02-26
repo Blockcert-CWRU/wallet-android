@@ -75,7 +75,7 @@ public class CertificateManager {
 
     public Observable<String> addCertificate(String url) {
         return mCertificateService.getCertificate(url)
-                .flatMap(responseBody -> handleCertificateResponse(responseBody));
+                .flatMap(this::handleCertificateResponse);
     }
 
     public Observable<String> addCertificate(File file) {

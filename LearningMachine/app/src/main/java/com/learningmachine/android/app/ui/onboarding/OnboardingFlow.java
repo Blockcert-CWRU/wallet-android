@@ -8,6 +8,7 @@ import static com.learningmachine.android.app.ui.onboarding.OnboardingScreen.WEL
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class OnboardingFlow implements Serializable {
@@ -16,7 +17,7 @@ public class OnboardingFlow implements Serializable {
     private List<OnboardingScreen> mScreens;
 
     public enum FlowType {
-        UNKNOWN(Arrays.asList(ACCOUNT_CHOOSER)),
+        UNKNOWN(Collections.singletonList(ACCOUNT_CHOOSER)),
         BACKUP_ONLY(Arrays.asList(WELCOME_BACK, BACKUP_PASSPHRASE)),
         NEW_ACCOUNT(Arrays.asList(ACCOUNT_CHOOSER, VIEW_PASSPHRASE, BACKUP_PASSPHRASE)),
         EXISTING_ACCOUNT(Arrays.asList(ACCOUNT_CHOOSER, PASTE_PASSPHRASE));

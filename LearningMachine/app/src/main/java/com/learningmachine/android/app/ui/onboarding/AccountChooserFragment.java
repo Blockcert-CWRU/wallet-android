@@ -40,27 +40,20 @@ public class AccountChooserFragment extends OnboardingFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_account_chooser, container, false);
 
-        Laba.Animate(mBinding.newAccountButton, "!^300", () -> {
-            return null;
-        });
-        Laba.Animate(mBinding.existingAccountButton, "!^300", () -> {
-            return null;
-        });
+        Laba.Animate(mBinding.newAccountButton, "!^300", () -> null);
+        Laba.Animate(mBinding.existingAccountButton, "!^300", () -> null);
 
         String fileName = "android.resource://" + getActivity().getPackageName() + "/raw/background";
 
         mBinding.backgroundVideoCover.setAlpha(1.0f);
         mBinding.backgroundVideo.setVideoURI(Uri.parse(fileName));
-        mBinding.backgroundVideo.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                Timber.d("SETTING VIDEO SCALING MODE");
-                mp.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
-                mp.setLooping(true);
-                mp.setScreenOnWhilePlaying(false);
+        mBinding.backgroundVideo.setOnPreparedListener(mp -> {
+            Timber.d("SETTING VIDEO SCALING MODE");
+            mp.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
+            mp.setLooping(true);
+            mp.setScreenOnWhilePlaying(false);
 
-                Laba.Animate(mBinding.backgroundVideoCover, "d1|f0", null);
-            }
+            Laba.Animate(mBinding.backgroundVideoCover, "d1|f0", null);
         });
         mBinding.backgroundVideo.start();
 

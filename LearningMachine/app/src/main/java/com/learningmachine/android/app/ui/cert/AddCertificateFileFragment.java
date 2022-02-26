@@ -212,9 +212,7 @@ public class AddCertificateFileFragment extends LMFragment {
                     getResources().getString(R.string.no_files_downloaded_message),
                     null,
                     getResources().getString(R.string.ok_button),
-                    (btnIdx) -> {
-                        return null;
-                    });
+                    (btnIdx) -> null);
             return;
         }
 

@@ -28,6 +28,8 @@ import com.learningmachine.android.app.ui.home.HomeActivity;
 import com.learningmachine.android.app.util.DialogUtils;
 import com.learningmachine.android.app.util.StringUtils;
 
+import java.util.Objects;
+
 import javax.inject.Inject;
 
 import timber.log.Timber;
@@ -97,43 +99,35 @@ public class PastePassphraseFragment extends OnboardingFragment {
         mBinding.doneButton.setEnabled(false);
         mBinding.pastePassphraseEditText.setEnabled(false);
 
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                mBitcoinManager.setPassphrase(passphrase)
-                        .compose(bindToMainThread())
-                        .subscribe(wallet -> {
+        AsyncTask.execute(() -> mBitcoinManager.setPassphrase(passphrase)
+                .compose(bindToMainThread())
+                .subscribe(wallet -> {
+
+                    if(isVisible()) {
+
+                        Log.d("LM", "PastePassphraseFragment isVisible()");
+
+                        activity.runOnUiThread(() -> {
 
                             if(isVisible()) {
-
-                                Log.d("LM", "PastePassphraseFragment isVisible()");
-
-                                activity.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-
-                                        if(isVisible()) {
-                                            // if we return to the app by pasting in our passphrase, we
-                                            // must have already backed it up!
-                                            mSharedPreferencesManager.setHasSeenBackupPassphraseBefore(true);
-                                            mSharedPreferencesManager.setWasReturnUser(true);
-                                            mSharedPreferencesManager.setFirstLaunch(false);
-                                            if (continueDelayedURLsFromDeepLinking() == false) {
-                                                startActivity(new Intent(getActivity(), HomeActivity.class));
-                                                getActivity().finish();
-                                            }
-                                        }
-                                    }
-                                });
+                                // if we return to the app by pasting in our passphrase, we
+                                // must have already backed it up!
+                                mSharedPreferencesManager.setHasSeenBackupPassphraseBefore(true);
+                                mSharedPreferencesManager.setWasReturnUser(true);
+                                mSharedPreferencesManager.setFirstLaunch(false);
+                                if (!continueDelayedURLsFromDeepLinking()) {
+                                    startActivity(new Intent(getActivity(), HomeActivity.class));
+                                    Objects.requireNonNull(getActivity()).finish();
+                                }
                             }
-                            hideProgressDialog();
-                        }, e -> {
-                            Timber.e(e, "Could not set passphrase.");
-                            hideProgressDialog();
-                            displayErrorsLocal(e, DialogUtils.ErrorCategory.GENERIC, R.string.error_title_message);
                         });
-            }
-        });
+                    }
+                    hideProgressDialog();
+                }, e -> {
+                    Timber.e(e, "Could not set passphrase.");
+                    hideProgressDialog();
+                    displayErrorsLocal(e, DialogUtils.ErrorCategory.GENERIC, R.string.error_title_message);
+                }));
     }
 
 

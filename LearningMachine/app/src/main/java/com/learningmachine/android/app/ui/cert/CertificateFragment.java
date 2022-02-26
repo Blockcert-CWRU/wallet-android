@@ -340,9 +340,7 @@ public class CertificateFragment extends LMFragment {
                 getResources().getString(errorId),
                 null,
                 getResources().getString(R.string.ok_button),
-                (btnIdx) -> {
-                    return null;
-                });
+                (btnIdx) -> null);
     }
 
 

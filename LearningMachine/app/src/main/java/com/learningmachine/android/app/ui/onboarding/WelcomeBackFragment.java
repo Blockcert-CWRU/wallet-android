@@ -29,11 +29,9 @@ public class WelcomeBackFragment extends OnboardingFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_welcome_back, container, false);
 
-        mBinding.continueButton.setOnClickListener(view -> {
-            ((OnboardingActivity)getActivity()).onContinuePastWelcomeScreen();
-        });
+        mBinding.continueButton.setOnClickListener(view -> ((OnboardingActivity)getActivity()).onContinuePastWelcomeScreen());
 
-        Laba.Animate(mBinding.continueButton, "!^300", () -> { return null; });
+        Laba.Animate(mBinding.continueButton, "!^300", () -> null);
 
         return mBinding.getRoot();
     }

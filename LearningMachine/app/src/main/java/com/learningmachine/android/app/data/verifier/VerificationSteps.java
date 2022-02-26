@@ -8,7 +8,7 @@ public class VerificationSteps {
     public String code;
     public SubSteps[] subSteps;
 
-    public class SubSteps {
+    public static final class SubSteps {
         public String code;
         public String label;
         public String labelPending;

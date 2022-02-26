@@ -102,36 +102,33 @@ public class ViewPassphraseFragment extends OnboardingFragment {
 
             Activity activity = getActivity();
 
-            AsyncTask.execute(() -> mBitcoinManager.getPassphrase().delay(1500, TimeUnit.MILLISECONDS).subscribe(passphrase -> {
+            AsyncTask.execute(() -> mBitcoinManager.getPassphrase().delay(1500, TimeUnit.MILLISECONDS).subscribe(passphrase -> activity.runOnUiThread(() -> {
+                stopCountingTimer();
 
-                activity.runOnUiThread(() -> {
-                    stopCountingTimer();
+                if(isVisible()) {
 
-                    if(isVisible()) {
+                    Log.d("LM", "ViewPassphraseFragment isVisible()");
 
-                        Log.d("LM", "ViewPassphraseFragment isVisible()");
+                    didGeneratePassphrase = true;
 
-                        didGeneratePassphrase = true;
+                    Laba.Animate(mBinding.onboardingPassphraseDesc, "f0d0,!^!f", () -> null);
+                    Laba.Animate(mBinding.onboardingPassphraseTitle, "f0d0,,!^!f", () -> null);
+                    Laba.Animate(mBinding.onboardingPassphraseContent, "f0d0,,,!^!f", () -> null);
 
-                        Laba.Animate(mBinding.onboardingPassphraseDesc, "f0d0,!^!f", () -> null);
-                        Laba.Animate(mBinding.onboardingPassphraseTitle, "f0d0,,!^!f", () -> null);
-                        Laba.Animate(mBinding.onboardingPassphraseContent, "f0d0,,,!^!f", () -> null);
+                    mBinding.progressBar.clearAnimation();
+                    mBinding.progressBar.setVisibility(View.GONE);
 
-                        mBinding.progressBar.clearAnimation();
-                        mBinding.progressBar.setVisibility(View.GONE);
+                    mBinding.imageView2.setVisibility(View.VISIBLE);
+                    mBinding.onboardingPassphraseDesc.setVisibility(View.VISIBLE);
+                    mBinding.onboardingPassphraseTitle.setVisibility(View.VISIBLE);
+                    mBinding.onboardingPassphraseContent.setVisibility(View.VISIBLE);
 
-                        mBinding.imageView2.setVisibility(View.VISIBLE);
-                        mBinding.onboardingPassphraseDesc.setVisibility(View.VISIBLE);
-                        mBinding.onboardingPassphraseTitle.setVisibility(View.VISIBLE);
-                        mBinding.onboardingPassphraseContent.setVisibility(View.VISIBLE);
+                    mBinding.onboardingStatusText.setText(R.string.onboarding_passphrase_status_1);
+                    mBinding.onboardingPassphraseContent.setText(passphrase);
 
-                        mBinding.onboardingStatusText.setText(R.string.onboarding_passphrase_status_1);
-                        mBinding.onboardingPassphraseContent.setText(passphrase);
-
-                        mBinding.onboardingDoneButton.setEnabled(true);
-                    }
-                });
-            }));
+                    mBinding.onboardingDoneButton.setEnabled(true);
+                }
+            })));
         } else {
             mBinding.progressBar.clearAnimation();
             mBinding.progressBar.setVisibility(View.GONE);
