@@ -53,6 +53,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+@SuppressWarnings("all")
 public class Laba {
 
 	public String labaNotation;
@@ -91,7 +92,8 @@ public class Laba {
         public R apply (A a, B b);
     }
 
-    public static class LabaTimer {
+    @SuppressWarnings("rawtypes")
+	public static class LabaTimer {
 
         long startTime;
         long endTime;
@@ -162,6 +164,7 @@ public class Laba {
         }
     }
 
+	@SuppressWarnings("rawtypes")
 	public static class LabaAction extends Object {
 		public boolean inverse;
 		public Float rawValue;
