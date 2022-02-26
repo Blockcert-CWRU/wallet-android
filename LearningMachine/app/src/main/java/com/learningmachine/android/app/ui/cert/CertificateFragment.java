@@ -148,7 +148,7 @@ public class CertificateFragment extends LMFragment {
     }
 
     private String displayHTML(BlockCert certificate) {
-        String displayHTML = "";
+        String displayHTML;
 
         if (certificate instanceof BlockCertV20) {
             BlockCertV20 cert2 = (BlockCertV20) certificate;
@@ -226,7 +226,7 @@ public class CertificateFragment extends LMFragment {
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             // Handle local URLs
             Uri uri = Uri.parse(url);
-            if (uri.getScheme() != null && uri.getScheme().toLowerCase().equals("mailto")) {
+            if (uri.getScheme() != null && uri.getScheme().equalsIgnoreCase("mailto")) {
                 Intent intent = new Intent(Intent.ACTION_SENDTO, uri);
                 startActivity(intent);
                 return true;

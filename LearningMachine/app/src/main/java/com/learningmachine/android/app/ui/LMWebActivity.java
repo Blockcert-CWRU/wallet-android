@@ -36,13 +36,11 @@ public class LMWebActivity extends LMSingleFragmentActivity {
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (event.getAction() == KeyEvent.ACTION_DOWN) {
-            switch (keyCode) {
-                case KeyEvent.KEYCODE_BACK:
-                    if (mLmWebFragment != null) {
-                        mLmWebFragment.backPressed();
-                    }
-
-                    return true;
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                if (mLmWebFragment != null) {
+                    mLmWebFragment.backPressed();
+                }
+                return true;
             }
         }
 

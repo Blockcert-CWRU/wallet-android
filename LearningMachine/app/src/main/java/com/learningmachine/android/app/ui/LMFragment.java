@@ -37,9 +37,9 @@ import timber.log.Timber;
 
 public class LMFragment extends Fragment implements LifecycleProvider<FragmentEvent> {
 
-    // Used by LifecycleProvider interface to transform lifeycycle events into a stream of events through an observable.
+    // Used by LifecycleProvider interface to transform lifecycle events into a stream of events through an observable.
     private final BehaviorSubject<FragmentEvent> mLifecycleSubject = BehaviorSubject.create();
-    private Observable.Transformer mMainThreadTransformer;
+    private Observable.Transformer<?, ?> mMainThreadTransformer;
     private AlertDialog mProgressDialog;
 
     @Inject

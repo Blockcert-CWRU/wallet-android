@@ -44,7 +44,7 @@ public class AlertDialogFragment extends DialogFragment {
 
     @FunctionalInterface
     public interface Callback <A, R> {
-        public R apply (A a);
+        R apply(A a);
     }
 
     public Callback onCancel = null;
@@ -163,7 +163,7 @@ public class AlertDialogFragment extends DialogFragment {
             layoutID = args.getInt(ARG_LAYOUT);
         }
 
-        Dialog dialog = null;
+        Dialog dialog;
 
         if (bottomSheet) {
             dialog = new Dialog(getActivity(), R.style.bottom_dialog);
@@ -173,7 +173,7 @@ public class AlertDialogFragment extends DialogFragment {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
 
-        View dialogContent = null;
+        View dialogContent;
         LayoutInflater factory = LayoutInflater.from(getContext());
         if (layoutID > 0) {
             dialogContent = factory.inflate(layoutID, null);

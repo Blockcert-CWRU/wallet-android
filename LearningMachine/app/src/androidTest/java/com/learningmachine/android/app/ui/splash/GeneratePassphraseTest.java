@@ -139,7 +139,7 @@ public class GeneratePassphraseTest {
                 allOf(withId(R.id.onboarding_passphrase_content),
                         childAtPosition(
                                 childAtPosition(
-                                        IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class),
+                                        IsInstanceOf.instanceOf(android.widget.LinearLayout.class),
                                         1),
                                 1),
                         isDisplayed()));

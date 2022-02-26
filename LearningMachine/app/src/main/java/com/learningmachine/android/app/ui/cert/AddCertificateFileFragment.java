@@ -35,7 +35,6 @@ import com.learningmachine.android.app.util.DialogUtils;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -163,8 +162,6 @@ public class AddCertificateFileFragment extends LMFragment {
                         Timber.e(throwable, "Importing failed with error");
                         displayErrors(throwable, DialogUtils.ErrorCategory.CERTIFICATE, R.string.error_title_message);
                     });
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

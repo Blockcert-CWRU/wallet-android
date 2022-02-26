@@ -16,7 +16,7 @@ public class IssuerSchemaV11 {
      */
     @SerializedName("issuer_key")
     @Expose
-    private List<IssuerKey> issuerKey = new ArrayList<IssuerKey>();
+    private List<IssuerKey> issuerKey = new ArrayList<>();
     /**
      * 
      * (Required)
@@ -24,7 +24,7 @@ public class IssuerSchemaV11 {
      */
     @SerializedName("revocation_key")
     @Expose
-    private List<RevocationKey> revocationKey = new ArrayList<RevocationKey>();
+    private List<RevocationKey> revocationKey = new ArrayList<>();
 
     /**
      * 

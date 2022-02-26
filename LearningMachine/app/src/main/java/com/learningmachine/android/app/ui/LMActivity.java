@@ -40,11 +40,11 @@ import rx.subjects.BehaviorSubject;
 public abstract class LMActivity extends AppCompatActivity implements LifecycleProvider<ActivityEvent> {
     private static final int REQUEST_CREATE_BACKUP = 101;
     private static final int REQUEST_RESTORE_BACKUP = 102;
-    protected static Class lastImportantClassSeen = HomeActivity.class;
+    protected static Class<?> lastImportantClassSeen = HomeActivity.class;
 
-    // Used by LifecycleProvider interface to transform lifeycycle events into a stream of events through an observable.
+    // Used by LifecycleProvider interface to transform lifecycle events into a stream of events through an observable.
     private final BehaviorSubject<ActivityEvent> mLifecycleSubject = BehaviorSubject.create();
-    private Observable.Transformer mMainThreadTransformer;
+    private Observable.Transformer<?, ?> mMainThreadTransformer;
 
     @Inject protected PassphraseManager mPassphraseManager;
     private Uri mStorePassphraseBackupUri;
@@ -87,7 +87,7 @@ public abstract class LMActivity extends AppCompatActivity implements LifecycleP
          */
         setupActionBar();
 
-        Class c = this.getClass();
+        Class<?> c = this.getClass();
         if(c == HomeActivity.class || c == IssuerActivity.class || c == SettingsActivity.class) {
             lastImportantClassSeen = c;
         }
@@ -177,10 +177,9 @@ public abstract class LMActivity extends AppCompatActivity implements LifecycleP
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

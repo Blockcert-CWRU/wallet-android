@@ -17,7 +17,7 @@ class IssuerId {
      */
     @SerializedName("issuerKeys")
     @Expose
-    private List<IssuerKey> issuerKeys = new ArrayList<IssuerKey>();
+    private List<IssuerKey> issuerKeys = new ArrayList<>();
     /**
      * list of revocation keys, listed in descending date order (most recent first). V1.2 changes: renamed from revocation_key, added optional invalidated field.
      * (Required)
@@ -25,7 +25,7 @@ class IssuerId {
      */
     @SerializedName("revocationKeys")
     @Expose
-    private List<RevocationKey> revocationKeys = new ArrayList<RevocationKey>();
+    private List<RevocationKey> revocationKeys = new ArrayList<>();
     /**
      * The URL of the issuer's website or homepage
      * (Required)

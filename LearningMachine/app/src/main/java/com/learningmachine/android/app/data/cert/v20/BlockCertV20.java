@@ -120,7 +120,7 @@ public class BlockCertV20 extends CertSchemaV20 implements BlockCert {
             return null;
         }
 
-        String keyString = getVerification().getPublicKey().toString();
+        String keyString = getVerification().getPublicKey();
         if (keyString.startsWith(LMConstants.ECDSA_KOBLITZ_PUBKEY_PREFIX)) {
             keyString = keyString.substring(LMConstants.ECDSA_KOBLITZ_PUBKEY_PREFIX.length());
         }
@@ -187,13 +187,13 @@ public class BlockCertV20 extends CertSchemaV20 implements BlockCert {
             Anchor anchor = getSignature().getAnchors().get(0);
             String anchorChain = anchor.getChain();
             if (anchorChain != null) {
-                if (anchorChain.toLowerCase().equals("bitcoinmainnet")) {
+                if (anchorChain.equalsIgnoreCase("bitcoinmainnet")) {
                     return Anchor.ChainType.bitcoin;
-                } else if (anchorChain.toLowerCase().equals("bitcointestnet")) {
+                } else if (anchorChain.equalsIgnoreCase("bitcointestnet")) {
                     return Anchor.ChainType.testnet;
-                } else if (anchorChain.toLowerCase().equals("bitcoinregtest")) {
+                } else if (anchorChain.equalsIgnoreCase("bitcoinregtest")) {
                     return Anchor.ChainType.regtest;
-                } else if (anchorChain.toLowerCase().equals("mockchain")) {
+                } else if (anchorChain.equalsIgnoreCase("mockchain")) {
                     return Anchor.ChainType.mocknet;
                 } else {
                     return Anchor.ChainType.unknown;

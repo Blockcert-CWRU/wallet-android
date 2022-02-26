@@ -94,9 +94,7 @@ public class SettingsFragment extends LMFragment {
                         startActivity(intent);
                         return null;
                     },
-                    (dialogContent) -> {
-                        return null;
-                    });
+                    (dialogContent) -> null);
 
         });
 

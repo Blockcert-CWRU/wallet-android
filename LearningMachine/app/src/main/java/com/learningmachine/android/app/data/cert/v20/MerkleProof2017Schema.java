@@ -47,7 +47,7 @@ public class MerkleProof2017Schema {
      */
     @SerializedName("proof")
     @Expose
-    private List<Proof> proof = new ArrayList<Proof>();
+    private List<Proof> proof = new ArrayList<>();
     /**
      * 
      * (Required)
@@ -55,7 +55,7 @@ public class MerkleProof2017Schema {
      */
     @SerializedName("anchors")
     @Expose
-    private List<Anchor> anchors = new ArrayList<Anchor>();
+    private List<Anchor> anchors = new ArrayList<>();
 
     /**
      * A type or an array of types defined in a JSON-LD context file.

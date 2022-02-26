@@ -83,14 +83,14 @@ class Certificate {
      */
     @SerializedName("alignment")
     @Expose
-    private List<Alignment> alignment = new ArrayList<Alignment>();
+    private List<Alignment> alignment = new ArrayList<>();
     /**
      * An array of strings. TagsArray is not a controlled vocabulary; it's a folksonomy
      * 
      */
     @SerializedName("tags")
     @Expose
-    private Set<String> tags = new LinkedHashSet<String>();
+    private Set<String> tags = new LinkedHashSet<>();
     /**
      * Represents the ieft language and ieft country codes. Format is [ieft_language]-[IEFT_COUNTRY]. V1.2 changes: this field is optional
      * 

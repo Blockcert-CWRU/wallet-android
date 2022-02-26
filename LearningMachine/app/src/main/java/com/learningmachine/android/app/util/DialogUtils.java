@@ -19,6 +19,7 @@ import com.google.gson.stream.MalformedJsonException;
 import com.learningmachine.android.app.R;
 import com.learningmachine.android.app.data.error.ExceptionWithResourceString;
 import com.learningmachine.android.app.dialog.AlertDialogFragment;
+import com.learningmachine.android.app.dialog.AlertDialogFragment.Callback;
 
 import java.net.UnknownHostException;
 
@@ -60,7 +61,7 @@ public class DialogUtils {
         alertDialogFragment.show(fragmentManager, TAG_DIALOG_ALERT);
     }
 
-    public static void showAlertDialog(Context context, @NonNull Fragment targetFragment, int iconID, String title, String message, String positiveButton, String negativeButton, AlertDialogFragment.Callback callback) {
+    public static void showAlertDialog(Context context, @NonNull Fragment targetFragment, int iconID, String title, String message, String positiveButton, String negativeButton, Callback callback) {
         FragmentManager fragmentManager = targetFragment.getFragmentManager();
         AlertDialogFragment alertDialogFragment = AlertDialogFragment.newInstance(
                 false,
@@ -77,7 +78,7 @@ public class DialogUtils {
         alertDialogFragment.show(fragmentManager, TAG_DIALOG_ALERT);
     }
 
-    public static void showAlertDialog(Context context, @NonNull Fragment targetFragment, int iconID, String title, String message, String positiveButton, String negativeButton, AlertDialogFragment.Callback callback, AlertDialogFragment.Callback onCancel) {
+    public static void showAlertDialog(Context context, @NonNull Fragment targetFragment, int iconID, String title, String message, String positiveButton, String negativeButton, Callback callback, Callback onCancel) {
         FragmentManager fragmentManager = targetFragment.getFragmentManager();
         AlertDialogFragment alertDialogFragment = AlertDialogFragment.newInstance(
                 false,
@@ -94,7 +95,7 @@ public class DialogUtils {
         alertDialogFragment.show(fragmentManager, TAG_DIALOG_ALERT);
     }
 
-    public static AlertDialogFragment showCustomDialog(Context context, @NonNull Fragment targetFragment, int iconID, String title, String message, String positiveButton, String negativeButton, AlertDialogFragment.Callback onComplete, AlertDialogFragment.Callback onCreate, AlertDialogFragment.Callback onCancel) {
+    public static AlertDialogFragment showCustomDialog(Context context, @NonNull Fragment targetFragment, int iconID, String title, String message, String positiveButton, String negativeButton, Callback onComplete, Callback onCreate, Callback onCancel) {
         FragmentManager fragmentManager = targetFragment.getFragmentManager();
         AlertDialogFragment alertDialogFragment = AlertDialogFragment.newInstance(
                 false,
@@ -116,7 +117,7 @@ public class DialogUtils {
     public static AlertDialogFragment showCustomSheet(Context context, @NonNull Fragment targetFragment,
                                                       int layoutID, int iconID, String title, String message,
                                                       String positiveButton, String negativeButton,
-                                                      AlertDialogFragment.Callback onComplete, AlertDialogFragment.Callback onCreate) {
+                                                      Callback onComplete, Callback onCreate) {
         return showCustomSheet(context, targetFragment, layoutID, iconID, title, message,
                 positiveButton, negativeButton, onComplete, onCreate, null);
     }
@@ -124,8 +125,8 @@ public class DialogUtils {
     public static AlertDialogFragment showCustomSheet(Context context, @NonNull Fragment targetFragment,
                                                       int layoutID, int iconID, String title, String message,
                                                       String positiveButton, String negativeButton,
-                                                      AlertDialogFragment.Callback onComplete, AlertDialogFragment.Callback onCreate,
-                                                      AlertDialogFragment.Callback onCancel) {
+                                                      Callback onComplete, Callback onCreate,
+                                                      Callback onCancel) {
         FragmentManager fragmentManager = targetFragment.getFragmentManager();
         AlertDialogFragment alertDialogFragment = AlertDialogFragment.newInstance(
                 true,
@@ -201,20 +202,16 @@ public class DialogUtils {
             return exceptionWithResourceString.getErrorMessageResId();
         } else if (throwable instanceof JsonParseException) {
             //There was an error parsing json
-            switch(errorCategory) {
-                case CERTIFICATE:
-                    return R.string.invalid_credential_error;
-                default:
-                    return 0;
+            if (errorCategory == ErrorCategory.CERTIFICATE) {
+                return R.string.invalid_credential_error;
             }
+            return 0;
         } else if (throwable instanceof MalformedJsonException) {
-            switch(errorCategory) {
-                case ISSUER:
-                    //if the url json is malformed
-                    return R.string.invalid_issuer_url;
-                default:
-                    return 0;
+            //if the url json is malformed
+            if (errorCategory == ErrorCategory.ISSUER) {
+                return R.string.invalid_issuer_url;
             }
+            return 0;
         }
         else {
             return 0;

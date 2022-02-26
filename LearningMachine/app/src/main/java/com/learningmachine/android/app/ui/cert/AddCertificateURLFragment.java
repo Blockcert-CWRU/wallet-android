@@ -70,11 +70,7 @@ public class AddCertificateURLFragment extends LMFragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (mBinding.certificateEditText.getText().length() > 0) {
-                    mBinding.importButton.setEnabled(true);
-                } else {
-                    mBinding.importButton.setEnabled(false);
-                }
+                mBinding.importButton.setEnabled(mBinding.certificateEditText.getText().length() > 0);
             }
         });
 

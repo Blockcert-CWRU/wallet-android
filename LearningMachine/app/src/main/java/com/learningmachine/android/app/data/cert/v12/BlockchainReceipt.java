@@ -54,7 +54,7 @@ class BlockchainReceipt {
      */
     @SerializedName("proof")
     @Expose
-    private List<Proof> proof = new ArrayList<Proof>();
+    private List<Proof> proof = new ArrayList<>();
     /**
      * how the proof is anchored to the blockchain
      * (Required)
@@ -62,7 +62,7 @@ class BlockchainReceipt {
      */
     @SerializedName("anchors")
     @Expose
-    private List<Anchor> anchors = new ArrayList<Anchor>();
+    private List<Anchor> anchors = new ArrayList<>();
 
     /**
      * This should always be chainpoint v2 JSON LD context

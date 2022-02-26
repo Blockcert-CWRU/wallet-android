@@ -100,7 +100,7 @@ class Verify {
         @SerializedName("ECDSA(secp256k1)")
         ECDSA_SECP_256_K_1("ECDSA(secp256k1)");
         private final String value;
-        private final static Map<String, Verify.Type> CONSTANTS = new HashMap<String, Verify.Type>();
+        private final static Map<String, Verify.Type> CONSTANTS = new HashMap<>();
 
         static {
             for (Verify.Type c: values()) {

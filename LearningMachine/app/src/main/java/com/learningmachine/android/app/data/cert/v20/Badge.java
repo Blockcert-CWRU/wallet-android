@@ -83,14 +83,14 @@ public class Badge {
      */
     @SerializedName("alignment")
     @Expose
-    private List<Alignment> alignment = new ArrayList<Alignment>();
+    private List<Alignment> alignment = new ArrayList<>();
     /**
      * List of tags that describe the type of achievement.
      * 
      */
     @SerializedName("tags")
     @Expose
-    private Set<String> tags = new LinkedHashSet<String>();
+    private Set<String> tags = new LinkedHashSet<>();
     /**
      * Blockcerts extension: array of signature lines for display.
      * 

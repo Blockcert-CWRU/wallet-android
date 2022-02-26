@@ -23,7 +23,7 @@ public class AddAcceptingIssuerTest {
     public static final String WIREMOCK_SERVER = "http://10.0.2.2:1234";
 
     @Rule
-    public IntentsTestRule<AddIssuerActivity> mActivityTestRule = new IntentsTestRule<AddIssuerActivity>(AddIssuerActivity.class);
+    public IntentsTestRule<AddIssuerActivity> mActivityTestRule = new IntentsTestRule<>(AddIssuerActivity.class);
 
     @Test
     public void addAcceptingIssuerTest() {
