@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 
@@ -48,13 +49,13 @@ public class AddCertificateURLFragment extends LMFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        Injector.obtain(getContext())
+        Injector.obtain(nonNullContext())
                 .inject(this);
     }
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_add_certificate_url, container, false);
         mBinding.certificateEditText.setOnEditorActionListener(mActionListener);
 
@@ -119,7 +120,7 @@ public class AddCertificateURLFragment extends LMFragment {
                     hideProgressDialog();
                     Intent intent = CertificateActivity.newIntent(getContext(), uuid);
                     startActivity(intent);
-                    getActivity().finish();
+                    nonNullActivity().finish();
                 }, throwable -> {
                     Timber.e(throwable, "Failed to load certificate from " + url);
                     displayErrors(throwable, DialogUtils.ErrorCategory.CERTIFICATE, R.string.error_title_message);

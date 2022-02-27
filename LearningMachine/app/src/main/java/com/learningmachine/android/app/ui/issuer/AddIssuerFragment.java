@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 
@@ -46,13 +47,13 @@ public class AddIssuerFragment extends LMIssuerBaseFragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_add_issuer, container, false);
 
         handleArgs();
 
         mBinding.addIssuerUrlEditText.setText(mIntroUrl);
-        mBinding.addIssuerNonceEditText.setText(mNounce);
+        mBinding.addIssuerNonceEditText.setText(mNonce);
 
         mBinding.addIssuerNonceEditText.setOnEditorActionListener(mActionListener);
 
@@ -72,7 +73,7 @@ public class AddIssuerFragment extends LMIssuerBaseFragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mNounce = mBinding.addIssuerNonceEditText.getText().toString();
+                mNonce = mBinding.addIssuerNonceEditText.getText().toString();
                 CheckIfImportButtonShouldBeEnabled();
             }
         });
@@ -106,7 +107,7 @@ public class AddIssuerFragment extends LMIssuerBaseFragment {
         }
         if (!StringUtils.isEmpty(issuerNonce)) {
             mBinding.addIssuerNonceEditText.setText(issuerNonce);
-            mNounce = issuerNonce;
+            mNonce = issuerNonce;
         }
     }
 
@@ -132,8 +133,8 @@ public class AddIssuerFragment extends LMIssuerBaseFragment {
     }
 
     private void enableImportButton(boolean enable) {
-        if (getActivity() != null && !getActivity().isFinishing()) {
-            getActivity().runOnUiThread(() -> mBinding.importButton.setEnabled(enable));
+        if (!nonNullActivity().isFinishing()) {
+            nonNullActivity().runOnUiThread(() -> mBinding.importButton.setEnabled(enable));
         }
     }
 
@@ -141,15 +142,15 @@ public class AddIssuerFragment extends LMIssuerBaseFragment {
         hideProgressDialog();
 
         // Go back to the issuer's listing
-        startActivity(new Intent(getActivity(), HomeActivity.class));
-        getActivity().finish();
+        startActivity(new Intent(nonNullActivity(), HomeActivity.class));
+        nonNullActivity().finish();
     }
 
     private void viewIssuer(String uuid) {
         hideProgressDialog();
         Intent intent = IssuerActivity.newIntent(getContext(), uuid);
         startActivity(intent);
-        getActivity().finish();
+        nonNullActivity().finish();
     }
 
     private final TextView.OnEditorActionListener mActionListener = (v, actionId, event) -> {
@@ -160,5 +161,4 @@ public class AddIssuerFragment extends LMIssuerBaseFragment {
         }
         return false;
     };
-
 }

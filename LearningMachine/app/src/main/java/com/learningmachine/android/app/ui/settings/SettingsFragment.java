@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
@@ -49,13 +50,12 @@ public class SettingsFragment extends LMFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Injector.obtain(getContext())
-                .inject(this);
+        Injector.obtain(nonNullContext()).inject(this);
     }
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         FragmentSettingsBinding binding = DataBindingUtil.inflate(inflater,
                 R.layout.fragment_settings,
                 container,
@@ -85,16 +85,15 @@ public class SettingsFragment extends LMFragment {
                     "",
                     "",
                     (btnIdx) -> {
-                        if ((int)btnIdx == 0) {
+                        if (btnIdx.equals(0)) {
                             Timber.i("Add Credential from URL tapped in settings");
                         } else {
                             Timber.i("User has chosen to add a certificate from file");
                         }
-                        Intent intent = AddCertificateActivity.newIntent(getContext(), (int)btnIdx, null);
+                        Intent intent = AddCertificateActivity.newIntent(nonNullContext(), (int)btnIdx, null);
                         startActivity(intent);
-                        return null;
                     },
-                    (dialogContent) -> null);
+                    (dialogContent) -> {});
 
         });
 
@@ -105,7 +104,7 @@ public class SettingsFragment extends LMFragment {
             File file = FileUtils.getLogsFile(getContext(), false);
 
             Uri fileUri = FileProvider.getUriForFile(
-                    getContext(),
+                    nonNullContext(),
                     "com.learningmachine.android.app.fileprovider",
                     file);
 
@@ -113,8 +112,7 @@ public class SettingsFragment extends LMFragment {
             //send file using email
             Intent emailIntent = new Intent(Intent.ACTION_SEND);
             // the attachment
-            String type = getContext().getContentResolver()
-                    .getType(fileUri);
+            String type = nonNullContext().getContentResolver().getType(fileUri);
             emailIntent.setType(type);
             emailIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
             emailIntent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
@@ -150,8 +148,7 @@ public class SettingsFragment extends LMFragment {
     }
 
     private void setupReplacePassphrase(FragmentSettingsBinding binding) {
-
-        if (BuildConfig.DEBUG == false) {
+        if (!BuildConfig.DEBUG) {
             binding.settingsLogoutSeparator.setVisibility(View.GONE);
             binding.settingsLogout.setVisibility(View.GONE);
             return;
@@ -159,18 +156,17 @@ public class SettingsFragment extends LMFragment {
 
         binding.settingsLogout.setOnClickListener(v -> {
             String message = getResources().getString(R.string.settings_logout_legacy_message);
-            AlertDialogFragment.Callback<Integer, Void> callback = (btnIdx) -> {
-                if(btnIdx == 1) {
+            AlertDialogFragment.Callback callback = btnIdx -> {
+                if(btnIdx.equals(1)) {
                     mBitcoinManager.resetEverything();
 
-                    Intent intent = new Intent(getActivity(), OnboardingActivity.class);
+                    Intent intent = new Intent(nonNullActivity(), OnboardingActivity.class);
                     startActivity(intent);
-                    getActivity().finish();
+                    nonNullActivity().finish();
                 }
-                return null;
             };
 
-            DialogUtils.showAlertDialog(getContext(), this,
+            DialogUtils.showAlertDialog( this,
                     R.drawable.ic_dialog_failure,
                     getResources().getString(R.string.settings_logout_title),
                     message,

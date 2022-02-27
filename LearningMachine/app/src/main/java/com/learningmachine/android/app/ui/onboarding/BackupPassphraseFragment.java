@@ -13,6 +13,8 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 
 import com.learningmachine.android.app.R;
@@ -23,8 +25,6 @@ import com.learningmachine.android.app.dialog.AlertDialogFragment;
 import com.learningmachine.android.app.ui.home.HomeActivity;
 import com.learningmachine.android.app.util.DialogUtils;
 import com.smallplanet.labalib.Laba;
-
-import java.lang.reflect.InvocationTargetException;
 
 import javax.inject.Inject;
 
@@ -44,7 +44,7 @@ public class BackupPassphraseFragment extends OnboardingFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Injector.obtain(getContext())
+        Injector.obtain(nonNullContext())
                 .inject(this);
     }
 
@@ -58,7 +58,7 @@ public class BackupPassphraseFragment extends OnboardingFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_backup_passphrase, container, false);
 
         mBinding.onboardingDoneButton.setOnClickListener(view -> onDone());
@@ -111,31 +111,28 @@ public class BackupPassphraseFragment extends OnboardingFragment {
         mSharedPreferencesManager.setWasReturnUser(false);
         mSharedPreferencesManager.setFirstLaunch(false);
         if (!continueDelayedURLsFromDeepLinking()) {
-            startActivity(new Intent(getActivity(), HomeActivity.class));
-            getActivity().finish();
+            startActivity(new Intent(nonNullActivity(), HomeActivity.class));
+            nonNullActivity().finish();
         }
     }
 
     protected void onSave() {
-        ((OnboardingActivity)getActivity()).askToSavePassphraseToDevice(mPassphrase, (passphrase) -> {
+        ((OnboardingActivity)nonNullActivity()).askToSavePassphraseToDevice(mPassphrase, (passphrase) -> {
             if(passphrase == null) {
                 if(Build.VERSION.SDK_INT >= 23) {
                     return;
                 }
-                DialogUtils.showAlertDialog(getContext(), this,
+                DialogUtils.showAlertDialog( this,
                         R.drawable.ic_dialog_failure,
                         getResources().getString(R.string.onboarding_passphrase_permissions_error_title),
                         getResources().getString(R.string.onboarding_passphrase_permissions_error),
                         getResources().getString(R.string.ok_button),
                         null,
-                        (btnIdx) -> {
-                            HandleBackupOptionCompleted(null);
-                            return null;
-                        });
+                        (btnIdx) -> HandleBackupOptionCompleted(null));
                 return;
             }
 
-            DialogUtils.showAlertDialog(getContext(), this,
+            DialogUtils.showAlertDialog( this,
                     R.drawable.ic_dialog_success,
                     getResources().getString(R.string.onboarding_passphrase_complete_title),
                     getResources().getString(R.string.onboarding_passphrase_save_complete),
@@ -145,19 +142,17 @@ public class BackupPassphraseFragment extends OnboardingFragment {
                         if(mBinding != null) {
                             HandleBackupOptionCompleted(mBinding.onboardingSaveCheckmark);
                         }
-                        return null;
                     }, (cancel) -> {
                         if(mBinding != null) {
                             HandleBackupOptionCompleted(mBinding.onboardingSaveCheckmark);
                         }
-                        return null;
                     });
         });
     }
 
     protected void onEmail() {
 
-        DialogUtils.showAlertDialog(getContext(), this,
+        DialogUtils.showAlertDialog( this,
                 0,
                 getResources().getString(R.string.onboarding_passphrase_email_before_title),
                 getResources().getString(R.string.onboarding_passphrase_email_before),
@@ -165,7 +160,7 @@ public class BackupPassphraseFragment extends OnboardingFragment {
                 getResources().getString(R.string.ok_button),
                 (btnIdx) -> {
 
-                    if((int)btnIdx == 0) {
+                    if(btnIdx.equals(0)) {
                         Intent intent = new Intent(Intent.ACTION_SEND);
                         intent.setType("text/plain");
                         intent.putExtra(Intent.EXTRA_SUBJECT, "Blockcerts Backup");
@@ -173,11 +168,10 @@ public class BackupPassphraseFragment extends OnboardingFragment {
                         Intent mailer = Intent.createChooser(intent, null);
                         startActivity(mailer);
 
-                        if(mBinding != null) {
+                        if (mBinding != null) {
                             HandleBackupOptionCompleted(mBinding.onboardingEmailCheckmark);
                         }
                     }
-                    return null;
                 });
     }
 
@@ -193,18 +187,17 @@ public class BackupPassphraseFragment extends OnboardingFragment {
                     if(mBinding != null) {
                         HandleBackupOptionCompleted(mBinding.onboardingWriteCheckmark);
                     }
-                    return null;
                 },
                 (dialogContent) -> {
 
                     // Set the content of the passphrase text field
                     View view = (View)dialogContent;
-                    TextView passphraseView = (TextView)view.findViewById(R.id.onboarding_passphrase_content);
+                    TextView passphraseView = view.findViewById(R.id.onboarding_passphrase_content);
                     passphraseView.setText(mPassphrase);
 
                     // For this dialog, we want to fill the whole screen regardless of the size of the content
                     // 1) Dialog width should be 80% of the width of the screen
-                    Point appUsableSize = getAppUsableScreenSize(getContext());
+                    Point appUsableSize = getAppUsableScreenSize(nonNullContext());
 
                     int idealDialogWidth = appUsableSize.x;
                     int idealDialogHeight = (int)(appUsableSize.y - Laba.dp2px(24));
@@ -213,8 +206,6 @@ public class BackupPassphraseFragment extends OnboardingFragment {
                     view.setMinimumHeight(idealDialogHeight);
 
                     view.setLayoutParams(new FrameLayout.LayoutParams(idealDialogWidth, idealDialogHeight));
-
-                    return null;
                 });
 
         fragment.forceFullscreen = true;
@@ -270,16 +261,7 @@ public class BackupPassphraseFragment extends OnboardingFragment {
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = windowManager.getDefaultDisplay();
         Point size = new Point();
-
-        if (Build.VERSION.SDK_INT >= 17) {
-            display.getRealSize(size);
-        } else if (Build.VERSION.SDK_INT >= 14) {
-            try {
-                size.x = (Integer) Display.class.getMethod("getRawWidth").invoke(display);
-                size.y = (Integer) Display.class.getMethod("getRawHeight").invoke(display);
-            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ignored) {}
-        }
-
+        display.getRealSize(size);
         return size;
     }
 }

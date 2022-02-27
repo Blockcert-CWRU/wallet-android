@@ -11,7 +11,6 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -27,6 +26,9 @@ import com.trello.rxlifecycle.RxLifecycle;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import com.trello.rxlifecycle.android.RxLifecycleAndroid;
 
+import java.util.Objects;
+import java.util.function.Consumer;
+
 import javax.inject.Inject;
 
 import rx.Observable;
@@ -35,7 +37,7 @@ import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
 import timber.log.Timber;
 
-public class LMFragment extends Fragment implements LifecycleProvider<FragmentEvent> {
+public class LMFragment extends AbstractLMFragment implements LifecycleProvider<FragmentEvent> {
 
     // Used by LifecycleProvider interface to transform lifecycle events into a stream of events through an observable.
     private final BehaviorSubject<FragmentEvent> mLifecycleSubject = BehaviorSubject.create();
@@ -60,12 +62,11 @@ public class LMFragment extends Fragment implements LifecycleProvider<FragmentEv
         super.onCreate(savedInstanceState);
         mLifecycleSubject.onNext(FragmentEvent.CREATE);
         Timber.d("onCreate: " + getFileExtension(this.getClass().toString()));
-        Injector.obtain(getContext())
-                .inject(this);
+        Injector.obtain(nonNullContext()).inject(this);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mLifecycleSubject.onNext(FragmentEvent.CREATE_VIEW);
     }
@@ -150,30 +151,22 @@ public class LMFragment extends Fragment implements LifecycleProvider<FragmentEv
     protected void displayErrors(Throwable throwable, DialogUtils.ErrorCategory errorCategory, @StringRes int errorTitleResId) {
         Timber.e(throwable, "Displaying error");
         hideProgressDialog();
-        DialogUtils.showErrorAlertDialog(getContext(), getFragmentManager(), errorTitleResId, throwable, errorCategory);
+        DialogUtils.showErrorAlertDialog(nonNullContext(), getFragmentManager(), errorTitleResId, throwable, errorCategory);
     }
 
     protected void displayErrors(int errorID, Throwable throwable, DialogUtils.ErrorCategory errorCategory, @StringRes int errorTitleResId) {
         hideProgressDialog();
-        DialogUtils.showErrorAlertDialog(getContext(), getFragmentManager(), errorTitleResId, errorID, throwable, errorCategory);
+        DialogUtils.showErrorAlertDialog(nonNullContext(), getFragmentManager(), errorTitleResId, errorID, throwable, errorCategory);
     }
 
     protected void displayProgressDialog(@StringRes int progressMessageResId) {
-        FragmentActivity parentActivity = getActivity();
-        if (parentActivity == null) {
-            return;
-        }
-        getActivity().runOnUiThread(() -> mProgressDialog = DialogUtils.showProgressDialog(getContext(), getString(progressMessageResId)));
+        nonNullActivity().runOnUiThread(() -> mProgressDialog = DialogUtils.showProgressDialog(getContext(), getString(progressMessageResId)));
 
     }
 
     protected void hideProgressDialog() {
         if (mProgressDialog != null) {
-            FragmentActivity parentActivity = getActivity();
-            if (parentActivity == null) {
-                return;
-            }
-            getActivity().runOnUiThread(() -> mProgressDialog.dismiss());
+            nonNullActivity().runOnUiThread(() -> mProgressDialog.dismiss());
         }
     }
 
@@ -221,14 +214,14 @@ public class LMFragment extends Fragment implements LifecycleProvider<FragmentEv
     }
 
     private void showVersionDialog() {
-        DialogUtils.showAlertDialog(getContext(), this,
+        DialogUtils.showAlertDialog( this,
                 R.drawable.ic_dialog_warning,
                 getResources().getString(R.string.check_version_title),
                 getResources().getString(R.string.check_version_message),
                 getResources().getString(R.string.ok_button),
                 getResources().getString(R.string.check_version_message_cancel_title),
                 (btnIdx) -> {
-                    if((int)btnIdx == 1) {
+                    if(btnIdx.equals(1)) {
                         try {
                             startActivity(new Intent(Intent.ACTION_VIEW,
                                     Uri.parse(LMConstants.PLAY_STORE_URL)));
@@ -239,22 +232,19 @@ public class LMFragment extends Fragment implements LifecycleProvider<FragmentEv
                     } else {
                         Timber.i("User is not going to play store to update");
                     }
-                    return null;
                 });
     }
 
     // Snackbars
 
     protected void showSnackbar(View view, int messageResId) {
-        Snackbar.make(view, messageResId, Snackbar.LENGTH_LONG)
-                .show();
+        Snackbar.make(view, messageResId, Snackbar.LENGTH_LONG).show();
     }
 
     // Keyboard
 
     protected void hideKeyboard() {
-        LMActivity activity = (LMActivity) getActivity();
-        activity.hideKeyboard();
+        ((LMActivity) nonNullActivity()).hideKeyboard();
     }
 
     public static String getFileExtension(String name) {
@@ -263,5 +253,24 @@ public class LMFragment extends Fragment implements LifecycleProvider<FragmentEv
         } catch (Exception e) {
             return "";
         }
+    }
+
+    protected void runOnActivity(Consumer<FragmentActivity> task) {
+        task.accept(nonNullActivity());
+    }
+
+    @NonNull
+    public Bundle nonNullArguments() {
+        return Objects.requireNonNull(getArguments());
+    }
+
+    @NonNull
+    public FragmentActivity nonNullActivity() {
+        return Objects.requireNonNull(getActivity());
+    }
+
+    @NonNull
+    public Context nonNullContext() {
+        return Objects.requireNonNull(getContext());
     }
 }

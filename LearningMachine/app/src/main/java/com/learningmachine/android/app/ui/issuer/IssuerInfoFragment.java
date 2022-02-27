@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 
@@ -39,16 +40,15 @@ public class IssuerInfoFragment extends LMFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Injector.obtain(getContext())
-                .inject(this);
+        Injector.obtain(nonNullContext()).inject(this);
     }
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_issuer_info, container, false);
 
-        String issuerUuid = getArguments().getString(ARG_ISSUER_UUID);
+        String issuerUuid = nonNullArguments().getString(ARG_ISSUER_UUID);
         // TODO: should find the bitcoin address that was sent to the issuer
         mIssuerManager.getIssuer(issuerUuid)
                 .compose(bindToMainThread())

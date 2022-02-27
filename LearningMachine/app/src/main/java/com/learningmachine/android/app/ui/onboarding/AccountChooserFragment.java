@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 
 import com.learningmachine.android.app.R;
@@ -37,13 +38,13 @@ public class AccountChooserFragment extends OnboardingFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_account_chooser, container, false);
 
         Laba.Animate(mBinding.newAccountButton, "!^300", () -> null);
         Laba.Animate(mBinding.existingAccountButton, "!^300", () -> null);
 
-        String fileName = "android.resource://" + getActivity().getPackageName() + "/raw/background";
+        String fileName = "android.resource://" + nonNullActivity().getPackageName() + "/raw/background";
 
         mBinding.backgroundVideoCover.setAlpha(1.0f);
         mBinding.backgroundVideo.setVideoURI(Uri.parse(fileName));

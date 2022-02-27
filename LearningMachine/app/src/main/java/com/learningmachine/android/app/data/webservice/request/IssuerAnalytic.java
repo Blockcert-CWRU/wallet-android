@@ -9,13 +9,13 @@ import com.learningmachine.android.app.BuildConfig;
 public class IssuerAnalytic {
 
     @SerializedName("key")
-    private String mKey;
+    private final String mKey;
     @SerializedName("action")
-    private Action mAction;
+    private final Action mAction;
     @SerializedName("application")
-    private String mApplicationString;
+    private final String mApplicationString;
     @SerializedName("platform")
-    private String mPlatformString;
+    private final String mPlatformString;
 
     public IssuerAnalytic(String key, Action action) {
         mKey = key;

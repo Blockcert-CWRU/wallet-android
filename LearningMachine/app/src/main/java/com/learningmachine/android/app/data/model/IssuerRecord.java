@@ -1,5 +1,7 @@
 package com.learningmachine.android.app.data.model;
 
+import androidx.annotation.NonNull;
+
 import com.google.common.base.Strings;
 import com.google.gson.annotations.SerializedName;
 import com.learningmachine.android.app.LMConstants;
@@ -167,6 +169,7 @@ public class IssuerRecord {
     // generally expensive to calculate
     public int cachedNumberOfCertificatesForIssuer = -1;
 
+    @NonNull
     @Override
     public String toString() {
         return mIntroUrl;

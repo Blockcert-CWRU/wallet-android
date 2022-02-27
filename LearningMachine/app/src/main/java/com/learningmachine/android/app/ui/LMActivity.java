@@ -14,6 +14,7 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -290,7 +291,7 @@ public abstract class LMActivity extends AppCompatActivity implements LifecycleP
     private boolean didReceivePermissionsCallback = false;
     private boolean didSucceedInPermissionsRequest = false;
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         // Note: this really sucks, but android will crash if we try and display dialogs in the permissions

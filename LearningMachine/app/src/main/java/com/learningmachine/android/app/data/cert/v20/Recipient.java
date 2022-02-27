@@ -1,6 +1,8 @@
 
 package com.learningmachine.android.app.data.cert.v20;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -164,6 +166,7 @@ class Recipient {
             this.value = value;
         }
 
+        @NonNull
         @Override
         public String toString() {
             return this.value;

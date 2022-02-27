@@ -54,7 +54,7 @@ public class ApiModule {
                 ResponseBody responseBody = response.body();
                 BufferedSource source = responseBody.source();
                 source.request(Long.MAX_VALUE);
-                Buffer buffer = source.buffer();
+                Buffer buffer = source.getBuffer();
                 String responseBodyString = buffer.clone().readString(StandardCharsets.UTF_8);
                 Timber.d(String.format("response body: %s", responseBodyString));
             }

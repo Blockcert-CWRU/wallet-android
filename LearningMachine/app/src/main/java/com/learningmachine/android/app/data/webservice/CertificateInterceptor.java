@@ -1,6 +1,8 @@
 package com.learningmachine.android.app.data.webservice;
 
 
+import androidx.annotation.NonNull;
+
 import java.io.IOException;
 
 import javax.inject.Inject;
@@ -18,6 +20,7 @@ public class CertificateInterceptor implements Interceptor {
     @Inject
     public CertificateInterceptor() {}
 
+    @NonNull
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();

@@ -64,27 +64,26 @@ public class CertificateInfoFragment extends LMFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        Injector.obtain(getContext())
-                .inject(this);
+        Injector.obtain(nonNullContext()).inject(this);
     }
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_certificate_info, container, false);
 
         mBinding.certificateInfoRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         mBinding.deleteButton.setOnClickListener(v -> {
             Timber.i("User has tapped the delete button on this certificate");
-            DialogUtils.showAlertDialog(getContext(), this,
+            DialogUtils.showAlertDialog( this,
                     0,
                     getResources().getString(R.string.fragment_certificate_info_delete_warning_title),
                     getResources().getString(R.string.fragment_certificate_info_delete_warning_message),
                     getResources().getString(R.string.fragment_certificate_info_delete_warning_positive_title),
                     getResources().getString(R.string.fragment_certificate_info_delete_warning_negative_title),
                     (btnIdx) -> {
-                        if((int)btnIdx == 0) {
+                        if(btnIdx.equals(0)) {
                             String uuid = mCertificate.getUuid();
                             mCertificateManager.removeCertificate(uuid)
                                     .compose(bindToMainThread())
@@ -95,16 +94,15 @@ public class CertificateInfoFragment extends LMFragment {
                                         } else {
                                             Timber.e(String.format("Deleting certificate %s failed", mCertificate.getUuid()));
                                         }
-                                        ((LMActivity)getActivity()).safeGoBack();
+                                        ((LMActivity)nonNullActivity()).safeGoBack();
                                     });
                         } else {
                             Timber.i("User canceled the deletion of the certificate");
                         }
-                        return null;
                     });
         });
 
-        String certificateUuid = getArguments().getString(ARG_CERTIFICATE_UUID);
+        String certificateUuid = nonNullArguments().getString(ARG_CERTIFICATE_UUID);
 
         mCertificateManager.getCertificate(certificateUuid)
                 .flatMap(certificate -> {
@@ -183,7 +181,7 @@ public class CertificateInfoFragment extends LMFragment {
             if (StringUtils.isEmpty(metadataString)) {
                 return viewModels;
             }
-            MetadataParser metadataParser = new MetadataParser(getContext());
+            MetadataParser metadataParser = new MetadataParser(nonNullContext());
             try {
                 Metadata metadata = metadataParser.fromJson(metadataString);
                 for (Field field : metadata.getFields()) {
@@ -195,6 +193,7 @@ public class CertificateInfoFragment extends LMFragment {
             return viewModels;
         }
 
+        @NonNull
         @Override
         public CertificateInfoItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             Context context = parent.getContext();

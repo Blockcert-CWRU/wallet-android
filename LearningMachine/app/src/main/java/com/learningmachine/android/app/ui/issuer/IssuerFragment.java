@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -62,17 +63,16 @@ public class IssuerFragment extends LMFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        Injector.obtain(getContext())
-                .inject(this);
+        Injector.obtain(nonNullContext()).inject(this);
 
-        mIssuerUuid = getArguments().getString(ARG_ISSUER_UUID);
+        mIssuerUuid = nonNullArguments().getString(ARG_ISSUER_UUID);
 
         mCertificateList = new ArrayList<>();
     }
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_issuer, container, false);
 
         mBinding.addCertificateFloatingActionButton.setOnClickListener(v -> {
@@ -86,16 +86,15 @@ public class IssuerFragment extends LMFragment {
                     "",
                     (btnIdx) -> {
 
-                        if ((int)btnIdx == 0) {
+                        if (btnIdx.equals(0)) {
                             Timber.i("Add Credential from URL tapped in issuer view");
                         } else {
                             Timber.i("User has chosen to add a certificate from file");
                         }
-                        Intent intent = AddCertificateActivity.newIntent(getContext(), (int)btnIdx, null);
+                        Intent intent = AddCertificateActivity.newIntent(nonNullContext(), (int)btnIdx, null);
                         startActivity(intent);
-                        return null;
                     },
-                    (dialogContent) -> null);
+                    (dialogContent) -> {});
         });
 
         setupRecyclerView();
@@ -169,8 +168,9 @@ public class IssuerFragment extends LMFragment {
             mCertificateList = certificateList;
         }
 
+        @NonNull
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             if(viewType == 0) {
                 Context context = parent.getContext();
                 LayoutInflater inflater = LayoutInflater.from(context);

@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -76,7 +77,7 @@ public class HomeFragment extends LMIssuerBaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        Injector.obtain(getContext())
+        Injector.obtain(nonNullContext())
                 .inject(this);
 
         mIssuerList = new ArrayList<>();
@@ -84,12 +85,12 @@ public class HomeFragment extends LMIssuerBaseFragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false);
 
         handleArgs();
 
-        if (ARG_LINK_TYPE_ISSUER.equals(mLinkType) && !StringUtils.isEmpty(super.mIntroUrl) && !StringUtils.isEmpty(super.mNounce)) {
+        if (ARG_LINK_TYPE_ISSUER.equals(mLinkType) && !StringUtils.isEmpty(super.mIntroUrl) && !StringUtils.isEmpty(super.mNonce)) {
             startIssuerIntroduction();
         } else if (ARG_LINK_TYPE_CERT.equals(mLinkType) && !StringUtils.isEmpty(super.mCertUrl)) {
             addCertificate();
@@ -117,12 +118,10 @@ public class HomeFragment extends LMIssuerBaseFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.fragment_home_settings_menu_item:
-                Timber.i("Settings button tapped");
-                Intent intent = SettingsActivity.newIntent(getContext());
-                startActivity(intent);
-                break;
+        if (item.getItemId() == R.id.fragment_home_settings_menu_item) {
+            Timber.i("Settings button tapped");
+            Intent intent = SettingsActivity.newIntent(getContext());
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -131,7 +130,7 @@ public class HomeFragment extends LMIssuerBaseFragment {
         IssuerAdapter adapter = new IssuerAdapter(mIssuerList);
         mBinding.issuerRecyclerview.setAdapter(adapter);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(nonNullActivity(), LinearLayoutManager.VERTICAL, false);
 
         mBinding.issuerRecyclerview.setLayoutManager(layoutManager);
     }
@@ -166,8 +165,7 @@ public class HomeFragment extends LMIssuerBaseFragment {
         }
 
         if (issuerList.isEmpty()) {
-            mBinding.issuerRecyclerview.getAdapter()
-                    .notifyDataSetChanged();
+            mBinding.issuerRecyclerview.getAdapter().notifyDataSetChanged();
             mBinding.issuerMainContent.setVisibility(View.GONE);
             mBinding.issuerEmptyContent.setVisibility(View.VISIBLE);
         }
@@ -201,8 +199,9 @@ public class HomeFragment extends LMIssuerBaseFragment {
             mIssuerList = issuerList;
         }
 
+        @NonNull
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             if(viewType == 0) {
                 Context context = parent.getContext();
                 LayoutInflater inflater = LayoutInflater.from(context);
@@ -229,7 +228,7 @@ public class HomeFragment extends LMIssuerBaseFragment {
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             if(position > 0) {
                 IssuerRecord issuer = mIssuerList.get(position - 1);
                 ((IssuerViewHolder)holder).bind(issuer);
@@ -258,7 +257,7 @@ public class HomeFragment extends LMIssuerBaseFragment {
             mIntroUrl = issuerUrlString;
         }
         if (!StringUtils.isEmpty(issuerNonce)) {
-            mNounce = issuerNonce;
+            mNonce = issuerNonce;
         }
         startIssuerIntroduction();
     }

@@ -27,8 +27,7 @@ public class OnboardingFragment extends LMFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        Injector.obtain(getContext())
-                .inject(this);
+        Injector.obtain(nonNullContext()).inject(this);
     }
 
     public void didFindSavedPassphrase(String passphrase) {
@@ -58,6 +57,6 @@ public class OnboardingFragment extends LMFragment {
 
     private void startActivityAndFinish(Intent intent) {
         startActivity(intent);
-        getActivity().finish();
+        nonNullActivity().finish();
     }
 }

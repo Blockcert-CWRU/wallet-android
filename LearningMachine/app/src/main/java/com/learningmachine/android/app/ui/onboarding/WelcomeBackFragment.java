@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 
 import com.learningmachine.android.app.R;
@@ -13,8 +15,6 @@ import com.learningmachine.android.app.databinding.FragmentWelcomeBackBinding;
 import com.smallplanet.labalib.Laba;
 
 public class WelcomeBackFragment extends OnboardingFragment {
-
-    private FragmentWelcomeBackBinding mBinding;
 
     public static WelcomeBackFragment newInstance() {
         return new WelcomeBackFragment();
@@ -26,13 +26,10 @@ public class WelcomeBackFragment extends OnboardingFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_welcome_back, container, false);
-
-        mBinding.continueButton.setOnClickListener(view -> ((OnboardingActivity)getActivity()).onContinuePastWelcomeScreen());
-
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        FragmentWelcomeBackBinding mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_welcome_back, container, false);
+        mBinding.continueButton.setOnClickListener(view -> ((OnboardingActivity)nonNullActivity()).onContinuePastWelcomeScreen());
         Laba.Animate(mBinding.continueButton, "!^300", () -> null);
-
         return mBinding.getRoot();
     }
 }

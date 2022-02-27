@@ -10,9 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
 
 import com.learningmachine.android.app.R;
 import com.learningmachine.android.app.data.cert.v20.Anchor;
@@ -20,15 +20,17 @@ import com.learningmachine.android.app.data.inject.Injector;
 import com.learningmachine.android.app.data.verifier.VerificationSteps;
 import com.learningmachine.android.app.data.verifier.VerifierStatus;
 import com.learningmachine.android.app.databinding.FragmentVerifyCertificateBinding;
+import com.learningmachine.android.app.ui.AbstractLMFragment;
 import com.learningmachine.android.app.util.DialogUtils;
 import com.learningmachine.android.app.util.FileUtils;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class VerifyCertificateFragment extends Fragment {
+public class VerifyCertificateFragment extends AbstractLMFragment {
     private static final String ARG_CERTIFICATE_UUID = "VerifyCertificateFragment.CertificateUuid";
 
     private String mCertUuid;
@@ -49,7 +51,7 @@ public class VerifyCertificateFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mParentActivity = new WeakReference<>(getActivity());
+        mParentActivity = new WeakReference<>(nonNullActivity());
     }
 
     @Override
@@ -57,12 +59,12 @@ public class VerifyCertificateFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Injector.obtain(mParentActivity.get())
                 .inject(this);
-        mCertUuid = getArguments().getString(ARG_CERTIFICATE_UUID);
+        mCertUuid = nonNullArguments().getString(ARG_CERTIFICATE_UUID);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_verify_certificate, container, false);
         return mBinding.getRoot();
     }
@@ -138,14 +140,17 @@ public class VerifyCertificateFragment extends Fragment {
             // 2. copy the certificate to "certificate.json"
             // 3. return the URL to the HTML file
 
-            FileUtils.copyAssetFile(getContext(), "www/verifier.js", "verifier.js");
-            FileUtils.copyAssetFile(getContext(), "www/verify.html", "verify.html");
+            Context context = nonNullContext();
 
-            String certificateJSON = FileUtils.getCertificateFileJSON(getContext(), mCertUuid);
-            String localJsonPath = getContext().getFilesDir() + "/" + "certificate.json";
+            FileUtils.copyAssetFile(context, "www/verifier.js", "verifier.js");
+            FileUtils.copyAssetFile(context, "www/verify.html", "verify.html");
+
+            String certificateJSON = FileUtils.getCertificateFileJSON(context, mCertUuid);
+            File filesDir = context.getFilesDir();
+            String localJsonPath = filesDir + "/" + "certificate.json";
             FileUtils.writeStringToFile(certificateJSON, localJsonPath);
 
-            return "file://" + getContext().getFilesDir() + "/" + "verify.html";
+            return "file://" + filesDir + "/" + "verify.html";
 
         } catch (Exception e) {
             return "Unable to prepare the certificate verification system<br>"+e.toString();
@@ -153,23 +158,23 @@ public class VerifyCertificateFragment extends Fragment {
     }
 
     private void showVerificationFailureDialog(int errorId) {
-        DialogUtils.showAlertDialog(getContext(), this,
+        DialogUtils.showAlertDialog( this,
                 R.drawable.ic_dialog_failure,
                 getResources().getString(R.string.cert_verification_failure_title),
                 getResources().getString(errorId),
                 null,
                 getResources().getString(R.string.ok_button),
-                (btnIdx) -> null);
+                (btnIdx) -> {});
     }
 
     private void showVerificationFailureDialog(String error, String title) {
-        DialogUtils.showAlertDialog(getContext(), this,
+        DialogUtils.showAlertDialog( this,
                 R.drawable.ic_dialog_failure,
                 title,
                 error,
                 null,
                 getResources().getString(R.string.ok_button),
-                (btnIdx) -> null);
+                (btnIdx) -> {});
     }
 
     public static boolean isOnline(Context context) {
@@ -179,7 +184,7 @@ public class VerifyCertificateFragment extends Fragment {
     }
 
     private void verifyCertificate() {
-        if (!isOnline(getContext())) {
+        if (!isOnline(nonNullContext())) {
             showVerificationFailureDialog(getString(R.string.error_no_internet_message),
                     getString(R.string.error_no_internet_title));
             return;
@@ -228,7 +233,7 @@ public class VerifyCertificateFragment extends Fragment {
          */
         @android.webkit.JavascriptInterface
         public void notifyVerificationSteps(String verificationStepsStr) {
-            mVerificationSteps = VerificationSteps.getFromString(verificationStepsStr);
+            VerificationSteps[] mVerificationSteps = VerificationSteps.getFromString(verificationStepsStr);
             setupStatus(mVerificationSteps, mChainName);
         }
 

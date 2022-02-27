@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -36,13 +37,13 @@ public class RevealPassphraseFragment extends LMFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Injector.obtain(getContext())
+        Injector.obtain(nonNullContext())
                 .inject(this);
     }
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater,
                 R.layout.fragment_reveal_passphrase,
                 container,
@@ -81,25 +82,22 @@ public class RevealPassphraseFragment extends LMFragment {
 
 
     protected void onSave() {
-        ((LMActivity)getActivity()).askToSavePassphraseToDevice(mPassphrase, (passphrase) -> {
+        ((LMActivity)nonNullActivity()).askToSavePassphraseToDevice(mPassphrase, (passphrase) -> {
             if(passphrase == null) {
                 if(Build.VERSION.SDK_INT >= 23) {
                     return;
                 }
-                DialogUtils.showAlertDialog(getContext(), this,
+                DialogUtils.showAlertDialog( this,
                         R.drawable.ic_dialog_failure,
                         getResources().getString(R.string.onboarding_passphrase_permissions_error_title),
                         getResources().getString(R.string.onboarding_passphrase_permissions_error),
                         getResources().getString(R.string.ok_button),
                         null,
-                        (btnIdx) -> {
-                            HandleBackupOptionCompleted(null);
-                            return null;
-                        });
+                        (btnIdx) -> HandleBackupOptionCompleted(null));
                 return;
             }
 
-            DialogUtils.showAlertDialog(getContext(), this,
+            DialogUtils.showAlertDialog(this,
                     R.drawable.ic_dialog_success,
                     getResources().getString(R.string.onboarding_passphrase_complete_title),
                     getResources().getString(R.string.onboarding_passphrase_save_complete),
@@ -109,18 +107,16 @@ public class RevealPassphraseFragment extends LMFragment {
                         if(mBinding != null) {
                             HandleBackupOptionCompleted(mBinding.onboardingSaveCheckmark);
                         }
-                        return null;
                     }, (cancel) -> {
                         if(mBinding != null) {
                             HandleBackupOptionCompleted(mBinding.onboardingSaveCheckmark);
                         }
-                        return null;
                     });
         });
     }
 
     protected void onEmail() {
-        DialogUtils.showAlertDialog(getContext(), this,
+        DialogUtils.showAlertDialog( this,
                 0,
                 getResources().getString(R.string.onboarding_passphrase_email_before_title),
                 getResources().getString(R.string.onboarding_passphrase_email_before),
@@ -128,7 +124,7 @@ public class RevealPassphraseFragment extends LMFragment {
                 getResources().getString(R.string.ok_button),
                 (btnIdx) -> {
 
-                    if((int)btnIdx == 0) {
+                    if(btnIdx.equals(0)) {
                         Intent intent = new Intent(Intent.ACTION_SEND);
                         intent.setType("text/plain");
                         intent.putExtra(Intent.EXTRA_SUBJECT, "Blockcerts Backup");
@@ -136,11 +132,10 @@ public class RevealPassphraseFragment extends LMFragment {
                         Intent mailer = Intent.createChooser(intent, null);
                         startActivity(mailer);
 
-                        if(mBinding != null) {
+                        if (mBinding != null) {
                             HandleBackupOptionCompleted(mBinding.onboardingEmailCheckmark);
                         }
                     }
-                    return null;
                 });
     }
 

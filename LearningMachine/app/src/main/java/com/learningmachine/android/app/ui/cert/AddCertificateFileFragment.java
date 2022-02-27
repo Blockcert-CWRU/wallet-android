@@ -62,8 +62,7 @@ public class AddCertificateFileFragment extends LMFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        Injector.obtain(getContext())
-                .inject(this);
+        Injector.obtain(nonNullContext()).inject(this);
     }
 
     @Override
@@ -76,7 +75,7 @@ public class AddCertificateFileFragment extends LMFragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_add_certificate_file, container, false);
 
         mBinding.chooseFileButton.setOnClickListener(mOnClickListener);
@@ -100,9 +99,9 @@ public class AddCertificateFileFragment extends LMFragment {
 
 
     private final View.OnClickListener mOnClickListener = v -> {
-        if (ContextCompat.checkSelfPermission(getContext(),
+        if (ContextCompat.checkSelfPermission(nonNullContext(),
                 Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(),
+            ActivityCompat.requestPermissions(nonNullActivity(),
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     REQUEST_READ_STORAGE);
             Timber.d("Requesting external storage read permission");
@@ -148,7 +147,7 @@ public class AddCertificateFileFragment extends LMFragment {
             Timber.e("No file selected");
             return;
         }
-        ContentResolver resolver = getContext().getContentResolver();
+        ContentResolver resolver = nonNullContext().getContentResolver();
         try (InputStream certificateInputStream = resolver.openInputStream(mSelectedFileUri)) {
             mAddCertificateSubscription = mCertificateManager.addCertificate(certificateInputStream)
                     .compose(bindToMainThread())
@@ -157,7 +156,7 @@ public class AddCertificateFileFragment extends LMFragment {
                         hideProgressDialog();
                         Intent intent = CertificateActivity.newIntent(getContext(), uuid);
                         startActivity(intent);
-                        getActivity().finish();
+                        nonNullActivity().finish();
                     }, throwable -> {
                         Timber.e(throwable, "Importing failed with error");
                         displayErrors(throwable, DialogUtils.ErrorCategory.CERTIFICATE, R.string.error_title_message);
@@ -175,7 +174,7 @@ public class AddCertificateFileFragment extends LMFragment {
 
         mSelectedFileUri = uri;
         Timber.d("File selected: %1$s", mSelectedFileUri.getPath());
-        ContentResolver resolver = getContext().getContentResolver();
+        ContentResolver resolver = nonNullContext().getContentResolver();
         try (Cursor cursor = resolver.query(uri, null, null, null, null)) {
             if (cursor != null && cursor.moveToFirst()) {
                 int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
@@ -203,19 +202,19 @@ public class AddCertificateFileFragment extends LMFragment {
 
     private void showFileDialog(File[] files) {
         if(files.length == 0) {
-            DialogUtils.showAlertDialog(getContext(), this,
+            DialogUtils.showAlertDialog( this,
                     R.drawable.ic_dialog_failure,
                     getResources().getString(R.string.no_files_downloaded_title),
                     getResources().getString(R.string.no_files_downloaded_message),
                     null,
                     getResources().getString(R.string.ok_button),
-                    (btnIdx) -> null);
+                    (btnIdx) -> {});
             return;
         }
 
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        FileArrayAdapter fileArrayAdapter = new FileArrayAdapter(getContext(), files);
+        AlertDialog.Builder builder = new AlertDialog.Builder(nonNullContext());
+        FileArrayAdapter fileArrayAdapter = new FileArrayAdapter(nonNullContext(), files);
         builder.setAdapter(fileArrayAdapter, (dialog, which) -> {
             File file = fileArrayAdapter.getItem(which);
             selectFile(file);

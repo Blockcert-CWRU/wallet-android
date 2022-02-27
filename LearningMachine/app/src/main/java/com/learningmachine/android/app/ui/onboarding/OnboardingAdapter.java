@@ -2,6 +2,7 @@ package com.learningmachine.android.app.ui.onboarding;
 
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
@@ -47,14 +48,14 @@ class OnboardingAdapter extends FragmentStatePagerAdapter {
     }
 
     @Override
-    public int getItemPosition(Object object) {
+    public int getItemPosition(@NonNull Object object) {
         // Workaround for ViewPager's Caching of objects after notifyDataSetChanged is called.
         // We want to reload everything because we are replacing the flow.
         return POSITION_NONE;
     }
 
     @Override
-    public void setPrimaryItem(ViewGroup container, int position, Object object) {
+    public void setPrimaryItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
         super.setPrimaryItem(container, position, object);
         mCurrentFragment = (OnboardingFragment) object;
     }

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 
@@ -31,7 +32,7 @@ public class LMWebFragment extends LMFragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_web, container, false);
         setupWebView();
         loadWebsite();
@@ -60,26 +61,25 @@ public class LMWebFragment extends LMFragment {
             }
         };
         mBinding.webViewController.setWebViewClient(webViewClient);
-        mBinding.webViewController.getSettings()
-                .setJavaScriptEnabled(true);
+        mBinding.webViewController.getSettings().setJavaScriptEnabled(true);
     }
 
     public void backPressed() {
         if (mBinding.webViewController.canGoBack()) {
             mBinding.webViewController.goBack();
         } else {
-            getActivity().finish();
+            nonNullActivity().finish();
         }
     }
 
     private void loadWebsite() {
         String endPoint = getEndPoint();
-        if (endPoint != null && !TextUtils.isEmpty(endPoint)) {
+        if (!TextUtils.isEmpty(endPoint)) {
             mBinding.webViewController.loadUrl(endPoint);
         }
     }
 
     protected String getEndPoint() {
-        return getArguments().getString(ARG_END_POINT);
+        return nonNullArguments().getString(ARG_END_POINT);
     }
 }

@@ -14,8 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 import androidx.databinding.DataBindingUtil;
 
 import com.learningmachine.android.app.R;
@@ -27,8 +27,6 @@ import com.learningmachine.android.app.ui.LMActivity;
 import com.learningmachine.android.app.ui.home.HomeActivity;
 import com.learningmachine.android.app.util.DialogUtils;
 import com.learningmachine.android.app.util.StringUtils;
-
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -48,12 +46,11 @@ public class PastePassphraseFragment extends OnboardingFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Injector.obtain(getContext())
-                .inject(this);
+        Injector.obtain(nonNullContext()).inject(this);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_paste_passphrase, container, false);
 
         if (Build.VERSION.SDK_INT >= 23) {
@@ -80,7 +77,7 @@ public class PastePassphraseFragment extends OnboardingFragment {
     }
 
     private void retrievePassphraseFromDevice() {
-        ((LMActivity)getActivity()).askToGetPassphraseFromDevice((passphrase) -> {
+        ((LMActivity)nonNullContext()).askToGetPassphraseFromDevice((passphrase) -> {
             if (passphrase != null) {
                 mBinding.pastePassphraseEditText.setText(passphrase);
                 onDone();
@@ -93,7 +90,7 @@ public class PastePassphraseFragment extends OnboardingFragment {
     private void onDone() {
         displayProgressDialog(R.string.onboarding_passphrase_loading);
         String passphrase = mBinding.pastePassphraseEditText.getText().toString();
-        Activity activity = getActivity();
+        Activity activity = nonNullActivity();
 
         mBinding.doneButton.setEnabled(false);
         mBinding.pastePassphraseEditText.setEnabled(false);
@@ -101,13 +98,9 @@ public class PastePassphraseFragment extends OnboardingFragment {
         AsyncTask.execute(() -> mBitcoinManager.setPassphrase(passphrase)
                 .compose(bindToMainThread())
                 .subscribe(wallet -> {
-
                     if(isVisible()) {
-
                         Log.d("LM", "PastePassphraseFragment isVisible()");
-
                         activity.runOnUiThread(() -> {
-
                             if(isVisible()) {
                                 // if we return to the app by pasting in our passphrase, we
                                 // must have already backed it up!
@@ -115,8 +108,8 @@ public class PastePassphraseFragment extends OnboardingFragment {
                                 mSharedPreferencesManager.setWasReturnUser(true);
                                 mSharedPreferencesManager.setFirstLaunch(false);
                                 if (!continueDelayedURLsFromDeepLinking()) {
-                                    startActivity(new Intent(getActivity(), HomeActivity.class));
-                                    Objects.requireNonNull(getActivity()).finish();
+                                    startActivity(new Intent(activity, HomeActivity.class));
+                                    activity.finish();
                                 }
                             }
                         });
@@ -125,21 +118,21 @@ public class PastePassphraseFragment extends OnboardingFragment {
                 }, e -> {
                     Timber.e(e, "Could not set passphrase.");
                     hideProgressDialog();
-                    displayErrorsLocal(e, DialogUtils.ErrorCategory.GENERIC, R.string.error_title_message);
+                    displayErrorsLocal();
                 }));
     }
 
-    protected void displayErrorsLocal(Throwable throwable, DialogUtils.ErrorCategory errorCategory, @StringRes int errorTitleResId) {
+    protected void displayErrorsLocal() {
         mBinding.pastePassphraseEditText.setEnabled(true);
         mBinding.pastePassphraseEditText.setText("");
 
-        DialogUtils.showAlertDialog(getContext(), this,
+        DialogUtils.showAlertDialog(this,
                 R.drawable.ic_dialog_failure,
                 getResources().getString(R.string.onboarding_passphrase_invalid_title),
                 getResources().getString(R.string.onboarding_passphrase_invalid_desc),
                 null,
                 getResources().getString(R.string.ok_button),
-                (btnIdx) -> null);
+                (btnIdx) -> {});
     }
 
 
@@ -154,8 +147,7 @@ public class PastePassphraseFragment extends OnboardingFragment {
 
         @Override
         public void afterTextChanged(Editable s) {
-            String passphrase = mBinding.pastePassphraseEditText.getText()
-                    .toString();
+            String passphrase = mBinding.pastePassphraseEditText.getText().toString();
             boolean emptyPassphrase = StringUtils.isEmpty(passphrase);
             mBinding.doneButton.setEnabled(!emptyPassphrase);
         }

@@ -18,6 +18,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
@@ -76,9 +77,9 @@ public class CertificateFragment extends LMFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        Injector.obtain(getContext())
+        Injector.obtain(nonNullContext())
                 .inject(this);
-        mCertUuid = getArguments().getString(ARG_CERTIFICATE_UUID);
+        mCertUuid = nonNullArguments().getString(ARG_CERTIFICATE_UUID);
         mIssuerManager.certificateViewed(mCertUuid)
                 .compose(bindToMainThread())
                 .subscribe(aVoid -> Timber.d("Issuer analytics: Certificate viewed"),
@@ -87,7 +88,7 @@ public class CertificateFragment extends LMFragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_certificate, container, false);
         setAllItemsChecked();
         mBinding.certBottomNavigation.setOnNavigationItemSelectedListener(item -> {
@@ -168,7 +169,7 @@ public class CertificateFragment extends LMFragment {
         if (!displayHTML.trim().startsWith("<div")) {
             scalingMetaContent = ", maximum-scale=1.0, user-scalable=0";
         } else {
-            bodyDisplay =  "display: inline-block;";
+            bodyDisplay = "display: inline-block;";
         }
 
         String normalizeCss = "/*! normalize.css v7.0.0 | MIT License | github.com/necolas/normalize.css */html{line-height:1.15;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,aside,footer,header,nav,section{display:block}h1{font-size:2em;margin:.67em 0}figcaption,figure,main{display:block}figure{margin:1em 40px}hr{box-sizing:content-box;height:0;overflow:visible}pre{font-family:monospace,monospace;font-size:1em}a{background-color:transparent;-webkit-text-decoration-skip:objects}abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}b,strong{font-weight:inherit}b,strong{font-weight:bolder}code,kbd,samp{font-family:monospace,monospace;font-size:1em}dfn{font-style:italic}mark{background-color:#ff0;color:#000}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}audio,video{display:inline-block}audio:not([controls]){display:none;height:0}img{border-style:none}svg:not(:root){overflow:hidden}button,input,optgroup,select,textarea{font-family:sans-serif;font-size:100%;line-height:1.15;margin:0}button,input{overflow:visible}button,select{text-transform:none}[type=reset],[type=submit],button,html [type=button]{-webkit-appearance:button}[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button::-moz-focus-inner{border-style:none;padding:0}[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring,button:-moz-focusring{outline:1px dotted ButtonText}fieldset{padding:.35em .75em .625em}legend{box-sizing:border-box;color:inherit;display:table;max-width:100%;padding:0;white-space:normal}progress{display:inline-block;vertical-align:baseline}textarea{overflow:auto}[type=checkbox],[type=radio]{box-sizing:border-box;padding:0}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-cancel-button,[type=search]::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}details,menu{display:block}summary{display:list-item}canvas{display:inline-block}template{display:none}[hidden]{display:none}/*# sourceMappingURL=normalize.min.css.map */";
@@ -180,8 +181,8 @@ public class CertificateFragment extends LMFragment {
     private String getAutolinkerScript() {
         String script = "";
         try {
-            FileUtils.copyAssetFile(getContext(), "www/Autolinker.min.js", "Autolinker.js");
-            script = FileUtils.getStringFromFile(getContext().getFilesDir() + "/Autolinker.js") + "\n";
+            FileUtils.copyAssetFile(nonNullContext(), "www/Autolinker.min.js", "Autolinker.js");
+            script = FileUtils.getStringFromFile(nonNullContext().getFilesDir() + "/Autolinker.js") + "\n";
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -245,7 +246,7 @@ public class CertificateFragment extends LMFragment {
     }
 
     private void shareCertificate() {
-        String certUuid = getArguments().getString(ARG_CERTIFICATE_UUID);
+        String certUuid = nonNullArguments().getString(ARG_CERTIFICATE_UUID);
         mCertificateManager.getCertificate(certUuid)
                 .compose(bindToMainThread())
                 .subscribe(certificateRecord -> {
@@ -266,22 +267,18 @@ public class CertificateFragment extends LMFragment {
                 "",
                 "",
                 "",
-                (btnIdx) -> {
-                    if ((int) btnIdx == 0) {
+                btnIdx -> {
+                    if (btnIdx.equals(0)) {
                         Timber.i("User chose to share certificate via file");
                         shareCertificateTypeResult(true);
                     }
-                    if ((int) btnIdx == 1) {
+                    if (btnIdx.equals(1)) {
                         Timber.i("User chose to share the certificate via URL");
                         shareCertificateTypeResult(false);
                     }
-                    return null;
                 },
-                (dialogContent) -> null,
-                (dialogContent) -> {
-                    Timber.i("Share dialog cancelled");
-                    return null;
-                });
+                (dialogContent) -> {},
+                (dialogContent) -> Timber.i("Share dialog cancelled"));
 
     }
 
@@ -305,10 +302,9 @@ public class CertificateFragment extends LMFragment {
                     String sharingText;
 
                     if (shareFile) {
-                        File certFile = FileUtils.getCertificateFile(getContext(), mCertUuid);
-                        Uri uri = FileProvider.getUriForFile(getContext(), FILE_PROVIDER_AUTHORITY, certFile);
-                        String type = getContext().getContentResolver()
-                                .getType(uri);
+                        File certFile = FileUtils.getCertificateFile(nonNullContext(), mCertUuid);
+                        Uri uri = FileProvider.getUriForFile(nonNullContext(), FILE_PROVIDER_AUTHORITY, certFile);
+                        String type = nonNullContext().getContentResolver().getType(uri);
                         intent.setType(type);
                         intent.putExtra(Intent.EXTRA_STREAM, uri);
                         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -327,26 +323,26 @@ public class CertificateFragment extends LMFragment {
     }
 
     private void viewCertificateInfo() {
-        Intent intent = CertificateInfoActivity.newIntent(getActivity(), mCertUuid);
+        Intent intent = CertificateInfoActivity.newIntent(nonNullActivity(), mCertUuid);
         startActivity(intent);
     }
 
 
     private void showFailureDialog(int errorId) {
 
-        DialogUtils.showAlertDialog(getContext(), this,
+        DialogUtils.showAlertDialog( this,
                 R.drawable.ic_dialog_failure,
                 getResources().getString(R.string.cert_verification_failure_title),
                 getResources().getString(errorId),
                 null,
                 getResources().getString(R.string.ok_button),
-                (btnIdx) -> null);
+                (btnIdx) -> {});
     }
 
 
     private void verifyCertificate() {
         Timber.i("User tapped verify on this certificate");
-        Intent certificateActivity = VerifyCertificateActivity.newIntent(getContext(), mCertUuid);
+        Intent certificateActivity = VerifyCertificateActivity.newIntent(nonNullContext(), mCertUuid);
         startActivity(certificateActivity);
     }
 }

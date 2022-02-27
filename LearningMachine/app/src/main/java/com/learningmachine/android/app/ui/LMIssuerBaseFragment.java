@@ -35,14 +35,14 @@ public abstract class LMIssuerBaseFragment extends LMFragment {
 
     protected String mIntroUrl;
     protected String mCertUrl;
-    protected String mNounce;
+    protected String mNonce;
     protected String mLinkType;
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Injector.obtain(getContext())
+        Injector.obtain(nonNullContext())
                 .inject(this);
         setHasOptionsMenu(true);
     }
@@ -58,7 +58,7 @@ public abstract class LMIssuerBaseFragment extends LMFragment {
         }
         String issuerNonce = args.getString(ARG_ISSUER_NONCE);
         if (!StringUtils.isEmpty(issuerNonce)) {
-            mNounce = issuerNonce;
+            mNonce = issuerNonce;
         }
 
         String certUrl = args.getString(ARG_CERT_URL);
@@ -93,7 +93,7 @@ public abstract class LMIssuerBaseFragment extends LMFragment {
 
         Observable.combineLatest(
                 mBitcoinManager.getFreshBitcoinAddress(),
-                Observable.just(mNounce),
+                Observable.just(mNonce),
                 mIssuerManager.fetchIssuer(mIntroUrl),
                 IssuerIntroductionRequest::new)
                 .doOnSubscribe(this::addIssuerOnSubscribe)

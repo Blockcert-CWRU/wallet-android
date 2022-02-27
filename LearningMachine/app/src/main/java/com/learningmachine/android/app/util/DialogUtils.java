@@ -61,7 +61,7 @@ public class DialogUtils {
         alertDialogFragment.show(fragmentManager, TAG_DIALOG_ALERT);
     }
 
-    public static void showAlertDialog(Context context, @NonNull Fragment targetFragment, int iconID, String title, String message, String positiveButton, String negativeButton, Callback callback) {
+    public static void showAlertDialog(@NonNull Fragment targetFragment, int iconID, String title, String message, String positiveButton, String negativeButton, Callback callback) {
         FragmentManager fragmentManager = targetFragment.getFragmentManager();
         AlertDialogFragment alertDialogFragment = AlertDialogFragment.newInstance(
                 false,
@@ -78,7 +78,7 @@ public class DialogUtils {
         alertDialogFragment.show(fragmentManager, TAG_DIALOG_ALERT);
     }
 
-    public static void showAlertDialog(Context context, @NonNull Fragment targetFragment, int iconID, String title, String message, String positiveButton, String negativeButton, Callback callback, Callback onCancel) {
+    public static void showAlertDialog(@NonNull Fragment targetFragment, int iconID, String title, String message, String positiveButton, String negativeButton, Callback callback, Callback onCancel) {
         FragmentManager fragmentManager = targetFragment.getFragmentManager();
         AlertDialogFragment alertDialogFragment = AlertDialogFragment.newInstance(
                 false,

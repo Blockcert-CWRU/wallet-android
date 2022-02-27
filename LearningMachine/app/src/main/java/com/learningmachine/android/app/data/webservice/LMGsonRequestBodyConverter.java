@@ -1,5 +1,7 @@
 package com.learningmachine.android.app.data.webservice;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonWriter;
@@ -7,7 +9,7 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -26,9 +28,9 @@ final class LMGsonRequestBodyConverter<T> implements Converter<T, RequestBody> {
     }
 
     @Override
-    public RequestBody convert(T value) throws IOException {
+    public RequestBody convert(@NonNull T value) throws IOException {
         Buffer buffer = new Buffer();
-        Writer writer = new OutputStreamWriter(buffer.outputStream(), Charset.forName("UTF-8"));
+        Writer writer = new OutputStreamWriter(buffer.outputStream(), StandardCharsets.UTF_8);
         JsonWriter jsonWriter = gson.newJsonWriter(writer);
         adapter.write(jsonWriter, value);
         jsonWriter.close();

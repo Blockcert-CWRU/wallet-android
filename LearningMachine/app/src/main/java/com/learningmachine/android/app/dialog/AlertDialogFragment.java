@@ -23,10 +23,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.learningmachine.android.app.R;
+import com.learningmachine.android.app.ui.NonNullFragment;
 
-public class AlertDialogFragment extends DialogFragment {
+import java.util.Objects;
+
+public class AlertDialogFragment extends DialogFragment implements NonNullFragment {
 
     public static final int RESULT_POSITIVE = 1;
     public static final int RESULT_NEGATIVE = 0;
@@ -42,14 +46,32 @@ public class AlertDialogFragment extends DialogFragment {
     private TextView mSubTitleView;
     private TextView mMessageView;
 
+    @NonNull
+    @Override
+    public Bundle nonNullArguments() {
+        return Objects.requireNonNull(getArguments());
+    }
+
+    @NonNull
+    @Override
+    public FragmentActivity nonNullActivity() {
+        return Objects.requireNonNull(getActivity());
+    }
+
+    @NonNull
+    @Override
+    public Context nonNullContext() {
+        return Objects.requireNonNull(getContext());
+    }
+
     @FunctionalInterface
-    public interface Callback <A, R> {
-        R apply(A a);
+    public interface Callback {
+        void apply(Object a);
     }
 
     public Callback onCancel = null;
     public Callback onComplete = null;
-    public Callback onCreate= null;
+    public Callback onCreate = null;
 
     public interface AlertCallback {
         void onDialogPositive();
@@ -104,7 +126,7 @@ public class AlertDialogFragment extends DialogFragment {
     public static AlertDialogFragment newInstance(int iconID, String title, String message, String positiveButtonMessage, String negativeButtonMessage) {
         Bundle args = new Bundle();
         AlertDialogFragment fragment = new AlertDialogFragment();
-        if(iconID > 0) {
+        if (iconID > 0) {
             args.putInt(ARG_ICON, iconID);
         }
         args.putString(ARG_MESSAGE, message);
@@ -126,7 +148,7 @@ public class AlertDialogFragment extends DialogFragment {
     }
 
     private float dp2px(float dp) {
-        Resources resources = getContext().getResources();
+        Resources resources = nonNullContext().getResources();
         DisplayMetrics metrics = resources.getDisplayMetrics();
         return dp * ((float) metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
     }
@@ -141,7 +163,7 @@ public class AlertDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Bundle args = getArguments();
+        Bundle args = nonNullArguments();
 
         String title = args.getString(ARG_TITLE);
         String message = args.getString(ARG_MESSAGE);
@@ -190,12 +212,12 @@ public class AlertDialogFragment extends DialogFragment {
 
         dialog.setContentView(dialogContent);
 
-        ImageView iconView = (ImageView) dialogContent.findViewById(R.id.image_view);
-        mTitleView = (TextView) dialogContent.findViewById(R.id.titleView);
-        mSubTitleView = (TextView) dialogContent.findViewById(R.id.subTitleView);
-        mMessageView = (TextView) dialogContent.findViewById(R.id.messageView);
-        Button positiveButtonView = (Button) dialogContent.findViewById(R.id.dialog_positive_button);
-        Button negativeButtonView = (Button) dialogContent.findViewById(R.id.dialog_negative_button);
+        ImageView iconView = dialogContent.findViewById(R.id.image_view);
+        mTitleView = dialogContent.findViewById(R.id.titleView);
+        mSubTitleView = dialogContent.findViewById(R.id.subTitleView);
+        mMessageView = dialogContent.findViewById(R.id.messageView);
+        Button positiveButtonView = dialogContent.findViewById(R.id.dialog_positive_button);
+        Button negativeButtonView = dialogContent.findViewById(R.id.dialog_negative_button);
 
         if (iconView != null) {
             if (dialogIcon > 0) {
@@ -205,10 +227,10 @@ public class AlertDialogFragment extends DialogFragment {
             }
         }
 
-        if(mTitleView != null) {
+        if (mTitleView != null) {
             mTitleView.setText(title);
         }
-        if(mMessageView != null) {
+        if (mMessageView != null) {
             mMessageView.setText(message);
         }
 
@@ -221,7 +243,7 @@ public class AlertDialogFragment extends DialogFragment {
         }
 
         // 1) Dialog width should be 80% of the width of the screen
-        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        Display display = nonNullActivity().getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
 
@@ -276,11 +298,6 @@ public class AlertDialogFragment extends DialogFragment {
             wlp.gravity = Gravity.BOTTOM;
             window.setAttributes(wlp);
         }
-
-
-        //dialog.setCancelable(false);
-        //this.setCancelable(false);
-
         return dialog;
     }
 
@@ -310,10 +327,11 @@ public class AlertDialogFragment extends DialogFragment {
     }
 
     public boolean forceFullscreen = false;
+
     @Override
     public void onStart() {
         super.onStart();
-        if(forceFullscreen) {
+        if (forceFullscreen) {
             Dialog dialog = getDialog();
             if (dialog != null) {
                 dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -329,7 +347,7 @@ public class AlertDialogFragment extends DialogFragment {
 
     @Override
     public void onCancel(DialogInterface dialog) {
-        if(onCancel != null) {
+        if (onCancel != null) {
             onCancel.apply(0);
         }
     }
@@ -346,7 +364,7 @@ public class AlertDialogFragment extends DialogFragment {
             }
         }
 
-        if(onComplete != null) {
+        if (onComplete != null) {
             onComplete.apply(buttonResultCode);
         }
     }

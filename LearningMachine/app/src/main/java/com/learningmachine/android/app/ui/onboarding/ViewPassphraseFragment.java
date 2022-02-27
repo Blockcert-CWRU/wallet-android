@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 
 import com.learningmachine.android.app.R;
@@ -24,7 +25,8 @@ import javax.inject.Inject;
 
 public class ViewPassphraseFragment extends OnboardingFragment {
 
-    @Inject protected BitcoinManager mBitcoinManager;
+    @Inject
+    protected BitcoinManager mBitcoinManager;
 
     private FragmentViewPassphraseBinding mBinding;
 
@@ -33,22 +35,19 @@ public class ViewPassphraseFragment extends OnboardingFragment {
     private Timer countingTimer;
 
     private final TimerTask timerTask = new TimerTask() {
+
         @Override
         public void run() {
-            Activity activity = getActivity();
-            if(activity != null) {
-                activity.runOnUiThread(() -> {
-
-                    if (!didGeneratePassphrase) {
-                        mBinding.onboardingStatusText.setText(getResources().getString(R.string.onboarding_passphrase_status_0));
-                    }
-                });
-            }
+            runOnActivity(activity -> activity.runOnUiThread(() -> {
+                if (!didGeneratePassphrase) {
+                    mBinding.onboardingStatusText.setText(getResources().getString(R.string.onboarding_passphrase_status_0));
+                }
+            }));
         }
     };
 
     public void startCountingTimer() {
-        if(countingTimer != null) {
+        if (countingTimer != null) {
             return;
         }
         countingTimer = new Timer();
@@ -56,7 +55,7 @@ public class ViewPassphraseFragment extends OnboardingFragment {
     }
 
     public void stopCountingTimer() {
-        if(countingTimer != null){
+        if (countingTimer != null) {
             countingTimer.cancel();
         }
         countingTimer = null;
@@ -69,12 +68,12 @@ public class ViewPassphraseFragment extends OnboardingFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Injector.obtain(getContext())
+        Injector.obtain(nonNullContext())
                 .inject(this);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_view_passphrase, container, false);
 
         mBinding.onboardingDoneButton.setOnClickListener(view -> onDone());
@@ -100,12 +99,12 @@ public class ViewPassphraseFragment extends OnboardingFragment {
             mBinding.onboardingStatusText.setText(R.string.onboarding_passphrase_status_0);
             startCountingTimer();
 
-            Activity activity = getActivity();
+            Activity activity = nonNullActivity();
 
             AsyncTask.execute(() -> mBitcoinManager.getPassphrase().delay(1500, TimeUnit.MILLISECONDS).subscribe(passphrase -> activity.runOnUiThread(() -> {
                 stopCountingTimer();
 
-                if(isVisible()) {
+                if (isVisible()) {
 
                     Log.d("LM", "ViewPassphraseFragment isVisible()");
 
@@ -141,33 +140,11 @@ public class ViewPassphraseFragment extends OnboardingFragment {
     }
 
     @Override
-    public void onPause() {
-        super .onPause();
-    }
-
-    @Override
-    public void onStop() {
-        super .onStop();
-    }
-
-    @Override
-    public void onResume() {
-        super .onResume();
-    }
-
-    @Override
-    public void onStart() {
-        super .onStart();
-    }
-
-    @Override
     public boolean isBackAllowed() {
         return true;
     }
 
     private void onDone() {
-        ((OnboardingActivity)getActivity()).onBackupPassphrase();
+        ((OnboardingActivity) nonNullActivity()).onBackupPassphrase();
     }
-
-
 }

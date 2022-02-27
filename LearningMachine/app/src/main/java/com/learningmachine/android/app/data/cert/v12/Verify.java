@@ -1,6 +1,8 @@
 
 package com.learningmachine.android.app.data.cert.v12;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -108,10 +110,11 @@ class Verify {
             }
         }
 
-        private Type(String value) {
+        Type(String value) {
             this.value = value;
         }
 
+        @NonNull
         @Override
         public String toString() {
             return this.value;
