@@ -53,13 +53,14 @@ public class BitcoinUtils {
         return null;
     }
 
+    @NonNull
     public static Wallet createWallet(NetworkParameters params, String seedPhrase) {
         byte[] entropy;
         try {
             entropy = MnemonicCode.INSTANCE.toEntropy(Arrays.asList(seedPhrase.split(" ")));
         } catch (MnemonicException e) {
             Timber.e(e, "Could not convert passphrase to entropy");
-            return null;
+            throw new RuntimeException(e);
         }
         return createWallet(params, entropy);
     }
