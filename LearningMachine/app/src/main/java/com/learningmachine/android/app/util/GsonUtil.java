@@ -26,6 +26,6 @@ public class GsonUtil {
         AssetManager assetManager = mContext.getAssets();
         InputStream inputStream = assetManager.open(filename);
         InputStreamReader reader = new InputStreamReader(inputStream);
-        return (T) GSON.fromJson(reader, clazz);
+        return GSON.fromJson(reader, clazz);
     }
 }

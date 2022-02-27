@@ -17,15 +17,10 @@ public class ErrorUtils {
         if (throwable instanceof HttpException) {
             ResponseBody body = ((HttpException) throwable).response().errorBody();
             Gson gson = new Gson();
-            TypeAdapter<LMApiError> adapter = gson.getAdapter
-                    (LMApiError
-                            .class);
+            TypeAdapter<LMApiError> adapter = gson.getAdapter(LMApiError.class);
             try {
-                LMApiError errorParser =
-                        adapter.fromJson(body.string());
-
+                LMApiError errorParser = adapter.fromJson(body.string());
                 throwableBody = "Code: " + errorParser.getCode() + ", Message: " + errorParser.getMessage();
-
             } catch (IOException e) {
                 e.printStackTrace();
             }

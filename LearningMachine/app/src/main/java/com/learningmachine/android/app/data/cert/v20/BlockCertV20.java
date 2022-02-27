@@ -209,5 +209,5 @@ public class BlockCertV20 extends CertSchemaV20 implements BlockCert {
         }
 
         return Anchor.ChainType.testnet;
-    };
+    }
 }

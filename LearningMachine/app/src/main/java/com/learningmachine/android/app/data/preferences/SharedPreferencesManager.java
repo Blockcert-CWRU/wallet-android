@@ -65,7 +65,7 @@ public class SharedPreferencesManager {
 
     public boolean shouldShowWelcomeBackUserFlow() {
         // if this is not a first time user and we have not stored the special preference key
-        return isFirstLaunch() == false && mPrefs.contains(PREF_SEEN_BACKUP_PASSPHRASE) == false;
+        return !isFirstLaunch() && !mPrefs.contains(PREF_SEEN_BACKUP_PASSPHRASE);
     }
 
     public boolean hasSeenBackupPassphraseBefore() {

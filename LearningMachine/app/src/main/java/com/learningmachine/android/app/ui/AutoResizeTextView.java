@@ -1,16 +1,16 @@
 /**
  *               DO WHAT YOU WANT TO PUBLIC LICENSE
  *                    Version 2, December 2004
- * 
+ *
  * Copyright (C) 2004 Sam Hocevar <sam@hocevar.net>
- * 
+ *
  * Everyone is permitted to copy and distribute verbatim or modified
  * copies of this license document, and changing it is allowed as long
  * as the name is changed.
- * 
+ *
  *            DO WHAT YOU WANT TO PUBLIC LICENSE
  *   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
- * 
+ *
  *  0. You just DO WHAT YOU WANT TO.
  */
 
@@ -24,22 +24,24 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.AppCompatTextView;
+
 /**
  * Text view that auto adjusts text size to fit within the view.
  * If the text size equals the minimum text size and still does not
  * fit, append with an ellipsis.
- * 
+ *
  * @author Chase Colburn
  * @since Apr 4, 2011
  */
-public class AutoResizeTextView extends androidx.appcompat.widget.AppCompatTextView {
+public class AutoResizeTextView extends AppCompatTextView {
 
     // Minimum text size for this text view
     public static final float MIN_TEXT_SIZE = 14;
 
     // Interface for resize notifications
     public interface OnTextResizeListener {
-        public void onTextResize(TextView textView, float oldSize, float newSize);
+        void onTextResize(TextView textView, float oldSize, float newSize);
     }
 
     // Our ellipse string
@@ -107,7 +109,6 @@ public class AutoResizeTextView extends androidx.appcompat.widget.AppCompatTextV
 
     /**
      * Register listener to receive resize notifications
-     * @param listener
      */
     public void setOnResizeListener(OnTextResizeListener listener) {
         mTextResizeListener = listener;
@@ -143,7 +144,6 @@ public class AutoResizeTextView extends androidx.appcompat.widget.AppCompatTextV
 
     /**
      * Set the upper text size limit and invalidate the view
-     * @param maxTextSize
      */
     public void setMaxTextSize(float maxTextSize) {
         mMaxTextSize = maxTextSize;
@@ -153,7 +153,6 @@ public class AutoResizeTextView extends androidx.appcompat.widget.AppCompatTextV
 
     /**
      * Return upper text size limit
-     * @return
      */
     public float getMaxTextSize() {
         return mMaxTextSize;
@@ -161,7 +160,6 @@ public class AutoResizeTextView extends androidx.appcompat.widget.AppCompatTextV
 
     /**
      * Set the lower text size limit and invalidate the view
-     * @param minTextSize
      */
     public void setMinTextSize(float minTextSize) {
         mMinTextSize = minTextSize;
@@ -171,7 +169,6 @@ public class AutoResizeTextView extends androidx.appcompat.widget.AppCompatTextV
 
     /**
      * Return lower text size limit
-     * @return
      */
     public float getMinTextSize() {
         return mMinTextSize;
@@ -179,7 +176,6 @@ public class AutoResizeTextView extends androidx.appcompat.widget.AppCompatTextV
 
     /**
      * Set flag to add ellipsis to text that overflows at the smallest text size
-     * @param addEllipsis
      */
     public void setAddEllipsis(boolean addEllipsis) {
         mAddEllipsis = addEllipsis;
@@ -187,7 +183,6 @@ public class AutoResizeTextView extends androidx.appcompat.widget.AppCompatTextV
 
     /**
      * Return flag to add ellipsis to text that overflows at the smallest text size
-     * @return
      */
     public boolean getAddEllipsis() {
         return mAddEllipsis;
@@ -228,8 +223,6 @@ public class AutoResizeTextView extends androidx.appcompat.widget.AppCompatTextV
 
     /**
      * Resize the text size with specified width and height
-     * @param width
-     * @param height
      */
     public void resizeText(int width, int height) {
         CharSequence text = getText();

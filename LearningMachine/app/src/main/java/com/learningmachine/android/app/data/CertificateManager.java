@@ -100,8 +100,7 @@ public class CertificateManager {
             // Copy the responseBody bytes before Gson consumes it
             BufferedSource source = responseBody.source();
             source.request(Long.MAX_VALUE);
-            Buffer buffer = source.buffer()
-                    .clone();
+            Buffer buffer = source.getBuffer().clone();
 
             // Parse
             BlockCertParser blockCertParser = new BlockCertParser();

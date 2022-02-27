@@ -26,7 +26,6 @@ public class AddCertificateActivity extends LMActivity {
     private static final String EXTRA_CERT_URL = "AddIssuerActivity.CertUrl";
     private static final String PAGER_INDEX = "AddIssuerActivity.PagerIndex";
 
-    private ActivityAddCertificateBinding mBinding;
     private AddCertificateURLFragment lastURLFragment = null;
 
     public static Intent newIntent(Context context, int pagerIndex, String certificateUrlString) {
@@ -39,7 +38,7 @@ public class AddCertificateActivity extends LMActivity {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_add_certificate);
+        ActivityAddCertificateBinding mBinding = DataBindingUtil.setContentView(this, R.layout.activity_add_certificate);
         setSupportActionBar(mBinding.addCertificateToolbar);
 
         setupViewPager(mBinding.activityCertificatePagerViewPager);

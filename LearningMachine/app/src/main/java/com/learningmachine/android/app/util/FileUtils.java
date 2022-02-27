@@ -25,9 +25,9 @@ public class FileUtils {
     private static final String JSON_EXT = ".json";
     private static final String LOGS_FILE = "logs.txt";
 
-    public static boolean saveCertificate(Context context, Buffer buffer, String uuid) {
+    public static void saveCertificate(Context context, Buffer buffer, String uuid) {
         File file = getCertificateFile(context, uuid, true);
-        return writeResponseBodyToDisk(file, buffer);
+        writeResponseBodyToDisk(file, buffer);
     }
 
     public static void saveLogs(Context context, StringBuilder buffer) {
@@ -35,19 +35,17 @@ public class FileUtils {
         writeLogsToDisk(file, buffer);
     }
 
-    public static boolean copyCertificateStream(Context context, InputStream inputStream, String uuid) {
+    public static void copyCertificateStream(Context context, InputStream inputStream, String uuid) {
         File outputFile = getCertificateFile(context, uuid, true);
-        return copyInputStream(inputStream, outputFile);
+        copyInputStream(inputStream, outputFile);
     }
 
     public static boolean deleteCertificate(Context context, String uuid) {
-        File file = getCertificateFile(context, uuid);
-        return file.delete();
+        return getCertificateFile(context, uuid).delete();
     }
 
-    public static boolean deleteLogs(Context context) {
-        File file = getLogsFile(context, false);
-        return file.delete();
+    public static void deleteLogs(Context context) {
+        getLogsFile(context, false).delete();
     }
 
     public static void renameCertificateFile(Context context, String oldName, String newName) {
@@ -86,13 +84,12 @@ public class FileUtils {
         return certDir;
     }
 
-    private static boolean writeResponseBodyToDisk(File file, Buffer buffer) {
+    private static void writeResponseBodyToDisk(File file, Buffer buffer) {
         try (InputStream inputStream = buffer.inputStream();
              OutputStream outputStream = new FileOutputStream(file)) {
-            return copyStreams(inputStream, outputStream);
+            copyStreams(inputStream, outputStream);
         } catch (IOException e) {
             Timber.e(e, "Unable to write ResponseBody to file");
-            return false;
         }
     }
 
@@ -119,16 +116,15 @@ public class FileUtils {
         }
     }
 
-    private static boolean copyInputStream(InputStream inputStream, File outputFile) {
+    private static void copyInputStream(InputStream inputStream, File outputFile) {
         try (OutputStream outputStream = new FileOutputStream(outputFile)) {
-            return copyStreams(inputStream, outputStream);
+            copyStreams(inputStream, outputStream);
         } catch (IOException e) {
             Timber.e(e, "Unable to copy certificate file");
-            return false;
         }
     }
 
-    public static boolean copyStreams(InputStream inputStream, OutputStream outputStream) throws IOException {
+    public static void copyStreams(InputStream inputStream, OutputStream outputStream) throws IOException {
         byte[] buffer = new byte[4096];
         while (true) {
             int read = inputStream.read(buffer);
@@ -137,12 +133,10 @@ public class FileUtils {
             }
             outputStream.write(buffer, 0, read);
         }
-
         outputStream.flush();
-        return true;
     }
 
-    public static boolean appendCharactersToFile(InputStream inputStream, File outputFile) throws IOException {
+    public static void appendCharactersToFile(InputStream inputStream, File outputFile) throws IOException {
         try (FileWriter writer = new FileWriter(outputFile, true);
              InputStreamReader reader = new InputStreamReader(inputStream)) {
             int characterCount = 4096;
@@ -154,36 +148,30 @@ public class FileUtils {
                 }
                 writer.write(buffer, 0, read);
             }
-
             writer.flush();
-            return true;
         } catch (IOException ioe) {
             Timber.e("Failed to append to file " + outputFile.getName());
             throw ioe;
         }
     }
 
-    public static boolean appendStringToFile(String string, File outputFile) throws IOException {
-        Timber.i("Last 5 characters are" + string.substring(string.length()-5));
+    public static void appendStringToFile(String string, File outputFile) throws IOException {
+        Timber.i("Last 5 characters are" + string.substring(string.length() - 5));
         FileWriter writer = new FileWriter(outputFile, true);
         writer.write(string);
-
         writer.flush();
-        return true;
     }
 
 
-    public static boolean writeStringToFile(String string, String outputPath) throws IOException {
+    public static void writeStringToFile(String string, String outputPath) throws IOException {
         File outputFile = new File(outputPath);
         FileWriter writer = new FileWriter(outputFile, false);
         writer.write(string);
         writer.flush();
-        return true;
     }
 
 
-    public static void copyAssetFile(Context appContext, String assetFilePath, String destinationFilePath) throws IOException
-    {
+    public static void copyAssetFile(Context appContext, String assetFilePath, String destinationFilePath) throws IOException {
         InputStream in = appContext.getAssets().open(assetFilePath);
         OutputStream out = new FileOutputStream(appContext.getFilesDir() + "/" + destinationFilePath);
 
@@ -207,7 +195,7 @@ public class FileUtils {
         return sb.toString();
     }
 
-    public static String getStringFromFile (String filePath) throws Exception {
+    public static String getStringFromFile(String filePath) throws Exception {
         File fl = new File(filePath);
         FileInputStream fin = new FileInputStream(fl);
         String ret = convertStreamToString(fin);

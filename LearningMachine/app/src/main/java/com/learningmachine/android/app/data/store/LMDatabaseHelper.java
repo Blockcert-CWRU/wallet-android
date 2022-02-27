@@ -18,7 +18,7 @@ public class LMDatabaseHelper extends SQLiteOpenHelper {
 
     private static final int DB_VERSION = 6;
 
-    private Migration[] mMigrations = { };
+    private final Migration[] mMigrations = { };
 
     @Inject
     public LMDatabaseHelper(Context context) {

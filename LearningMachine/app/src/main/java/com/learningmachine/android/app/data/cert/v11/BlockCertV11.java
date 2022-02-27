@@ -76,8 +76,7 @@ public class BlockCertV11 extends CertificateSchemaV11 implements BlockCert {
 
     @Override
     public IssuerResponse getIssuer() {
-        if (getCertificate() == null
-                || getCertificate().getIssuer() == null) {
+        if (getCertificate() == null || getCertificate().getIssuer() == null) {
             return null;
         }
 

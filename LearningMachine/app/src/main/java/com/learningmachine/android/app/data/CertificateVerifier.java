@@ -6,8 +6,6 @@ import com.learningmachine.android.app.R;
 import com.learningmachine.android.app.data.cert.BlockCert;
 import com.learningmachine.android.app.data.cert.BlockCertParser;
 import com.learningmachine.android.app.data.error.ExceptionWithResourceString;
-import com.learningmachine.android.app.data.webservice.BlockchainService;
-import com.learningmachine.android.app.data.webservice.IssuerService;
 import com.learningmachine.android.app.util.FileUtils;
 
 import java.io.File;
@@ -25,10 +23,11 @@ import timber.log.Timber;
 // the actual certificate verification process.  Instead, this class now provides a
 // theatrical playback of the verification process only
 public class CertificateVerifier {
+
     private final Context mContext;
 
     @Inject
-    public CertificateVerifier(Context context, BlockchainService blockchainService, IssuerService issuerService) {
+    public CertificateVerifier(Context context) {
         mContext = context;
     }
 
