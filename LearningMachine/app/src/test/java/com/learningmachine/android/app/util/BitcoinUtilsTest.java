@@ -27,15 +27,11 @@ import java.util.List;
 public class BitcoinUtilsTest {
 
     private static final String ABANDON_ABANDON_ART = "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon art";
-    private Context mContext;
 
     @Before
     public void setup() throws Exception {
-        mContext = Mockito.mock(Context.class);
-
-        InputStream inputStream = getClass().getClassLoader()
-                .getResourceAsStream("english.txt");
-
+        Context mContext = Mockito.mock(Context.class);
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("english.txt");
         AssetManager assetManager = Mockito.mock(AssetManager.class);
         Mockito.when(mContext.getAssets()).thenReturn(assetManager);
         Mockito.when(assetManager.open(any())).thenReturn(inputStream);

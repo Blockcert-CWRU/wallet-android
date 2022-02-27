@@ -49,18 +49,4 @@ public class AddIssuerTest {
 
         Timber.i("And we're running this test!");
     }
-
-//    @Test
-//    public void addIssuer_fromRecyclerViewState() {
-//        // Click the first issuer tile
-//        onView(withId(R.id.issuer_recyclerview))
-//                .perform(actionOnItemAtPosition(0, click()));
-//
-//        // Check that the "Add Certificate" button is displayed
-//        onView(withId(R.id.add_certificate_floating_action_button)).check(matches(isDisplayed()));
-//
-//        Timber.i("And we're running this test!");
-//    }
-
-
 }

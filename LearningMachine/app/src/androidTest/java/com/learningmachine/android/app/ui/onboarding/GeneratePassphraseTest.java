@@ -40,12 +40,6 @@ public class GeneratePassphraseTest {
     @Rule
     public ActivityTestRule<OnboardingActivity> mActivityTestRule = new ActivityTestRule<>(OnboardingActivity.class);
 
-//    @Before
-//    public void beforeTest() {
-//        Context appContext = InstrumentationRegistry.getTargetContext();
-//        ((ActivityManager) appContext.getSystemService(Context.ACTIVITY_SERVICE)).clearApplicationUserData();
-//    }
-
     @Test
     public void generatePassphraseTest() {
         ViewInteraction appCompatButton = onView(
@@ -95,7 +89,6 @@ public class GeneratePassphraseTest {
         });
         final String generatedPassphrase = generatedPassphraseArray[0];
         Timber.i("Generated passphrase: " + generatedPassphrase);
-//        textView.check(matches(withText("crater pioneer also space seven unhappy rare tail glove zero great noodle armed modify woman point guilt dry yellow inherit note reduce ticket brick")));
 
         ViewInteraction appCompatButton3 = onView(
                 allOf(withId(R.id.onboarding_done_button), withText("Done"),

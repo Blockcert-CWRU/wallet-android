@@ -62,15 +62,9 @@ public class CertificateVerificationTest {
 
     public static final String ISSUER_FILENAME = "issuer-v2.json";
 
-    private CertificateVerifier subject;
     private TxRecord mTxRecordD3F042;
-    private TxRecord mTxRecordC7667D;
-    private TxRecord mTxRecordA05E8B;
     private IssuerResponse mIssuer;
     private BlockCert validCertV12;
-    private BlockCert validCertV20alpha;
-    private BlockCert validCertV20;
-    private BlockCert forgedCertificate;
 
     @Before
     public void setup() {
@@ -79,9 +73,9 @@ public class CertificateVerificationTest {
         Gson gson = new Gson();
 
         BlockchainService blockchainService = mock(BlockchainService.class);
-        mTxRecordC7667D = gson.fromJson(getResourceAsReader(BTC_TX_RECORD_C7667D_FILENAME), TxRecord.class);
+        TxRecord mTxRecordC7667D = gson.fromJson(getResourceAsReader(BTC_TX_RECORD_C7667D_FILENAME), TxRecord.class);
         mTxRecordD3F042 = gson.fromJson(getResourceAsReader(BTC_TX_RECORD_D3F042_FILENAME), TxRecord.class);
-        mTxRecordA05E8B = gson.fromJson(getResourceAsReader(BTC_TX_RECORD_MAINNET_20_FILENAME), TxRecord.class);
+        TxRecord mTxRecordA05E8B = gson.fromJson(getResourceAsReader(BTC_TX_RECORD_MAINNET_20_FILENAME), TxRecord.class);
         when(blockchainService.getBlockchain(BTC_TX_RECORD_ID_C7667D)).thenReturn(Observable.just(mTxRecordC7667D));
         when(blockchainService.getBlockchain(BTC_TX_RECORD_ID_D3F042)).thenReturn(Observable.just(mTxRecordD3F042));
         when(blockchainService.getBlockchain(BTC_TX_RECORD_ID_A05E8B)).thenReturn(Observable.just(mTxRecordA05E8B));
@@ -90,53 +84,14 @@ public class CertificateVerificationTest {
         mIssuer = gson.fromJson(getResourceAsReader(ISSUER_FILENAME), IssuerResponse.class);
         when(issuerService.getIssuer(any())).thenReturn(Observable.just(mIssuer));
 
-        subject = new CertificateVerifier(context, blockchainService, issuerService);
+        CertificateVerifier subject = new CertificateVerifier(context);
 
         BlockCertParser blockCertParser = new BlockCertParser();
         validCertV12 = blockCertParser.fromJson(getResourceAsStream(CERT_FILENAME));
-        validCertV20alpha = blockCertParser.fromJson(getResourceAsStream(CERT_V20_ALPHA_FILENAME));
-        validCertV20 = blockCertParser.fromJson(getResourceAsStream(CERT_V20_FILENAME));
-        forgedCertificate = blockCertParser.fromJson(getResourceAsStream(FORGED_CERT_FILENAME));
+        BlockCert validCertV20alpha = blockCertParser.fromJson(getResourceAsStream(CERT_V20_ALPHA_FILENAME));
+        BlockCert validCertV20 = blockCertParser.fromJson(getResourceAsStream(CERT_V20_FILENAME));
+        BlockCert forgedCertificate = blockCertParser.fromJson(getResourceAsStream(FORGED_CERT_FILENAME));
     }
-
-    /* These funcations no longer exist, causing tests to fail */
-    /*
-    @Test
-    public void validCertV12ShouldVerifyIssuer() {
-        subject.verifyIssuer(validCertV12, mTxRecordC7667D)
-                .subscribe(issuerKey -> assertTrue(true));
-    }
-
-    @Test
-    public void validCertV12ShouldVerifyBitcoinTransaction() {
-        subject.verifyBitcoinTransactionRecord(validCertV12)
-                .subscribe(txRecord -> assertTrue(true));
-    }
-
-    @Test
-    public void validCertV20AlphaShouldVerifyIssuer() {
-        subject.verifyIssuer(validCertV20alpha, mTxRecordD3F042)
-                .subscribe(issuerKey -> assertTrue(true));
-    }
-
-    @Test
-    public void validCertV20AlphaShouldVerifyBitcoinTransaction() {
-        subject.verifyBitcoinTransactionRecord(validCertV20alpha)
-                .subscribe(remoteHash -> assertTrue(true));
-    }
-
-    @Test
-    public void validCertV20ShouldVerifyIssuer() {
-        subject.verifyIssuer(validCertV20, mTxRecordD3F042)
-                .subscribe(issuerKey -> assertTrue(true));
-    }
-
-    @Test
-    public void validCertV20ShouldVerifyBitcoinTransaction() {
-        subject.verifyBitcoinTransactionRecord(validCertV20)
-                .subscribe(remoteHash -> assertTrue(true));
-    }
-    */
 
     @Test
     public void forgedCertificateShouldFail() {

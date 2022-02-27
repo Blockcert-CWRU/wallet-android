@@ -30,9 +30,6 @@ public class AddAcceptingIssuerTest {
         onView(withId(R.id.add_issuer_url_edit_text)).perform(replaceText(WIREMOCK_SERVER + "/issuer/accepting-estimate-unsigned"), closeSoftKeyboard());
         onView(withId(R.id.add_issuer_nonce_edit_text)).perform(replaceText("1234"), closeSoftKeyboard());
         onView(withId(R.id.import_button)).perform(click());
-
-//        intended(hasComponent(IssuerActivity.class.getName()));
-//        intended(toPackage("com.learningmachine.android.app.ui.issuer.IssuerActivity"));
         Timber.i("Did it work??");
     }
 }
