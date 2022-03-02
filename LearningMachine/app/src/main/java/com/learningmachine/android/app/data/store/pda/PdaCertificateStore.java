@@ -54,12 +54,12 @@ public class PdaCertificateStore implements CertificateStore {
 
     @Override
     public void save(BlockCert cert) {
-        mStoreService.save(cert.getCertUid(), cert);
+        mStoreService.save(cert.getCertUid(), cert, mHatName, mAuthToken);
     }
 
     @Override
     public boolean delete(String certId) {
-        mStoreService.delete(certId);
+        mStoreService.delete(certId, mHatName, mAuthToken);
         return true;
     }
 
