@@ -3,27 +3,30 @@ package com.learningmachine.android.app.data.inject;
 import com.learningmachine.android.app.data.store.CertificateStore;
 import com.learningmachine.android.app.data.store.ImageStore;
 import com.learningmachine.android.app.data.store.IssuerStore;
-import com.learningmachine.android.app.data.store.SQLiteCertificateStore;
-import com.learningmachine.android.app.data.store.SQLiteImageStore;
-import com.learningmachine.android.app.data.store.SQLiteIssuerStore;
+import com.learningmachine.android.app.data.store.pda.PDACertificateStore;
+import com.learningmachine.android.app.data.store.pda.PDAIssuerStore;
+import com.learningmachine.android.app.data.store.sql.SQLiteImageStore;
 
 import javax.inject.Singleton;
 
 import dagger.Binds;
 import dagger.Module;
 
+// TODO Dagger does not support injecting @AssistedInject type
+//   We will need to migrate to providing these at runtime with authentication
+
 @Module
 interface DataBindings {
 
     @Binds
     @Singleton
-    CertificateStore bindCertificateStore(SQLiteCertificateStore certStore);
+    CertificateStore certificateStore(PDACertificateStore certificateStore);
 
     @Binds
     @Singleton
-    IssuerStore bindIssuerStore(SQLiteIssuerStore issuerStore);
+    IssuerStore issuerStore(PDAIssuerStore issuerStore);
 
     @Binds
     @Singleton
-    ImageStore bindImageStore(SQLiteImageStore imageStore);
+    ImageStore imageStore(SQLiteImageStore imageStore);
 }

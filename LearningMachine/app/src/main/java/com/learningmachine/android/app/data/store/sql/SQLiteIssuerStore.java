@@ -1,4 +1,4 @@
-package com.learningmachine.android.app.data.store;
+package com.learningmachine.android.app.data.store.sql;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -6,12 +6,12 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.learningmachine.android.app.data.model.IssuerRecord;
 import com.learningmachine.android.app.data.model.KeyRotation;
+import com.learningmachine.android.app.data.store.AbstractIssuerStore;
+import com.learningmachine.android.app.data.store.ImageStore;
+import com.learningmachine.android.app.data.store.LMDatabaseHelper;
 import com.learningmachine.android.app.data.store.cursor.IssuerCursorWrapper;
-import com.learningmachine.android.app.data.webservice.response.IssuerResponse;
 import com.learningmachine.android.app.util.ListUtils;
 import com.learningmachine.android.app.util.StringUtils;
-
-import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,65 +20,50 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class SQLiteIssuerStore implements IssuerStore {
+public class SQLiteIssuerStore extends AbstractIssuerStore {
 
     private final SQLiteDatabase mDatabase;
     private final ImageStore mImageStore;
 
     @Inject
     public SQLiteIssuerStore(SQLiteDatabase database, ImageStore imageStore) {
+        super(imageStore);
         mDatabase = database;
         mImageStore = imageStore;
     }
 
     @Override
-    public void saveIssuerResponse(IssuerResponse issuerResponse, String recipientPubKey) {
-        if (issuerResponse == null) {
-            return;
-        }
-
-        String uuid = issuerResponse.getUuid();
-        String imageData = issuerResponse.getImageData();
-        mImageStore.saveImage(uuid, imageData);
-
-        String introducedOn = DateTime.now().toString();
-        issuerResponse.setIntroducedOn(introducedOn);
-
-        saveIssuer(issuerResponse, recipientPubKey);
-    }
-
-    @Override
-    public void saveIssuer(IssuerRecord issuer, String recipientPubKey) {
+    public void saveRecord(IssuerRecord record, String recipientPubKey) {
         ContentValues contentValues = new ContentValues();
 
-        contentValues.put(LMDatabaseHelper.Column.Issuer.NAME, issuer.getName());
-        contentValues.put(LMDatabaseHelper.Column.Issuer.EMAIL, issuer.getEmail());
-        contentValues.put(LMDatabaseHelper.Column.Issuer.ISSUERURL, issuer.getIssuerURL());
-        contentValues.put(LMDatabaseHelper.Column.Issuer.INTRODUCED_ON, issuer.getIntroducedOn());
+        contentValues.put(LMDatabaseHelper.Column.Issuer.NAME, record.getName());
+        contentValues.put(LMDatabaseHelper.Column.Issuer.EMAIL, record.getEmail());
+        contentValues.put(LMDatabaseHelper.Column.Issuer.ISSUERURL, record.getIssuerURL());
+        contentValues.put(LMDatabaseHelper.Column.Issuer.INTRODUCED_ON, record.getIntroducedOn());
         contentValues.put(LMDatabaseHelper.Column.Issuer.RECIPIENT_PUB_KEY, recipientPubKey);
 
         // Issuers in certificates are incomplete, do not overwrite data if it was there before
-        String certsUrl = issuer.getCertsUrl();
+        String certsUrl = record.getCertsUrl();
         if (!StringUtils.isEmpty(certsUrl)) {
             contentValues.put(LMDatabaseHelper.Column.Issuer.CERTS_URL, certsUrl);
         }
-        String introUrl = issuer.getIntroUrl();
+        String introUrl = record.getIntroUrl();
         if (!StringUtils.isEmpty(introUrl)) {
             contentValues.put(LMDatabaseHelper.Column.Issuer.INTRO_URL, introUrl);
         }
-        String analyticsUrlString = issuer.getAnalyticsUrlString();
+        String analyticsUrlString = record.getAnalyticsUrlString();
         if (!StringUtils.isEmpty(analyticsUrlString)) {
             contentValues.put(LMDatabaseHelper.Column.Issuer.ANALYTICS, analyticsUrlString);
         }
-        String issuerId = issuer.getUuid();
-        if (!ListUtils.isEmpty(issuer.getIssuerKeys())) {
-            saveIssuerKeys(issuer.getIssuerKeys(), issuerId);
+        String issuerId = record.getUuid();
+        if (!ListUtils.isEmpty(record.getIssuerKeys())) {
+            saveIssuerKeys(record.getIssuerKeys(), issuerId);
         }
-        if (!ListUtils.isEmpty(issuer.getRevocationKeys())) {
-            saveRevocationKeys(issuer.getRevocationKeys(), issuerId);
+        if (!ListUtils.isEmpty(record.getRevocationKeys())) {
+            saveRevocationKeys(record.getRevocationKeys(), issuerId);
         }
 
-        if (loadIssuer(issuerId) == null) {
+        if (load(issuerId) == null) {
             contentValues.put(LMDatabaseHelper.Column.Issuer.UUID, issuerId);
             mDatabase.insert(LMDatabaseHelper.Table.ISSUER,
                     null,
@@ -91,7 +76,7 @@ public class SQLiteIssuerStore implements IssuerStore {
     }
 
     @Override
-    public List<IssuerRecord> loadIssuers() {
+    public List<IssuerRecord> loadAll() {
 
         List<IssuerRecord> issuerList = new ArrayList<>();
 
@@ -125,7 +110,7 @@ public class SQLiteIssuerStore implements IssuerStore {
     }
 
     @Override
-    public IssuerRecord loadIssuer(String issuerId) {
+    public IssuerRecord load(String issuerId) {
         IssuerRecord issuer = null;
         Cursor cursor = mDatabase.query(
                 LMDatabaseHelper.Table.ISSUER,
@@ -151,7 +136,7 @@ public class SQLiteIssuerStore implements IssuerStore {
     }
 
     @Override
-    public IssuerRecord loadIssuerForCertificate(String certId) {
+    public IssuerRecord loadForCertificate(String certId) {
         IssuerRecord issuer = null;
 
         String selectQuery = "SELECT "

@@ -1,8 +1,8 @@
 package com.learningmachine.android.app.data.store.pda;
 
 import com.learningmachine.android.app.data.cert.BlockCert;
-import com.learningmachine.android.app.data.inject.DaggerPdaStoreComponent;
-import com.learningmachine.android.app.data.inject.PdaStoreComponent;
+import com.learningmachine.android.app.data.inject.DaggerPDAComponent;
+import com.learningmachine.android.app.data.inject.PDAComponent;
 import com.learningmachine.android.app.data.model.CertificateRecord;
 import com.learningmachine.android.app.data.store.CertificateStore;
 import com.learningmachine.android.app.util.ListUtils;
@@ -12,18 +12,18 @@ import java.util.List;
 import dagger.assisted.Assisted;
 import dagger.assisted.AssistedInject;
 
-public class PdaCertificateStore implements CertificateStore {
+public class PDACertificateStore implements CertificateStore {
 
-    private static final PdaStoreComponent COMPONENT = DaggerPdaStoreComponent.create();
-    private final PdaIndexService mIndexService;
-    private final PdaCertificateStoreService mStoreService;
+    private static final PDAComponent COMPONENT = DaggerPDAComponent.builder().build();
+    private final PDAIndexService mIndexService;
+    private final PDACertificateStoreService mStoreService;
     private final String mHatName;
     private final String mAuthToken;
 
     @AssistedInject
-    PdaCertificateStore(
-            PdaIndexService indexService,
-            PdaCertificateStoreService storeService,
+    PDACertificateStore(
+            PDAIndexService indexService,
+            PDACertificateStoreService storeService,
             @Assisted("hatName") String hatName,
             @Assisted("authToken") String authToken) {
         mIndexService = indexService;
@@ -32,8 +32,8 @@ public class PdaCertificateStore implements CertificateStore {
         mAuthToken = authToken;
     }
 
-    public static PdaCertificateStore create(String hatName, String authToken) {
-        return COMPONENT.getCertFactory().create(hatName, authToken);
+    public static PDACertificateStore create(String hatName, String authToken) {
+        return COMPONENT.certificateStoreFactory().create(hatName, authToken);
     }
 
     @Override
@@ -47,14 +47,14 @@ public class PdaCertificateStore implements CertificateStore {
                 .records()
                 .stream()
                 .filter(record -> record.issuerId().equals(issuerId))
-                .map(IndexRecord::certId)
+                .map(PDAIndexRecord::certId)
                 .map(this::load)
                 .collect(ListUtils.toImmutableList());
     }
 
     @Override
     public void save(BlockCert cert) {
-        mStoreService.save(cert.getCertUid(), cert, mHatName, mAuthToken);
+        mStoreService.save(cert, cert.getCertUid(), mHatName, mAuthToken);
     }
 
     @Override

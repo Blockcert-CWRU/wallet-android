@@ -1,8 +1,9 @@
 package com.learningmachine.android.app.data.inject;
 
 import com.learningmachine.android.app.LMConstants;
-import com.learningmachine.android.app.data.store.pda.PdaCertificateStoreService;
-import com.learningmachine.android.app.data.store.pda.PdaIndexService;
+import com.learningmachine.android.app.data.store.pda.PDACertificateStoreService;
+import com.learningmachine.android.app.data.store.pda.PDAIndexService;
+import com.learningmachine.android.app.data.store.pda.PDAIssuerStoreService;
 import com.learningmachine.android.app.data.webservice.BlockchainService;
 import com.learningmachine.android.app.data.webservice.CertificateInterceptor;
 import com.learningmachine.android.app.data.webservice.CertificateService;
@@ -78,8 +79,29 @@ public class ApiModule {
 
     @Provides
     @Singleton
-    static PdaCertificateStoreService certStoreService(@Named("certStore") Retrofit retrofit) {
-        return retrofit.create(PdaCertificateStoreService.class);
+    static PDACertificateStoreService certStoreService(@Named("certStore") Retrofit retrofit) {
+        return retrofit.create(PDACertificateStoreService.class);
+    }
+
+    @Provides
+    @Singleton
+    @Named("issuerStore")
+    static OkHttpClient issuerStoreServiceClient(Interceptor loggingInterceptor) {
+        return okHttpClient(loggingInterceptor);
+    }
+
+    @Provides
+    @Singleton
+    @Named("issuerStore")
+    static Retrofit issuerStoreRetrofit(@Named("issuerStore") OkHttpClient client) {
+        return retrofit(LMConstants.BASE_PDA_URL, client);
+    }
+
+    @Provides
+    @Singleton
+    @Named("issuerStore")
+    static PDAIssuerStoreService issuerStoreService(@Named("issuerStore") Retrofit retrofit) {
+        return retrofit.create(PDAIssuerStoreService.class);
     }
 
     @Provides
@@ -98,8 +120,8 @@ public class ApiModule {
 
     @Provides
     @Singleton
-    static PdaIndexService provideIndexService(@Named("index") Retrofit retrofit) {
-        return retrofit.create(PdaIndexService.class);
+    static PDAIndexService provideIndexService(@Named("index") Retrofit retrofit) {
+        return retrofit.create(PDAIndexService.class);
     }
 
     @Provides

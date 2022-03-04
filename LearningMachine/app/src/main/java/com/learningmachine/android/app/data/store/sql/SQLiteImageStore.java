@@ -1,8 +1,9 @@
-package com.learningmachine.android.app.data.store;
+package com.learningmachine.android.app.data.store.sql;
 
 import android.content.Context;
 import android.util.Base64;
 
+import com.learningmachine.android.app.data.store.ImageStore;
 import com.learningmachine.android.app.util.ImageUtils;
 import com.learningmachine.android.app.util.StringUtils;
 
@@ -26,7 +27,7 @@ public class SQLiteImageStore implements ImageStore {
     }
 
     /**
-     * @param issuerId     Issuer url
+     * @param issuerId Issuer url
      * @param jsonData Image data
      * @return true if the image was written to file successfully
      */

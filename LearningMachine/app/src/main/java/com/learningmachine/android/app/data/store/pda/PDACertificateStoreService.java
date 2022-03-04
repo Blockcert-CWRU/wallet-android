@@ -11,7 +11,7 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
-public interface PdaCertificateStoreService {
+public interface PDACertificateStoreService {
 
     @GET("/certs/{certId}")
     CertificateRecord load(
@@ -21,8 +21,8 @@ public interface PdaCertificateStoreService {
 
     @PUT("/certs/{certId}")
     void save(
-            @Path("certId") String certId,
             @Body BlockCert cert,
+            @Path("certId") String certId,
             @Path("hatName") String hatName,
             @Header("x-auth-token") String authToken);
 

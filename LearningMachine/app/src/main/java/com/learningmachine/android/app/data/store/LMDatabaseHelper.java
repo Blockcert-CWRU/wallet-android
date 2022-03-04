@@ -14,11 +14,12 @@ import javax.inject.Singleton;
 @Singleton
 public class LMDatabaseHelper extends SQLiteOpenHelper {
 
-    @VisibleForTesting static final String DB_NAME = "com.learningmachine.android.app.sqlite";
+    @VisibleForTesting
+    static final String DB_NAME = "com.learningmachine.android.app.sqlite";
 
     private static final int DB_VERSION = 6;
 
-    private final Migration[] mMigrations = { };
+    private final Migration[] mMigrations = {};
 
     @Inject
     public LMDatabaseHelper(Context context) {
@@ -56,7 +57,7 @@ public class LMDatabaseHelper extends SQLiteOpenHelper {
             } else {
                 sqLiteDatabase.execSQL(String.format("alter table %s add column %s %s", tableName, columnName, typeName));
             }
-        }catch (Exception ignored) {
+        } catch (Exception ignored) {
 
         }
     }
@@ -68,47 +69,6 @@ public class LMDatabaseHelper extends SQLiteOpenHelper {
             }
         }
         return null;
-    }
-
-    public static class Table {
-        public static final String ISSUER = "Issuer";
-        public static final String ISSUER_KEY = "IssuerKey";
-        public static final String REVOCATION_KEY = "RevocationKey";
-        public static final String CERTIFICATE = "Certificate";
-    }
-
-    public static class Column {
-        public static class Issuer {
-            public static final String ID = "id";
-            public static final String NAME = "name";
-            public static final String EMAIL = "email";
-            public static final String ISSUERURL = "issuer_url";
-            public static final String UUID = "uuid";
-            public static final String CERTS_URL = "certs_url";
-            public static final String INTRO_URL = "intro_url";
-            public static final String INTRODUCED_ON = "introduced_on";
-            public static final String ANALYTICS = "analytics";
-            public static final String RECIPIENT_PUB_KEY = "recipient_pub_key";
-        }
-
-        public static class KeyRotation {
-            public static final String ID = "id";
-            public static final String ISSUER_UUID = "issuer_uuid";
-            public static final String KEY = "key";
-            public static final String CREATED_DATE = "created_date";
-        }
-
-        public static class Certificate {
-            public static final String ID = "id";
-            public static final String UUID = "uuid";
-            public static final String ISSUER_UUID = "issuer_id";
-            public static final String NAME = "name";
-            public static final String DESCRIPTION = "description";
-            public static final String ISSUE_DATE = "issue_date";
-            public static final String URL = "url";
-            public static final String EXPIRATION_DATE = "expiration_date";
-            public static final String METADATA = "metadata";
-        }
     }
 
     private void createIssuerTable(SQLiteDatabase sqLiteDatabase) {
@@ -161,5 +121,46 @@ public class LMDatabaseHelper extends SQLiteOpenHelper {
                 + ", " + Column.Certificate.METADATA + " TEXT"
                 + ");";
         sqLiteDatabase.execSQL(createTable);
+    }
+
+    public static class Table {
+        public static final String ISSUER = "Issuer";
+        public static final String ISSUER_KEY = "IssuerKey";
+        public static final String REVOCATION_KEY = "RevocationKey";
+        public static final String CERTIFICATE = "Certificate";
+    }
+
+    public static class Column {
+        public static class Issuer {
+            public static final String ID = "id";
+            public static final String NAME = "name";
+            public static final String EMAIL = "email";
+            public static final String ISSUERURL = "issuer_url";
+            public static final String UUID = "uuid";
+            public static final String CERTS_URL = "certs_url";
+            public static final String INTRO_URL = "intro_url";
+            public static final String INTRODUCED_ON = "introduced_on";
+            public static final String ANALYTICS = "analytics";
+            public static final String RECIPIENT_PUB_KEY = "recipient_pub_key";
+        }
+
+        public static class KeyRotation {
+            public static final String ID = "id";
+            public static final String ISSUER_UUID = "issuer_uuid";
+            public static final String KEY = "key";
+            public static final String CREATED_DATE = "created_date";
+        }
+
+        public static class Certificate {
+            public static final String ID = "id";
+            public static final String UUID = "uuid";
+            public static final String ISSUER_UUID = "issuer_id";
+            public static final String NAME = "name";
+            public static final String DESCRIPTION = "description";
+            public static final String ISSUE_DATE = "issue_date";
+            public static final String URL = "url";
+            public static final String EXPIRATION_DATE = "expiration_date";
+            public static final String METADATA = "metadata";
+        }
     }
 }

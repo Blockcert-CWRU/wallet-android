@@ -11,6 +11,8 @@ import com.learningmachine.android.app.BuildConfig;
 import com.learningmachine.android.app.data.cert.BlockCert;
 import com.learningmachine.android.app.data.cert.v12.BlockCertV12;
 import com.learningmachine.android.app.data.model.IssuerRecord;
+import com.learningmachine.android.app.data.store.sql.SQLiteCertificateStore;
+import com.learningmachine.android.app.data.store.sql.SQLiteIssuerStore;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -55,7 +57,7 @@ public class InnerJoinTest {
         issuerOrig.setRevocationKeys(new ArrayList<>());
         issuerOrig.setIssuerKeys(new ArrayList<>());
 
-        mIssuerStore.saveIssuer(issuerOrig, recipientPubKey);
+        mIssuerStore.saveRecord(issuerOrig, recipientPubKey);
 
         String certUuid = "certUuid";
         String certName = "Sample Certificate 1";
@@ -67,7 +69,7 @@ public class InnerJoinTest {
 
         mCertificateStore.save(blockCert);
 
-        IssuerRecord issuerLoaded = mIssuerStore.loadIssuerForCertificate(certUuid);
+        IssuerRecord issuerLoaded = mIssuerStore.loadForCertificate(certUuid);
 
         assertNotNull(issuerLoaded);
         assertEquals(name, issuerLoaded.getName());
