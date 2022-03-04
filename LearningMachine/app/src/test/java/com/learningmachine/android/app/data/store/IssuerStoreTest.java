@@ -59,9 +59,9 @@ public class IssuerStoreTest {
         IssuerRecord issuerOrig = new IssuerRecord(name, email, issuerUrl, issuerUuid, certsUrl, introUrl, introducedOn, analytics, recipientPubKey);
         issuerOrig.setRevocationKeys(new ArrayList<>());
         issuerOrig.setIssuerKeys(new ArrayList<>());
-        mIssuerStore.saveIssuer(issuerOrig, recipientPubKey);
+        mIssuerStore.saveRecord(issuerOrig, recipientPubKey);
 
-        IssuerRecord issuerLoaded = mIssuerStore.loadIssuer(issuerUuid);
+        IssuerRecord issuerLoaded = mIssuerStore.load(issuerUuid);
 
         assertNotNull(issuerLoaded);
         assertEquals(name, issuerLoaded.getName());

@@ -8,16 +8,16 @@ import java.util.List;
 
 public interface IssuerStore extends DataStore {
 
-    void saveIssuerResponse(IssuerResponse issuerResponse, String recipientPubKey);
+    void saveResponse(IssuerResponse response, String recipientPubKey);
 
 
-    void saveIssuer(IssuerRecord issuer, String recipientPubKey);
+    void saveRecord(IssuerRecord record, String recipientPubKey);
 
-    List<IssuerRecord> loadIssuers();
+    List<IssuerRecord> loadAll();
 
-    IssuerRecord loadIssuer(String issuerId);
+    IssuerRecord load(String issuerId);
 
-    IssuerRecord loadIssuerForCertificate(String certId);
+    IssuerRecord loadForCertificate(String certId);
 
 
     void saveKeyRotation(KeyRotation keyRotation, String issuerId, String tableName);

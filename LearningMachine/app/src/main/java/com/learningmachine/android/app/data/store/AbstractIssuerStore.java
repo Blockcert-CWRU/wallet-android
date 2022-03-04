@@ -12,11 +12,11 @@ public abstract class AbstractIssuerStore implements IssuerStore {
         mImageStore = imageStore;
     }
 
-    public void saveIssuerResponse(IssuerResponse issuerResponse, String recipientPubKey) {
-        if (issuerResponse != null) {
-            mImageStore.saveImage(issuerResponse.getUuid(), issuerResponse.getImageData());
-            issuerResponse.setIntroducedOn(DateTime.now().toString());
-            saveIssuer(issuerResponse, recipientPubKey);
+    public void saveResponse(IssuerResponse response, String recipientPubKey) {
+        if (response != null) {
+            mImageStore.saveImage(response.getUuid(), response.getImageData());
+            response.setIntroducedOn(DateTime.now().toString());
+            saveRecord(response, recipientPubKey);
         }
     }
 }

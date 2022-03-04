@@ -131,7 +131,7 @@ public class CertificateManager {
 
             return mIssuerManager.fetchIssuer(blockCert.getIssuerId()).map(issuer -> {
                 String recipientPublicKey = blockCert.getRecipientPublicKey();
-                mIssuerStore.saveIssuerResponse(issuer, recipientPublicKey);
+                mIssuerStore.saveResponse(issuer, recipientPublicKey);
                 return certUid;
             });
         } catch (JsonSyntaxException e) {
@@ -192,7 +192,7 @@ public class CertificateManager {
 
         return mIssuerManager.fetchIssuer(blockCert.getIssuerId()).map(issuer -> {
             String recipientPublicKey = blockCert.getRecipientPublicKey();
-            mIssuerStore.saveIssuerResponse(issuer, recipientPublicKey);
+            mIssuerStore.saveResponse(issuer, recipientPublicKey);
             return certUid;
         });
     }

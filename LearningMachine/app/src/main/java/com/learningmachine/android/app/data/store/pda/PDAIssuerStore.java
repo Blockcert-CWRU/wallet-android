@@ -53,28 +53,28 @@ public class PDAIssuerStore extends AbstractIssuerStore {
     }
 
     @Override
-    public void saveIssuer(IssuerRecord issuer, String recipientPubKey) {
-        mStoreService.save(issuer, issuer.getUuid(), recipientPubKey, mHatName, mAuthToken);
+    public void saveRecord(IssuerRecord record, String recipientPubKey) {
+        mStoreService.save(record, record.getUuid(), recipientPubKey, mHatName, mAuthToken);
     }
 
     @Override
-    public List<IssuerRecord> loadIssuers() {
+    public List<IssuerRecord> loadAll() {
         return ImmutableList.copyOf(mStoreService.loadAll(mHatName, mAuthToken));
     }
 
     @Override
-    public IssuerRecord loadIssuer(String issuerId) {
+    public IssuerRecord load(String issuerId) {
         return mStoreService.load(issuerId, mHatName, mAuthToken);
     }
 
     @Override
-    public IssuerRecord loadIssuerForCertificate(String certId) {
+    public IssuerRecord loadForCertificate(String certId) {
         List<IssuerRecord> records = mIndexService.get(mHatName, mAuthToken)
                 .records()
                 .stream()
                 .filter(record -> record.certId().equals(certId))
                 .map(PDAIndexRecord::issuerId)
-                .map(this::loadIssuer)
+                .map(this::load)
                 .collect(Collectors.toList());
         checkRecords(records);
         return records.get(0);
