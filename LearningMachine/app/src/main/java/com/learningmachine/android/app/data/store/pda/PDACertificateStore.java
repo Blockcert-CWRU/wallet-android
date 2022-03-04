@@ -13,7 +13,7 @@ import dagger.assisted.AssistedInject;
 
 public class PDACertificateStore implements CertificateStore {
 
-    private static final PdaStoreComponent COMPONENT = DaggerPdaStoreComponent.create();
+    private static final PdaStoreComponent COMPONENT = DaggerPDAStoreComponent.create();
     private final PDAIndexService mIndexService;
     private final PDACertificateStoreService mStoreService;
     private final String mHatName;
@@ -32,7 +32,7 @@ public class PDACertificateStore implements CertificateStore {
     }
 
     public static PDACertificateStore create(String hatName, String authToken) {
-        return COMPONENT.getCertFactory().create(hatName, authToken);
+        return COMPONENT.certificateStoreFactory().create(hatName, authToken);
     }
 
     @Override
