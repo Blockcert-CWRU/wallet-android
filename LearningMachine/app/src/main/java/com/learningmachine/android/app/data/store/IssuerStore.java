@@ -10,6 +10,7 @@ public interface IssuerStore extends DataStore {
 
     void saveIssuerResponse(IssuerResponse issuerResponse, String recipientPubKey);
 
+
     void saveIssuer(IssuerRecord issuer, String recipientPubKey);
 
     List<IssuerRecord> loadIssuers();
@@ -17,6 +18,7 @@ public interface IssuerStore extends DataStore {
     IssuerRecord loadIssuer(String issuerId);
 
     IssuerRecord loadIssuerForCertificate(String certId);
+
 
     void saveKeyRotation(KeyRotation keyRotation, String issuerId, String tableName);
 

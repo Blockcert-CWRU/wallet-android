@@ -3,6 +3,7 @@ package com.learningmachine.android.app.data.inject;
 import com.learningmachine.android.app.LMConstants;
 import com.learningmachine.android.app.data.store.pda.PdaCertificateStoreService;
 import com.learningmachine.android.app.data.store.pda.PdaIndexService;
+import com.learningmachine.android.app.data.store.pda.PdaIssuerStoreService;
 import com.learningmachine.android.app.data.webservice.BlockchainService;
 import com.learningmachine.android.app.data.webservice.CertificateInterceptor;
 import com.learningmachine.android.app.data.webservice.CertificateService;
@@ -80,6 +81,12 @@ public class ApiModule {
     @Singleton
     static PdaCertificateStoreService certStoreService(@Named("certStore") Retrofit retrofit) {
         return retrofit.create(PdaCertificateStoreService.class);
+    }
+
+    @Provides
+    @Singleton
+    static PdaIssuerStoreService issuerStoreService(@Named("certStore") Retrofit retrofit) {
+        return retrofit.create(PdaIssuerStoreService.class);
     }
 
     @Provides

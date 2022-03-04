@@ -1,5 +1,9 @@
 package com.learningmachine.android.app.data.store.pda;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import com.learningmachine.android.app.data.cert.BlockCert;
 import com.learningmachine.android.app.data.inject.DaggerPdaStoreComponent;
 import com.learningmachine.android.app.data.inject.PdaStoreComponent;
@@ -41,6 +45,7 @@ public class PdaCertificateStore implements CertificateStore {
         return mStoreService.load(certId, mHatName, mAuthToken);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public List<CertificateRecord> loadForIssuer(String issuerId) {
         return mIndexService.get(mHatName, mAuthToken)
