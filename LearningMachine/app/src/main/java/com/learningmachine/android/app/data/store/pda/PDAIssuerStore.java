@@ -74,7 +74,7 @@ public class PDAIssuerStore extends AbstractIssuerStore {
                 .records()
                 .stream()
                 .filter(record -> record.certId().equals(certId))
-                .map(IndexRecord::issuerId)
+                .map(PDAIndexRecord::issuerId)
                 .map(this::loadIssuer)
                 .collect(ListUtils.toImmutableList());
 

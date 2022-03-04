@@ -46,7 +46,7 @@ public class PDACertificateStore implements CertificateStore {
                 .records()
                 .stream()
                 .filter(record -> record.issuerId().equals(issuerId))
-                .map(IndexRecord::certId)
+                .map(PDAIndexRecord::certId)
                 .map(this::load)
                 .collect(ListUtils.toImmutableList());
     }

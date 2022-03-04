@@ -11,17 +11,17 @@ import retrofit2.http.Path;
 public interface PDAIndexService {
 
     @GET("/index")
-    Index get(@Path("hatName") String hatName, @Header("x-auth-token") String authToken);
+    PDAIndex get(@Path("hatName") String hatName, @Header("x-auth-token") String authToken);
 
     @POST("/index")
     void create(
-            @Body Index index,
+            @Body PDAIndex index,
             @Path("hatName") String hatName,
             @Header("x-auth-token") String authToken);
 
     @PUT("/index")
     void update(
-            @Body Index index,
+            @Body PDAIndex index,
             @Path("hatName") String hatName,
             @Header("x-auth-token") String authToken);
 

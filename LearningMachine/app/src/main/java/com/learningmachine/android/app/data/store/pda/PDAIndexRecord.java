@@ -1,6 +1,6 @@
 package com.learningmachine.android.app.data.store.pda;
 
-public abstract class IndexRecord {
+public abstract class PDAIndexRecord {
 
     public abstract String certId();
 
