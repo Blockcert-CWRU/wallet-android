@@ -54,17 +54,17 @@ public class PDAIssuerStore extends AbstractIssuerStore {
 
     @Override
     public void saveIssuer(IssuerRecord issuer, String recipientPubKey) {
-        mStoreService.save(issuer.getUuid(), recipientPubKey, issuer);
+        mStoreService.save(issuer, issuer.getUuid(), recipientPubKey, mHatName, mAuthToken);
     }
 
     @Override
     public List<IssuerRecord> loadIssuers() {
-        return ImmutableList.copyOf(mStoreService.loadAll());
+        return ImmutableList.copyOf(mStoreService.loadAll(mHatName, mAuthToken));
     }
 
     @Override
     public IssuerRecord loadIssuer(String issuerId) {
-        return mStoreService.load(issuerId);
+        return mStoreService.load(issuerId, mHatName, mAuthToken);
     }
 
     @Override

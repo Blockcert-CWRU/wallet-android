@@ -20,8 +20,15 @@ public interface PDACertificateStoreService {
             @Header("x-auth-token") String authToken);
 
     @PUT("/certs/{certId}")
-    void save(@Path("certId") String certId, @Body BlockCert cert);
+    void save(
+            @Body BlockCert cert,
+            @Path("certId") String certId,
+            @Path("hatName") String hatName,
+            @Header("x-auth-token") String authToken);
 
     @DELETE("/certs")
-    void delete(@Query("records") String certId);
+    void delete(
+            @Query("records") String certId,
+            @Path("hatName") String hatName,
+            @Header("x-auth-token") String authToken);
 }
