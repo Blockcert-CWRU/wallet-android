@@ -85,7 +85,22 @@ public class ApiModule {
 
     @Provides
     @Singleton
-    static PDAIssuerStoreService issuerStoreService(@Named("certStore") Retrofit retrofit) {
+    @Named("issuerStore")
+    static OkHttpClient issuerStoreServiceClient(Interceptor loggingInterceptor) {
+        return okHttpClient(loggingInterceptor);
+    }
+
+    @Provides
+    @Singleton
+    @Named("issuerStore")
+    static Retrofit issuerStoreRetrofit(@Named("issuerStore") OkHttpClient client) {
+        return retrofit(LMConstants.BASE_PDA_URL, client);
+    }
+
+    @Provides
+    @Singleton
+    @Named("issuerStore")
+    static PDAIssuerStoreService issuerStoreService(@Named("issuerStore") Retrofit retrofit) {
         return retrofit.create(PDAIssuerStoreService.class);
     }
 
