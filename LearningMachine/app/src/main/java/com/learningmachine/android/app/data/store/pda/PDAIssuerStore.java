@@ -10,6 +10,7 @@ import com.learningmachine.android.app.data.store.ImageStore;
 import com.learningmachine.android.app.data.store.IssuerStore;
 import com.learningmachine.android.app.data.store.sql.SQLiteIssuerStore;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -79,7 +80,7 @@ public class PDAIssuerStore extends AbstractIssuerStore {
         return records.get(0);
     }
 
-    private static void checkRecords(List<IssuerRecord> records) {
+    private static void checkRecords(Collection<IssuerRecord> records) {
         if (records.isEmpty()) {
             throw new NoSuchElementException();
         } else if (records.size() > 1) {
