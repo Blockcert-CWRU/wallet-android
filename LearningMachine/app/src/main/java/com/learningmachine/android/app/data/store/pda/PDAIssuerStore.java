@@ -21,16 +21,16 @@ import dagger.assisted.AssistedInject;
 public class PDAIssuerStore extends AbstractIssuerStore {
 
     private static final PdaStoreComponent COMPONENT = DaggerPdaStoreComponent.create();
-    private final PdaIssuerStoreService missuerStoreService;
-    private final PdaIndexService mIndexService;
+    private final PDAIssuerStoreService missuerStoreService;
+    private final PDAIndexService mIndexService;
     private final String mHatName;
     private final String mAuthToken;
     private final SQLiteIssuerStore sQLiteIssuerStore;
 
     @AssistedInject
     PDAIssuerStore(
-            PdaIssuerStoreService missuerStoreService,
-            PdaIndexService mIndexService,
+            PDAIssuerStoreService missuerStoreService,
+            PDAIndexService mIndexService,
             @Assisted("hatName") String hatName,
             @Assisted("authToken") String authToken,
             ImageStore imageStore,

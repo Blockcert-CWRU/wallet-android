@@ -11,7 +11,7 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
-public interface PdaIssuerStoreService {
+public interface PDAIssuerStoreService {
 
     @GET("/issuerRecords/{issuerId}")
     IssuerRecord load(

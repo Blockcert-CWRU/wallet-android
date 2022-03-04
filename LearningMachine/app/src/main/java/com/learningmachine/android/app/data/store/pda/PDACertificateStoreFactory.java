@@ -4,9 +4,9 @@ import dagger.assisted.Assisted;
 import dagger.assisted.AssistedFactory;
 
 @AssistedFactory
-public interface PdaCertificateStoreFactory {
+public interface PDACertificateStoreFactory {
 
-    PdaCertificateStore create(
+    PDACertificateStore create(
             @Assisted("hatName") String hatName,
             @Assisted("authToken") String authToken);
 
