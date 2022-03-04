@@ -7,7 +7,6 @@ import com.learningmachine.android.app.data.store.AbstractIssuerStore;
 import com.learningmachine.android.app.data.store.CertificateStore;
 import com.learningmachine.android.app.data.store.ImageStore;
 import com.learningmachine.android.app.data.store.sql.SQLiteIssuerStore;
-import com.learningmachine.android.app.data.store.pda.AbstractIssuerStore;
 import com.learningmachine.android.app.util.ListUtils;
 
 import java.util.List;
@@ -35,7 +34,7 @@ public class PDAIssuerStore extends AbstractIssuerStore {
             @Assisted("hatName") String hatName,
             @Assisted("authToken") String authToken,
             ImageStore imageStore,
-            SQLiteIssuerStore sQLiteIssuerStore ) {
+            SQLiteIssuerStore sQLiteIssuerStore) {
 
         super(imageStore);
         this.missuerStoreService = missuerStoreService;
@@ -45,6 +44,9 @@ public class PDAIssuerStore extends AbstractIssuerStore {
         this.sQLiteIssuerStore = sQLiteIssuerStore;
     }
 
+    public static CertificateStore createPDAIssuerStore() {
+        return COMPONENT.getPDAIssuerStoreFactory().create(mHatName, mAuthToken);
+    }
 
     @Override
     public void reset() {
@@ -66,24 +68,19 @@ public class PDAIssuerStore extends AbstractIssuerStore {
         return missuerStoreService.load(issuerId);
     }
 
-    public static CertificateStore createPDAIssuerStore(){
-        return COMPONENT.getPDAIssuerStoreFactory().create(mHatName, mAuthToken);
-    }
-
     @Override
     public IssuerRecord loadIssuerForCertificate(String certId) {
         List<IssuerRecord> issuerRecordList = mIndexService.get(mHatName, mAuthToken)
-                                                .records()
-                                                .stream()
-                                                .filter(record -> record.certId().equals(certId))
-                                                .map(IndexRecord::issuerId)
-                                                .map(this::loadIssuer)
-                                                .collect(ListUtils.toImmutableList());
+                .records()
+                .stream()
+                .filter(record -> record.certId().equals(certId))
+                .map(IndexRecord::issuerId)
+                .map(this::loadIssuer)
+                .collect(ListUtils.toImmutableList());
 
-        if(issuerRecordList.isEmpty()) {
+        if (issuerRecordList.isEmpty()) {
             throw new NoSuchElementException();
-        }
-        else if (issuerRecordList.size() > 1){
+        } else if (issuerRecordList.size() > 1) {
             throw new IllegalStateException("More than 1 record corresponding to certID");
         }
         return issuerRecordList.get(0);

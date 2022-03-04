@@ -27,7 +27,7 @@ public class SQLiteImageStore implements ImageStore {
     }
 
     /**
-     * @param issuerId     Issuer url
+     * @param issuerId Issuer url
      * @param jsonData Image data
      * @return true if the image was written to file successfully
      */

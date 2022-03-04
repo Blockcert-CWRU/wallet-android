@@ -10,7 +10,6 @@ import com.learningmachine.android.app.data.store.AbstractIssuerStore;
 import com.learningmachine.android.app.data.store.ImageStore;
 import com.learningmachine.android.app.data.store.LMDatabaseHelper;
 import com.learningmachine.android.app.data.store.cursor.IssuerCursorWrapper;
-import com.learningmachine.android.app.data.store.pda.AbstractIssuerStore;
 import com.learningmachine.android.app.util.ListUtils;
 import com.learningmachine.android.app.util.StringUtils;
 
@@ -21,7 +20,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class SQLiteIssuerStore  extends AbstractIssuerStore {
+public class SQLiteIssuerStore extends AbstractIssuerStore {
 
     private final SQLiteDatabase mDatabase;
     private final ImageStore mImageStore;

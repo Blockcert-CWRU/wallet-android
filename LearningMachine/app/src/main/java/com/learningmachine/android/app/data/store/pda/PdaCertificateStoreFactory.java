@@ -1,7 +1,5 @@
 package com.learningmachine.android.app.data.store.pda;
 
-import com.learningmachine.android.app.data.store.PDAIssuerStore;
-
 import dagger.assisted.Assisted;
 import dagger.assisted.AssistedFactory;
 

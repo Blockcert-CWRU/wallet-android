@@ -1,7 +1,5 @@
 package com.learningmachine.android.app.data.store;
 
-import com.learningmachine.android.app.data.store.ImageStore;
-import com.learningmachine.android.app.data.store.IssuerStore;
 import com.learningmachine.android.app.data.webservice.response.IssuerResponse;
 
 import org.joda.time.DateTime;
@@ -9,11 +7,11 @@ import org.joda.time.DateTime;
 public abstract class AbstractIssuerStore implements IssuerStore {
     private final ImageStore imageStore;
 
-    protected AbstractIssuerStore(ImageStore imageStore){
+    protected AbstractIssuerStore(ImageStore imageStore) {
         this.imageStore = imageStore;
     }
 
-    public void saveIssuerResponse(IssuerResponse issuerResponse, String recipientPubKey){
+    public void saveIssuerResponse(IssuerResponse issuerResponse, String recipientPubKey) {
         if (issuerResponse == null) {
             return;
         }
