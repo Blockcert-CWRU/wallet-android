@@ -5,24 +5,18 @@ import com.learningmachine.android.app.data.webservice.response.IssuerResponse;
 import org.joda.time.DateTime;
 
 public abstract class AbstractIssuerStore implements IssuerStore {
-    private final ImageStore imageStore;
+
+    private final ImageStore mImageStore;
 
     protected AbstractIssuerStore(ImageStore imageStore) {
-        this.imageStore = imageStore;
+        mImageStore = imageStore;
     }
 
     public void saveIssuerResponse(IssuerResponse issuerResponse, String recipientPubKey) {
-        if (issuerResponse == null) {
-            return;
+        if (issuerResponse != null) {
+            mImageStore.saveImage(issuerResponse.getUuid(), issuerResponse.getImageData());
+            issuerResponse.setIntroducedOn(DateTime.now().toString());
+            saveIssuer(issuerResponse, recipientPubKey);
         }
-
-        String uuid = issuerResponse.getUuid();
-        String imageData = issuerResponse.getImageData();
-        imageStore.saveImage(uuid, imageData);
-
-        String introducedOn = DateTime.now().toString();
-        issuerResponse.setIntroducedOn(introducedOn);
-
-        saveIssuer(issuerResponse, recipientPubKey);
     }
 }
