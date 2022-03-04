@@ -24,7 +24,7 @@ public interface PdaIssuerStoreService {
     List<IssuerRecord> loadAll();
 
     @PUT("/issuerRecords/{issuerId}")
-    void save(@Path("issuerId") String issuerId, String recipientPubKey);
+    void save(@Path("issuerId") String issuerId, String recipientPubKey, @Body IssuerRecord record);
 
     @DELETE("/certs")
     void delete(@Query("records") String certId);

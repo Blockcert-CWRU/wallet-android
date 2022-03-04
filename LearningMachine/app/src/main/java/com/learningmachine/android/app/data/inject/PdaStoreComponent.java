@@ -1,5 +1,6 @@
 package com.learningmachine.android.app.data.inject;
 
+import com.learningmachine.android.app.data.store.PDAIssuerStore;
 import com.learningmachine.android.app.data.store.pda.PdaCertificateStoreFactory;
 
 import javax.inject.Singleton;
@@ -11,4 +12,5 @@ import dagger.Component;
 public interface PdaStoreComponent {
 
     PdaCertificateStoreFactory getCertFactory();
+    PdaCertificateStoreFactory getPDAIssuerStoreFactory();
 }

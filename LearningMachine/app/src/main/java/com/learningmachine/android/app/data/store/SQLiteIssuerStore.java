@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.learningmachine.android.app.data.model.IssuerRecord;
 import com.learningmachine.android.app.data.model.KeyRotation;
 import com.learningmachine.android.app.data.store.cursor.IssuerCursorWrapper;
+import com.learningmachine.android.app.data.store.pda.AbstractIssuerStore;
 import com.learningmachine.android.app.data.webservice.response.IssuerResponse;
 import com.learningmachine.android.app.util.ListUtils;
 import com.learningmachine.android.app.util.StringUtils;
@@ -20,31 +21,16 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class SQLiteIssuerStore implements IssuerStore {
+public class SQLiteIssuerStore  extends AbstractIssuerStore {
 
     private final SQLiteDatabase mDatabase;
     private final ImageStore mImageStore;
 
     @Inject
     public SQLiteIssuerStore(SQLiteDatabase database, ImageStore imageStore) {
+        super(imageStore);
         mDatabase = database;
         mImageStore = imageStore;
-    }
-
-    @Override
-    public void saveIssuerResponse(IssuerResponse issuerResponse, String recipientPubKey) {
-        if (issuerResponse == null) {
-            return;
-        }
-
-        String uuid = issuerResponse.getUuid();
-        String imageData = issuerResponse.getImageData();
-        mImageStore.saveImage(uuid, imageData);
-
-        String introducedOn = DateTime.now().toString();
-        issuerResponse.setIntroducedOn(introducedOn);
-
-        saveIssuer(issuerResponse, recipientPubKey);
     }
 
     @Override
