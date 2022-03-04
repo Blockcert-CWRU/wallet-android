@@ -1,7 +1,8 @@
 package com.learningmachine.android.app.data.store.pda;
 
 import com.learningmachine.android.app.data.cert.BlockCert;
-import com.learningmachine.android.app.data.inject.PdaStoreComponent;
+import com.learningmachine.android.app.data.inject.DaggerPDAComponent;
+import com.learningmachine.android.app.data.inject.PDAComponent;
 import com.learningmachine.android.app.data.model.CertificateRecord;
 import com.learningmachine.android.app.data.store.CertificateStore;
 import com.learningmachine.android.app.util.ListUtils;
@@ -13,7 +14,7 @@ import dagger.assisted.AssistedInject;
 
 public class PDACertificateStore implements CertificateStore {
 
-    private static final PdaStoreComponent COMPONENT = DaggerPDAStoreComponent.create();
+    private static final PDAComponent COMPONENT = DaggerPDAComponent.builder().build();
     private final PDAIndexService mIndexService;
     private final PDACertificateStoreService mStoreService;
     private final String mHatName;

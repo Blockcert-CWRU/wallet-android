@@ -1,98 +1,99 @@
 package com.learningmachine.android.app.data.store.pda;
 
-import com.learningmachine.android.app.data.inject.PdaStoreComponent;
+import com.google.common.collect.ImmutableList;
+import com.learningmachine.android.app.data.inject.DaggerPDAComponent;
+import com.learningmachine.android.app.data.inject.PDAComponent;
 import com.learningmachine.android.app.data.model.IssuerRecord;
 import com.learningmachine.android.app.data.model.KeyRotation;
 import com.learningmachine.android.app.data.store.AbstractIssuerStore;
-import com.learningmachine.android.app.data.store.CertificateStore;
 import com.learningmachine.android.app.data.store.ImageStore;
+import com.learningmachine.android.app.data.store.IssuerStore;
 import com.learningmachine.android.app.data.store.sql.SQLiteIssuerStore;
-import com.learningmachine.android.app.util.ListUtils;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-
-import javax.inject.Singleton;
+import java.util.stream.Collectors;
 
 import dagger.assisted.Assisted;
 import dagger.assisted.AssistedInject;
 
-@Singleton
 public class PDAIssuerStore extends AbstractIssuerStore {
 
-    private static final PdaStoreComponent COMPONENT = DaggerPdaStoreComponent.create();
-    private final PDAIssuerStoreService missuerStoreService;
+    private static final PDAComponent COMPONENT = DaggerPDAComponent.builder().build();
+    private final PDAIssuerStoreService mStoreService;
     private final PDAIndexService mIndexService;
+    private final IssuerStore mKeyStore;
     private final String mHatName;
     private final String mAuthToken;
-    private final SQLiteIssuerStore sQLiteIssuerStore;
 
     @AssistedInject
     PDAIssuerStore(
-            PDAIssuerStoreService missuerStoreService,
-            PDAIndexService mIndexService,
-            @Assisted("hatName") String hatName,
-            @Assisted("authToken") String authToken,
+            PDAIssuerStoreService storeService,
+            PDAIndexService indexService,
             ImageStore imageStore,
-            SQLiteIssuerStore sQLiteIssuerStore) {
-
+            SQLiteIssuerStore keyStore,
+            @Assisted("hatName") String hatName,
+            @Assisted("authToken") String authToken) {
         super(imageStore);
-        this.missuerStoreService = missuerStoreService;
-        this.mIndexService = mIndexService;
-        this.mHatName = hatName;
-        this.mAuthToken = authToken;
-        this.sQLiteIssuerStore = sQLiteIssuerStore;
+        mStoreService = storeService;
+        mIndexService = indexService;
+        mHatName = hatName;
+        mAuthToken = authToken;
+        mKeyStore = keyStore;
     }
 
-    public static CertificateStore createPDAIssuerStore() {
-        return COMPONENT.getPDAIssuerStoreFactory().create(mHatName, mAuthToken);
+    public static PDAIssuerStore create(String hatName, String authToken) {
+        return COMPONENT.issuerStoreFactory().create(hatName, authToken);
     }
 
     @Override
     public void reset() {
-
+        // no-op
     }
 
     @Override
     public void saveIssuer(IssuerRecord issuer, String recipientPubKey) {
-        missuerStoreService.save(issuer.getUuid(), recipientPubKey, issuer);
+        mStoreService.save(issuer.getUuid(), recipientPubKey, issuer);
     }
 
     @Override
     public List<IssuerRecord> loadIssuers() {
-        return missuerStoreService.loadAll();
+        return ImmutableList.copyOf(mStoreService.loadAll());
     }
 
     @Override
     public IssuerRecord loadIssuer(String issuerId) {
-        return missuerStoreService.load(issuerId);
+        return mStoreService.load(issuerId);
     }
 
     @Override
     public IssuerRecord loadIssuerForCertificate(String certId) {
-        List<IssuerRecord> issuerRecordList = mIndexService.get(mHatName, mAuthToken)
+        List<IssuerRecord> records = mIndexService.get(mHatName, mAuthToken)
                 .records()
                 .stream()
                 .filter(record -> record.certId().equals(certId))
                 .map(PDAIndexRecord::issuerId)
                 .map(this::loadIssuer)
-                .collect(ListUtils.toImmutableList());
+                .collect(Collectors.toList());
+        checkRecords(records);
+        return records.get(0);
+    }
 
-        if (issuerRecordList.isEmpty()) {
+    private static void checkRecords(List<IssuerRecord> records) {
+        if (records.isEmpty()) {
             throw new NoSuchElementException();
-        } else if (issuerRecordList.size() > 1) {
+        } else if (records.size() > 1) {
             throw new IllegalStateException("More than 1 record corresponding to certID");
         }
-        return issuerRecordList.get(0);
     }
 
     @Override
     public void saveKeyRotation(KeyRotation keyRotation, String issuerId, String tableName) {
-        sQLiteIssuerStore.saveKeyRotation(keyRotation, issuerId, tableName);
+        mKeyStore.saveKeyRotation(keyRotation, issuerId, tableName);
     }
 
     @Override
     public List<KeyRotation> loadKeyRotations(String issuerId, String tableName) {
-        return sQLiteIssuerStore.loadKeyRotations(issuerId, tableName);
+        return ImmutableList.copyOf(mKeyStore.loadKeyRotations(issuerId, tableName));
     }
 }
