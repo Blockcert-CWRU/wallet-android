@@ -1,4 +1,4 @@
-package com.learningmachine.android.app.data.store.pda;
+package com.learningmachine.android.app.data.store;
 
 import com.learningmachine.android.app.data.store.ImageStore;
 import com.learningmachine.android.app.data.store.IssuerStore;

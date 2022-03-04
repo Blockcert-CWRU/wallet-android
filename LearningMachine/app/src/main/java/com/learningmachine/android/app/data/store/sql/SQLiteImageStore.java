@@ -1,8 +1,9 @@
-package com.learningmachine.android.app.data.store;
+package com.learningmachine.android.app.data.store.sql;
 
 import android.content.Context;
 import android.util.Base64;
 
+import com.learningmachine.android.app.data.store.ImageStore;
 import com.learningmachine.android.app.util.ImageUtils;
 import com.learningmachine.android.app.util.StringUtils;
 
@@ -11,23 +12,25 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import timber.log.Timber;
 
-public class PDAImageStore implements ImageStore{
+@Singleton
+public class SQLiteImageStore implements ImageStore {
 
     private final Context mContext;
 
     @Inject
-    public PDAImageStore(Context context) {
+    public SQLiteImageStore(Context context) {
         mContext = context;
     }
 
-    @Override
-    public void reset() {
-
-    }
-
+    /**
+     * @param issuerId     Issuer url
+     * @param jsonData Image data
+     * @return true if the image was written to file successfully
+     */
     @Override
     public boolean saveImage(String issuerId, String jsonData) {
         if (StringUtils.isEmpty(issuerId) || StringUtils.isEmpty(jsonData)) {
@@ -58,5 +61,15 @@ public class PDAImageStore implements ImageStore{
         }
 
         return success;
+    }
+
+    @Override
+    public void reset() {
+        String[] fileList = mContext.fileList();
+        for (String file : fileList) {
+            if (file.contains(".png")) {
+                mContext.deleteFile(file);
+            }
+        }
     }
 }

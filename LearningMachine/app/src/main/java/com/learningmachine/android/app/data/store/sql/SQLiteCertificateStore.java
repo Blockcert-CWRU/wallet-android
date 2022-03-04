@@ -1,4 +1,4 @@
-package com.learningmachine.android.app.data.store;
+package com.learningmachine.android.app.data.store.sql;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.learningmachine.android.app.data.cert.BlockCert;
 import com.learningmachine.android.app.data.model.CertificateRecord;
+import com.learningmachine.android.app.data.store.CertificateStore;
+import com.learningmachine.android.app.data.store.LMDatabaseHelper;
 import com.learningmachine.android.app.data.store.cursor.CertificateCursorWrapper;
 
 import java.util.ArrayList;

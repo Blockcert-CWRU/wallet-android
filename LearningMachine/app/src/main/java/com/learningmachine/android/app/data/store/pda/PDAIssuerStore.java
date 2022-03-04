@@ -1,12 +1,13 @@
-package com.learningmachine.android.app.data.store;
+package com.learningmachine.android.app.data.store.pda;
 
 import com.learningmachine.android.app.data.inject.PdaStoreComponent;
 import com.learningmachine.android.app.data.model.IssuerRecord;
 import com.learningmachine.android.app.data.model.KeyRotation;
+import com.learningmachine.android.app.data.store.AbstractIssuerStore;
+import com.learningmachine.android.app.data.store.CertificateStore;
+import com.learningmachine.android.app.data.store.ImageStore;
+import com.learningmachine.android.app.data.store.sql.SQLiteIssuerStore;
 import com.learningmachine.android.app.data.store.pda.AbstractIssuerStore;
-import com.learningmachine.android.app.data.store.pda.IndexRecord;
-import com.learningmachine.android.app.data.store.pda.PdaIndexService;
-import com.learningmachine.android.app.data.store.pda.PdaIssuerStoreService;
 import com.learningmachine.android.app.util.ListUtils;
 
 import java.util.List;

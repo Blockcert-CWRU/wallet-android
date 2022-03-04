@@ -14,6 +14,7 @@ import com.learningmachine.android.app.data.cert.v20.Badge;
 import com.learningmachine.android.app.data.cert.v20.BlockCertV20;
 import com.learningmachine.android.app.data.cert.v20.Issuer;
 import com.learningmachine.android.app.data.model.CertificateRecord;
+import com.learningmachine.android.app.data.store.sql.SQLiteCertificateStore;
 
 import org.junit.Before;
 import org.junit.Test;

@@ -11,6 +11,8 @@ import android.database.sqlite.SQLiteDatabase;
 import com.learningmachine.android.app.BuildConfig;
 import com.learningmachine.android.app.data.model.IssuerRecord;
 import com.learningmachine.android.app.data.model.KeyRotation;
+import com.learningmachine.android.app.data.store.sql.SQLiteImageStore;
+import com.learningmachine.android.app.data.store.sql.SQLiteIssuerStore;
 import com.learningmachine.android.app.util.ListUtils;
 
 import org.junit.Before;

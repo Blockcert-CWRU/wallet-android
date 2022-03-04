@@ -11,6 +11,8 @@ import com.learningmachine.android.app.BuildConfig;
 import com.learningmachine.android.app.data.cert.BlockCert;
 import com.learningmachine.android.app.data.cert.v12.BlockCertV12;
 import com.learningmachine.android.app.data.model.IssuerRecord;
+import com.learningmachine.android.app.data.store.sql.SQLiteCertificateStore;
+import com.learningmachine.android.app.data.store.sql.SQLiteIssuerStore;
 
 import org.junit.Before;
 import org.junit.Test;

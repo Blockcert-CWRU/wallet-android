@@ -1,4 +1,4 @@
-package com.learningmachine.android.app.data.store;
+package com.learningmachine.android.app.data.store.sql;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -6,13 +6,13 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.learningmachine.android.app.data.model.IssuerRecord;
 import com.learningmachine.android.app.data.model.KeyRotation;
+import com.learningmachine.android.app.data.store.AbstractIssuerStore;
+import com.learningmachine.android.app.data.store.ImageStore;
+import com.learningmachine.android.app.data.store.LMDatabaseHelper;
 import com.learningmachine.android.app.data.store.cursor.IssuerCursorWrapper;
 import com.learningmachine.android.app.data.store.pda.AbstractIssuerStore;
-import com.learningmachine.android.app.data.webservice.response.IssuerResponse;
 import com.learningmachine.android.app.util.ListUtils;
 import com.learningmachine.android.app.util.StringUtils;
-
-import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.List;
