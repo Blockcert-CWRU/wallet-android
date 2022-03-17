@@ -1,8 +1,6 @@
 package com.learningmachine.android.app.data.store.pda;
 
 import com.google.common.collect.ImmutableList;
-import com.learningmachine.android.app.data.inject.DaggerPDAComponent;
-import com.learningmachine.android.app.data.inject.PDAComponent;
 import com.learningmachine.android.app.data.model.IssuerRecord;
 import com.learningmachine.android.app.data.model.KeyRotation;
 import com.learningmachine.android.app.data.store.AbstractIssuerStore;
@@ -20,7 +18,7 @@ import dagger.assisted.AssistedInject;
 
 public class PDAIssuerStore extends AbstractIssuerStore {
 
-    private static final PDAComponent COMPONENT = DaggerPDAComponent.builder().build();
+//    private static final PDAComponent COMPONENT = DaggerPDAComponent.builder().build();
     private final PDAIssuerStoreService mStoreService;
     private final PDAIndexService mIndexService;
     private final IssuerStore mKeyStore;
@@ -44,7 +42,8 @@ public class PDAIssuerStore extends AbstractIssuerStore {
     }
 
     public static PDAIssuerStore create(String hatName, String authToken) {
-        return COMPONENT.issuerStoreFactory().create(hatName, authToken);
+//        return COMPONENT.issuerStoreFactory().create(hatName, authToken);
+        return null;
     }
 
     private static void checkRecords(Collection<IssuerRecord> records) {
