@@ -58,12 +58,38 @@ public class AddCertificateFileFragment extends LMFragment {
         return new AddCertificateFileFragment();
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-        Injector.obtain(nonNullContext()).inject(this);
-    }
+    private final View.OnClickListener mOnClickListener = v -> {
+        if (ContextCompat.checkSelfPermission(requireContext(),
+                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(requireActivity(),
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    REQUEST_READ_STORAGE);
+            Timber.d("Requesting external storage read permission");
+            return;
+        }
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            Intent openJsonCertificateIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            openJsonCertificateIntent.addCategory(Intent.CATEGORY_OPENABLE);
+            openJsonCertificateIntent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
+            openJsonCertificateIntent.setType("application/json");
+            startActivityForResult(openJsonCertificateIntent, REQUEST_SELECT_FILE);
+        } else {
+            File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            if (downloadDir.exists()) {
+                FileFilter filter = new JsonFilter();
+                File[] files = downloadDir.listFiles(filter);
+                if (files == null) {
+                    Timber.e("Unable to list files");
+                    return;
+                }
+
+                // filter to json files, check if 0
+                // show snackbar
+                showFileDialog(files);
+            }
+        }
+    };
 
     @Override
     public void onDestroy() {
@@ -97,39 +123,12 @@ public class AddCertificateFileFragment extends LMFragment {
         return mBinding.getRoot();
     }
 
-
-    private final View.OnClickListener mOnClickListener = v -> {
-        if (ContextCompat.checkSelfPermission(nonNullContext(),
-                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(nonNullActivity(),
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    REQUEST_READ_STORAGE);
-            Timber.d("Requesting external storage read permission");
-            return;
-        }
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-            Intent openJsonCertificateIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-            openJsonCertificateIntent.addCategory(Intent.CATEGORY_OPENABLE);
-            openJsonCertificateIntent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
-            openJsonCertificateIntent.setType("application/json");
-            startActivityForResult(openJsonCertificateIntent, REQUEST_SELECT_FILE);
-        } else {
-            File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-            if (downloadDir.exists()) {
-                FileFilter filter = new JsonFilter();
-                File[] files = downloadDir.listFiles(filter);
-                if (files == null) {
-                    Timber.e("Unable to list files");
-                    return;
-                }
-
-                // filter to json files, check if 0
-                // show snackbar
-                showFileDialog(files);
-            }
-        }
-    };
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        Injector.obtain(requireContext()).inject(this);
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -147,7 +146,7 @@ public class AddCertificateFileFragment extends LMFragment {
             Timber.e("No file selected");
             return;
         }
-        ContentResolver resolver = nonNullContext().getContentResolver();
+        ContentResolver resolver = requireContext().getContentResolver();
         try (InputStream certificateInputStream = resolver.openInputStream(mSelectedFileUri)) {
             mAddCertificateSubscription = mCertificateManager.addCertificate(certificateInputStream)
                     .compose(bindToMainThread())
@@ -156,7 +155,7 @@ public class AddCertificateFileFragment extends LMFragment {
                         hideProgressDialog();
                         Intent intent = CertificateActivity.newIntent(getContext(), uuid);
                         startActivity(intent);
-                        nonNullActivity().finish();
+                        requireActivity().finish();
                     }, throwable -> {
                         Timber.e(throwable, "Importing failed with error");
                         displayErrors(throwable, DialogUtils.ErrorCategory.CERTIFICATE, R.string.error_title_message);
@@ -174,7 +173,7 @@ public class AddCertificateFileFragment extends LMFragment {
 
         mSelectedFileUri = uri;
         Timber.d("File selected: %1$s", mSelectedFileUri.getPath());
-        ContentResolver resolver = nonNullContext().getContentResolver();
+        ContentResolver resolver = requireContext().getContentResolver();
         try (Cursor cursor = resolver.query(uri, null, null, null, null)) {
             if (cursor != null && cursor.moveToFirst()) {
                 int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
@@ -208,13 +207,14 @@ public class AddCertificateFileFragment extends LMFragment {
                     getResources().getString(R.string.no_files_downloaded_message),
                     null,
                     getResources().getString(R.string.ok_button),
-                    (btnIdx) -> {});
+                    (btnIdx) -> {
+                    });
             return;
         }
 
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(nonNullContext());
-        FileArrayAdapter fileArrayAdapter = new FileArrayAdapter(nonNullContext(), files);
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        FileArrayAdapter fileArrayAdapter = new FileArrayAdapter(requireContext(), files);
         builder.setAdapter(fileArrayAdapter, (dialog, which) -> {
             File file = fileArrayAdapter.getItem(which);
             selectFile(file);

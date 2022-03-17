@@ -46,7 +46,7 @@ public class PastePassphraseFragment extends OnboardingFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Injector.obtain(nonNullContext()).inject(this);
+        Injector.obtain(requireContext()).inject(this);
     }
 
     @Override
@@ -77,7 +77,7 @@ public class PastePassphraseFragment extends OnboardingFragment {
     }
 
     private void retrievePassphraseFromDevice() {
-        ((LMActivity)nonNullContext()).askToGetPassphraseFromDevice((passphrase) -> {
+        ((LMActivity) requireContext()).askToGetPassphraseFromDevice((passphrase) -> {
             if (passphrase != null) {
                 mBinding.pastePassphraseEditText.setText(passphrase);
                 onDone();
@@ -90,7 +90,7 @@ public class PastePassphraseFragment extends OnboardingFragment {
     private void onDone() {
         displayProgressDialog(R.string.onboarding_passphrase_loading);
         String passphrase = mBinding.pastePassphraseEditText.getText().toString();
-        Activity activity = nonNullActivity();
+        Activity activity = requireActivity();
 
         mBinding.doneButton.setEnabled(false);
         mBinding.pastePassphraseEditText.setEnabled(false);

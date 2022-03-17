@@ -42,7 +42,7 @@ public abstract class LMIssuerBaseFragment extends LMFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Injector.obtain(nonNullContext())
+        Injector.obtain(requireContext())
                 .inject(this);
         setHasOptionsMenu(true);
     }

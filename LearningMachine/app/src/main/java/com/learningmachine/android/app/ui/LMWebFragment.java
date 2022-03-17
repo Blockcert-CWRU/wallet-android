@@ -68,7 +68,7 @@ public class LMWebFragment extends LMFragment {
         if (mBinding.webViewController.canGoBack()) {
             mBinding.webViewController.goBack();
         } else {
-            nonNullActivity().finish();
+            requireActivity().finish();
         }
     }
 
@@ -80,6 +80,6 @@ public class LMWebFragment extends LMFragment {
     }
 
     protected String getEndPoint() {
-        return nonNullArguments().getString(ARG_END_POINT);
+        return requireArguments().getString(ARG_END_POINT);
     }
 }

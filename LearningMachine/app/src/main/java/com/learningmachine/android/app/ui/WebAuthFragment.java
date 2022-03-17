@@ -29,9 +29,13 @@ public class WebAuthFragment extends LMFragment {
     private String mErrorUrlString;
     private WebAuthCallbacks mCallbacks;
 
-    public interface WebAuthCallbacks {
-        void onSuccess();
-        void onError();
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle arguments = requireArguments();
+        mEndPoint = arguments.getString(ARG_END_POINT);
+        mSuccessUrlString = arguments.getString(ARG_SUCCESS_URL);
+        mErrorUrlString = arguments.getString(ARG_ERROR_URL);
     }
 
     public static WebAuthFragment newInstance(String endPoint, String successUrlString, String errorUrlString) {
@@ -44,12 +48,12 @@ public class WebAuthFragment extends LMFragment {
         return fragment;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mEndPoint = getArguments().getString(ARG_END_POINT);
-        mSuccessUrlString = getArguments().getString(ARG_SUCCESS_URL);
-        mErrorUrlString = getArguments().getString(ARG_ERROR_URL);
+    public void backPressed() {
+        if (mBinding.webViewController.canGoBack()) {
+            mBinding.webViewController.goBack();
+        } else {
+            requireActivity().finish();
+        }
     }
 
     @Override
@@ -96,12 +100,10 @@ public class WebAuthFragment extends LMFragment {
                 .setJavaScriptEnabled(true);
     }
 
-    public void backPressed() {
-        if (mBinding.webViewController.canGoBack()) {
-            mBinding.webViewController.goBack();
-        } else {
-            nonNullActivity().finish();
-        }
+    public interface WebAuthCallbacks {
+        void onSuccess();
+
+        void onError();
     }
 
     private void loadWebsite() {

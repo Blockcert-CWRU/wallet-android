@@ -23,14 +23,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 
 import com.learningmachine.android.app.R;
-import com.learningmachine.android.app.ui.NonNullFragment;
+import com.learningmachine.android.app.ui.AbstractLMFragment;
 
-import java.util.Objects;
-
-public class AlertDialogFragment extends DialogFragment implements NonNullFragment {
+public class AlertDialogFragment extends DialogFragment {
 
     public static final int RESULT_POSITIVE = 1;
     public static final int RESULT_NEGATIVE = 0;
@@ -45,24 +42,6 @@ public class AlertDialogFragment extends DialogFragment implements NonNullFragme
     private TextView mTitleView;
     private TextView mSubTitleView;
     private TextView mMessageView;
-
-    @NonNull
-    @Override
-    public Bundle nonNullArguments() {
-        return Objects.requireNonNull(getArguments());
-    }
-
-    @NonNull
-    @Override
-    public FragmentActivity nonNullActivity() {
-        return Objects.requireNonNull(getActivity());
-    }
-
-    @NonNull
-    @Override
-    public Context nonNullContext() {
-        return Objects.requireNonNull(getContext());
-    }
 
     @FunctionalInterface
     public interface Callback {
@@ -148,7 +127,7 @@ public class AlertDialogFragment extends DialogFragment implements NonNullFragme
     }
 
     private float dp2px(float dp) {
-        Resources resources = nonNullContext().getResources();
+        Resources resources = requireContext().getResources();
         DisplayMetrics metrics = resources.getDisplayMetrics();
         return dp * ((float) metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
     }
@@ -163,7 +142,7 @@ public class AlertDialogFragment extends DialogFragment implements NonNullFragme
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Bundle args = nonNullArguments();
+        Bundle args = AbstractLMFragment.requireArguments(this);
 
         String title = args.getString(ARG_TITLE);
         String message = args.getString(ARG_MESSAGE);
@@ -243,7 +222,7 @@ public class AlertDialogFragment extends DialogFragment implements NonNullFragme
         }
 
         // 1) Dialog width should be 80% of the width of the screen
-        Display display = nonNullActivity().getWindowManager().getDefaultDisplay();
+        Display display = requireActivity().getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
 

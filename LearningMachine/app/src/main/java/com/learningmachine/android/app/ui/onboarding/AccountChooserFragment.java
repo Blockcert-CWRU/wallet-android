@@ -44,7 +44,7 @@ public class AccountChooserFragment extends OnboardingFragment {
         Laba.Animate(mBinding.newAccountButton, "!^300", () -> null);
         Laba.Animate(mBinding.existingAccountButton, "!^300", () -> null);
 
-        String fileName = "android.resource://" + nonNullActivity().getPackageName() + "/raw/background";
+        String fileName = "android.resource://" + requireActivity().getPackageName() + "/raw/background";
 
         mBinding.backgroundVideoCover.setAlpha(1.0f);
         mBinding.backgroundVideo.setVideoURI(Uri.parse(fileName));

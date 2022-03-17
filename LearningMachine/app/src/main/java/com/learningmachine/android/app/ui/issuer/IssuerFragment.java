@@ -63,9 +63,9 @@ public class IssuerFragment extends LMFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        Injector.obtain(nonNullContext()).inject(this);
+        Injector.obtain(requireContext()).inject(this);
 
-        mIssuerUuid = nonNullArguments().getString(ARG_ISSUER_UUID);
+        mIssuerUuid = requireArguments().getString(ARG_ISSUER_UUID);
 
         mCertificateList = new ArrayList<>();
     }
@@ -91,7 +91,7 @@ public class IssuerFragment extends LMFragment {
                         } else {
                             Timber.i("User has chosen to add a certificate from file");
                         }
-                        Intent intent = AddCertificateActivity.newIntent(nonNullContext(), (int)btnIdx, null);
+                        Intent intent = AddCertificateActivity.newIntent(requireContext(), (int) btnIdx, null);
                         startActivity(intent);
                     },
                     (dialogContent) -> {});

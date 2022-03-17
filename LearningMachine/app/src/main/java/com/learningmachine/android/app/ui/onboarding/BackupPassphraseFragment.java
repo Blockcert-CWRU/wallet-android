@@ -44,7 +44,7 @@ public class BackupPassphraseFragment extends OnboardingFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Injector.obtain(nonNullContext())
+        Injector.obtain(requireContext())
                 .inject(this);
     }
 
@@ -111,18 +111,18 @@ public class BackupPassphraseFragment extends OnboardingFragment {
         mSharedPreferencesManager.setWasReturnUser(false);
         mSharedPreferencesManager.setFirstLaunch(false);
         if (!continueDelayedURLsFromDeepLinking()) {
-            startActivity(new Intent(nonNullActivity(), HomeActivity.class));
-            nonNullActivity().finish();
+            startActivity(new Intent(requireActivity(), HomeActivity.class));
+            requireActivity().finish();
         }
     }
 
     protected void onSave() {
-        ((OnboardingActivity)nonNullActivity()).askToSavePassphraseToDevice(mPassphrase, (passphrase) -> {
-            if(passphrase == null) {
-                if(Build.VERSION.SDK_INT >= 23) {
+        ((OnboardingActivity) requireActivity()).askToSavePassphraseToDevice(mPassphrase, (passphrase) -> {
+            if (passphrase == null) {
+                if (Build.VERSION.SDK_INT >= 23) {
                     return;
                 }
-                DialogUtils.showAlertDialog( this,
+                DialogUtils.showAlertDialog(this,
                         R.drawable.ic_dialog_failure,
                         getResources().getString(R.string.onboarding_passphrase_permissions_error_title),
                         getResources().getString(R.string.onboarding_passphrase_permissions_error),
@@ -197,7 +197,7 @@ public class BackupPassphraseFragment extends OnboardingFragment {
 
                     // For this dialog, we want to fill the whole screen regardless of the size of the content
                     // 1) Dialog width should be 80% of the width of the screen
-                    Point appUsableSize = getAppUsableScreenSize(nonNullContext());
+                    Point appUsableSize = getAppUsableScreenSize(requireContext());
 
                     int idealDialogWidth = appUsableSize.x;
                     int idealDialogHeight = (int)(appUsableSize.y - Laba.dp2px(24));

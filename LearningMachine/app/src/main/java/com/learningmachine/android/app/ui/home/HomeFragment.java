@@ -77,7 +77,7 @@ public class HomeFragment extends LMIssuerBaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        Injector.obtain(nonNullContext())
+        Injector.obtain(requireContext())
                 .inject(this);
 
         mIssuerList = new ArrayList<>();
@@ -130,7 +130,7 @@ public class HomeFragment extends LMIssuerBaseFragment {
         IssuerAdapter adapter = new IssuerAdapter(mIssuerList);
         mBinding.issuerRecyclerview.setAdapter(adapter);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(nonNullActivity(), LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false);
 
         mBinding.issuerRecyclerview.setLayoutManager(layoutManager);
     }

@@ -40,7 +40,7 @@ public class IssuerInfoFragment extends LMFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Injector.obtain(nonNullContext()).inject(this);
+        Injector.obtain(requireContext()).inject(this);
     }
 
     @Nullable
@@ -48,7 +48,7 @@ public class IssuerInfoFragment extends LMFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_issuer_info, container, false);
 
-        String issuerUuid = nonNullArguments().getString(ARG_ISSUER_UUID);
+        String issuerUuid = requireArguments().getString(ARG_ISSUER_UUID);
         // TODO: should find the bitcoin address that was sent to the issuer
         mIssuerManager.getIssuer(issuerUuid)
                 .compose(bindToMainThread())

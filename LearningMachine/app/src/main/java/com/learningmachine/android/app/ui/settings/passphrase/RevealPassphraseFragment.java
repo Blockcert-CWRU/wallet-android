@@ -37,7 +37,7 @@ public class RevealPassphraseFragment extends LMFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Injector.obtain(nonNullContext())
+        Injector.obtain(requireContext())
                 .inject(this);
     }
 
@@ -82,12 +82,12 @@ public class RevealPassphraseFragment extends LMFragment {
 
 
     protected void onSave() {
-        ((LMActivity)nonNullActivity()).askToSavePassphraseToDevice(mPassphrase, (passphrase) -> {
-            if(passphrase == null) {
-                if(Build.VERSION.SDK_INT >= 23) {
+        ((LMActivity) requireActivity()).askToSavePassphraseToDevice(mPassphrase, (passphrase) -> {
+            if (passphrase == null) {
+                if (Build.VERSION.SDK_INT >= 23) {
                     return;
                 }
-                DialogUtils.showAlertDialog( this,
+                DialogUtils.showAlertDialog(this,
                         R.drawable.ic_dialog_failure,
                         getResources().getString(R.string.onboarding_passphrase_permissions_error_title),
                         getResources().getString(R.string.onboarding_passphrase_permissions_error),

@@ -133,8 +133,8 @@ public class AddIssuerFragment extends LMIssuerBaseFragment {
     }
 
     private void enableImportButton(boolean enable) {
-        if (!nonNullActivity().isFinishing()) {
-            nonNullActivity().runOnUiThread(() -> mBinding.importButton.setEnabled(enable));
+        if (!requireActivity().isFinishing()) {
+            requireActivity().runOnUiThread(() -> mBinding.importButton.setEnabled(enable));
         }
     }
 
@@ -142,15 +142,15 @@ public class AddIssuerFragment extends LMIssuerBaseFragment {
         hideProgressDialog();
 
         // Go back to the issuer's listing
-        startActivity(new Intent(nonNullActivity(), HomeActivity.class));
-        nonNullActivity().finish();
+        startActivity(new Intent(requireActivity(), HomeActivity.class));
+        requireActivity().finish();
     }
 
     private void viewIssuer(String uuid) {
         hideProgressDialog();
         Intent intent = IssuerActivity.newIntent(getContext(), uuid);
         startActivity(intent);
-        nonNullActivity().finish();
+        requireActivity().finish();
     }
 
     private final TextView.OnEditorActionListener mActionListener = (v, actionId, event) -> {

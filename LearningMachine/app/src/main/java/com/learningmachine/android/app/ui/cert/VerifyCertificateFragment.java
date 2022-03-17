@@ -51,7 +51,7 @@ public class VerifyCertificateFragment extends AbstractLMFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mParentActivity = new WeakReference<>(nonNullActivity());
+        mParentActivity = new WeakReference<>(requireActivity());
     }
 
     @Override
@@ -59,7 +59,7 @@ public class VerifyCertificateFragment extends AbstractLMFragment {
         super.onCreate(savedInstanceState);
         Injector.obtain(mParentActivity.get())
                 .inject(this);
-        mCertUuid = nonNullArguments().getString(ARG_CERTIFICATE_UUID);
+        mCertUuid = requireArguments().getString(ARG_CERTIFICATE_UUID);
     }
 
     @Override
@@ -140,7 +140,7 @@ public class VerifyCertificateFragment extends AbstractLMFragment {
             // 2. copy the certificate to "certificate.json"
             // 3. return the URL to the HTML file
 
-            Context context = nonNullContext();
+            Context context = requireContext();
 
             FileUtils.copyAssetFile(context, "www/verifier.js", "verifier.js");
             FileUtils.copyAssetFile(context, "www/verify.html", "verify.html");
@@ -184,7 +184,7 @@ public class VerifyCertificateFragment extends AbstractLMFragment {
     }
 
     private void verifyCertificate() {
-        if (!isOnline(nonNullContext())) {
+        if (!isOnline(requireContext())) {
             showVerificationFailureDialog(getString(R.string.error_no_internet_message),
                     getString(R.string.error_no_internet_title));
             return;

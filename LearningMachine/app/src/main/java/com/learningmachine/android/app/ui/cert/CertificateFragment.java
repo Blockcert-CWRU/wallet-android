@@ -77,9 +77,9 @@ public class CertificateFragment extends LMFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        Injector.obtain(nonNullContext())
+        Injector.obtain(requireContext())
                 .inject(this);
-        mCertUuid = nonNullArguments().getString(ARG_CERTIFICATE_UUID);
+        mCertUuid = requireArguments().getString(ARG_CERTIFICATE_UUID);
         mIssuerManager.certificateViewed(mCertUuid)
                 .compose(bindToMainThread())
                 .subscribe(aVoid -> Timber.d("Issuer analytics: Certificate viewed"),
@@ -181,8 +181,8 @@ public class CertificateFragment extends LMFragment {
     private String getAutolinkerScript() {
         String script = "";
         try {
-            FileUtils.copyAssetFile(nonNullContext(), "www/Autolinker.min.js", "Autolinker.js");
-            script = FileUtils.getStringFromFile(nonNullContext().getFilesDir() + "/Autolinker.js") + "\n";
+            FileUtils.copyAssetFile(requireContext(), "www/Autolinker.min.js", "Autolinker.js");
+            script = FileUtils.getStringFromFile(requireContext().getFilesDir() + "/Autolinker.js") + "\n";
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -246,7 +246,7 @@ public class CertificateFragment extends LMFragment {
     }
 
     private void shareCertificate() {
-        String certUuid = nonNullArguments().getString(ARG_CERTIFICATE_UUID);
+        String certUuid = requireArguments().getString(ARG_CERTIFICATE_UUID);
         mCertificateManager.getCertificate(certUuid)
                 .compose(bindToMainThread())
                 .subscribe(certificateRecord -> {
@@ -302,9 +302,9 @@ public class CertificateFragment extends LMFragment {
                     String sharingText;
 
                     if (shareFile) {
-                        File certFile = FileUtils.getCertificateFile(nonNullContext(), mCertUuid);
-                        Uri uri = FileProvider.getUriForFile(nonNullContext(), FILE_PROVIDER_AUTHORITY, certFile);
-                        String type = nonNullContext().getContentResolver().getType(uri);
+                        File certFile = FileUtils.getCertificateFile(requireContext(), mCertUuid);
+                        Uri uri = FileProvider.getUriForFile(requireContext(), FILE_PROVIDER_AUTHORITY, certFile);
+                        String type = requireContext().getContentResolver().getType(uri);
                         intent.setType(type);
                         intent.putExtra(Intent.EXTRA_STREAM, uri);
                         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -323,7 +323,7 @@ public class CertificateFragment extends LMFragment {
     }
 
     private void viewCertificateInfo() {
-        Intent intent = CertificateInfoActivity.newIntent(nonNullActivity(), mCertUuid);
+        Intent intent = CertificateInfoActivity.newIntent(requireActivity(), mCertUuid);
         startActivity(intent);
     }
 
@@ -342,7 +342,7 @@ public class CertificateFragment extends LMFragment {
 
     private void verifyCertificate() {
         Timber.i("User tapped verify on this certificate");
-        Intent certificateActivity = VerifyCertificateActivity.newIntent(nonNullContext(), mCertUuid);
+        Intent certificateActivity = VerifyCertificateActivity.newIntent(requireContext(), mCertUuid);
         startActivity(certificateActivity);
     }
 }

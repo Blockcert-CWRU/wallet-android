@@ -68,7 +68,7 @@ public class ViewPassphraseFragment extends OnboardingFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Injector.obtain(nonNullContext())
+        Injector.obtain(requireContext())
                 .inject(this);
     }
 
@@ -99,7 +99,7 @@ public class ViewPassphraseFragment extends OnboardingFragment {
             mBinding.onboardingStatusText.setText(R.string.onboarding_passphrase_status_0);
             startCountingTimer();
 
-            Activity activity = nonNullActivity();
+            Activity activity = requireActivity();
 
             AsyncTask.execute(() -> mBitcoinManager.getPassphrase().delay(1500, TimeUnit.MILLISECONDS).subscribe(passphrase -> activity.runOnUiThread(() -> {
                 stopCountingTimer();
@@ -145,6 +145,6 @@ public class ViewPassphraseFragment extends OnboardingFragment {
     }
 
     private void onDone() {
-        ((OnboardingActivity) nonNullActivity()).onBackupPassphrase();
+        ((OnboardingActivity) requireActivity()).onBackupPassphrase();
     }
 }

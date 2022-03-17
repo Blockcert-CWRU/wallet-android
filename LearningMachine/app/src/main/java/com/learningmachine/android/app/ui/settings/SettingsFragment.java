@@ -50,7 +50,7 @@ public class SettingsFragment extends LMFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Injector.obtain(nonNullContext()).inject(this);
+        Injector.obtain(requireContext()).inject(this);
     }
 
     @Nullable
@@ -90,7 +90,7 @@ public class SettingsFragment extends LMFragment {
                         } else {
                             Timber.i("User has chosen to add a certificate from file");
                         }
-                        Intent intent = AddCertificateActivity.newIntent(nonNullContext(), (int)btnIdx, null);
+                        Intent intent = AddCertificateActivity.newIntent(requireContext(), (int) btnIdx, null);
                         startActivity(intent);
                     },
                     (dialogContent) -> {});
@@ -104,7 +104,7 @@ public class SettingsFragment extends LMFragment {
             File file = FileUtils.getLogsFile(getContext(), false);
 
             Uri fileUri = FileProvider.getUriForFile(
-                    nonNullContext(),
+                    requireContext(),
                     "com.learningmachine.android.app.fileprovider",
                     file);
 
@@ -112,7 +112,7 @@ public class SettingsFragment extends LMFragment {
             //send file using email
             Intent emailIntent = new Intent(Intent.ACTION_SEND);
             // the attachment
-            String type = nonNullContext().getContentResolver().getType(fileUri);
+            String type = requireContext().getContentResolver().getType(fileUri);
             emailIntent.setType(type);
             emailIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
             emailIntent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
@@ -160,9 +160,9 @@ public class SettingsFragment extends LMFragment {
                 if(btnIdx.equals(1)) {
                     mBitcoinManager.resetEverything();
 
-                    Intent intent = new Intent(nonNullActivity(), OnboardingActivity.class);
+                    Intent intent = new Intent(requireActivity(), OnboardingActivity.class);
                     startActivity(intent);
-                    nonNullActivity().finish();
+                    requireActivity().finish();
                 }
             };
 

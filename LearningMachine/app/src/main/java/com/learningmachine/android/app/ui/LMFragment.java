@@ -26,7 +26,6 @@ import com.trello.rxlifecycle.RxLifecycle;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import com.trello.rxlifecycle.android.RxLifecycleAndroid;
 
-import java.util.Objects;
 import java.util.function.Consumer;
 
 import javax.inject.Inject;
@@ -62,7 +61,7 @@ public class LMFragment extends AbstractLMFragment implements LifecycleProvider<
         super.onCreate(savedInstanceState);
         mLifecycleSubject.onNext(FragmentEvent.CREATE);
         Timber.d("onCreate: " + getFileExtension(this.getClass().toString()));
-        Injector.obtain(nonNullContext()).inject(this);
+        Injector.obtain(requireContext()).inject(this);
     }
 
     @Override
@@ -151,22 +150,21 @@ public class LMFragment extends AbstractLMFragment implements LifecycleProvider<
     protected void displayErrors(Throwable throwable, DialogUtils.ErrorCategory errorCategory, @StringRes int errorTitleResId) {
         Timber.e(throwable, "Displaying error");
         hideProgressDialog();
-        DialogUtils.showErrorAlertDialog(nonNullContext(), getFragmentManager(), errorTitleResId, throwable, errorCategory);
+        DialogUtils.showErrorAlertDialog(requireContext(), getFragmentManager(), errorTitleResId, throwable, errorCategory);
     }
 
     protected void displayErrors(int errorID, Throwable throwable, DialogUtils.ErrorCategory errorCategory, @StringRes int errorTitleResId) {
         hideProgressDialog();
-        DialogUtils.showErrorAlertDialog(nonNullContext(), getFragmentManager(), errorTitleResId, errorID, throwable, errorCategory);
+        DialogUtils.showErrorAlertDialog(requireContext(), getFragmentManager(), errorTitleResId, errorID, throwable, errorCategory);
     }
 
     protected void displayProgressDialog(@StringRes int progressMessageResId) {
-        nonNullActivity().runOnUiThread(() -> mProgressDialog = DialogUtils.showProgressDialog(getContext(), getString(progressMessageResId)));
-
+        requireActivity().runOnUiThread(() -> mProgressDialog = DialogUtils.showProgressDialog(getContext(), getString(progressMessageResId)));
     }
 
     protected void hideProgressDialog() {
         if (mProgressDialog != null) {
-            nonNullActivity().runOnUiThread(() -> mProgressDialog.dismiss());
+            requireActivity().runOnUiThread(() -> mProgressDialog.dismiss());
         }
     }
 
@@ -214,14 +212,14 @@ public class LMFragment extends AbstractLMFragment implements LifecycleProvider<
     }
 
     private void showVersionDialog() {
-        DialogUtils.showAlertDialog( this,
+        DialogUtils.showAlertDialog(this,
                 R.drawable.ic_dialog_warning,
                 getResources().getString(R.string.check_version_title),
                 getResources().getString(R.string.check_version_message),
                 getResources().getString(R.string.ok_button),
                 getResources().getString(R.string.check_version_message_cancel_title),
                 (btnIdx) -> {
-                    if(btnIdx.equals(1)) {
+                    if (btnIdx.equals(1)) {
                         try {
                             startActivity(new Intent(Intent.ACTION_VIEW,
                                     Uri.parse(LMConstants.PLAY_STORE_URL)));
@@ -244,7 +242,7 @@ public class LMFragment extends AbstractLMFragment implements LifecycleProvider<
     // Keyboard
 
     protected void hideKeyboard() {
-        ((LMActivity) nonNullActivity()).hideKeyboard();
+        ((LMActivity) requireActivity()).hideKeyboard();
     }
 
     public static String getFileExtension(String name) {
@@ -256,21 +254,6 @@ public class LMFragment extends AbstractLMFragment implements LifecycleProvider<
     }
 
     protected void runOnActivity(Consumer<FragmentActivity> task) {
-        task.accept(nonNullActivity());
-    }
-
-    @NonNull
-    public Bundle nonNullArguments() {
-        return Objects.requireNonNull(getArguments());
-    }
-
-    @NonNull
-    public FragmentActivity nonNullActivity() {
-        return Objects.requireNonNull(getActivity());
-    }
-
-    @NonNull
-    public Context nonNullContext() {
-        return Objects.requireNonNull(getContext());
+        task.accept(requireActivity());
     }
 }

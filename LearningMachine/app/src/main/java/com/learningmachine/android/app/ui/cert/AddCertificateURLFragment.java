@@ -49,7 +49,7 @@ public class AddCertificateURLFragment extends LMFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        Injector.obtain(nonNullContext())
+        Injector.obtain(requireContext())
                 .inject(this);
     }
 
@@ -120,7 +120,7 @@ public class AddCertificateURLFragment extends LMFragment {
                     hideProgressDialog();
                     Intent intent = CertificateActivity.newIntent(getContext(), uuid);
                     startActivity(intent);
-                    nonNullActivity().finish();
+                    requireActivity().finish();
                 }, throwable -> {
                     Timber.e(throwable, "Failed to load certificate from " + url);
                     displayErrors(throwable, DialogUtils.ErrorCategory.CERTIFICATE, R.string.error_title_message);

@@ -64,7 +64,7 @@ public class CertificateInfoFragment extends LMFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        Injector.obtain(nonNullContext()).inject(this);
+        Injector.obtain(requireContext()).inject(this);
     }
 
     @Nullable
@@ -94,7 +94,7 @@ public class CertificateInfoFragment extends LMFragment {
                                         } else {
                                             Timber.e(String.format("Deleting certificate %s failed", mCertificate.getUuid()));
                                         }
-                                        ((LMActivity)nonNullActivity()).safeGoBack();
+                                        ((LMActivity) requireActivity()).safeGoBack();
                                     });
                         } else {
                             Timber.i("User canceled the deletion of the certificate");
@@ -102,7 +102,7 @@ public class CertificateInfoFragment extends LMFragment {
                     });
         });
 
-        String certificateUuid = nonNullArguments().getString(ARG_CERTIFICATE_UUID);
+        String certificateUuid = requireArguments().getString(ARG_CERTIFICATE_UUID);
 
         mCertificateManager.getCertificate(certificateUuid)
                 .flatMap(certificate -> {
@@ -181,7 +181,7 @@ public class CertificateInfoFragment extends LMFragment {
             if (StringUtils.isEmpty(metadataString)) {
                 return viewModels;
             }
-            MetadataParser metadataParser = new MetadataParser(nonNullContext());
+            MetadataParser metadataParser = new MetadataParser(requireContext());
             try {
                 Metadata metadata = metadataParser.fromJson(metadataString);
                 for (Field field : metadata.getFields()) {
