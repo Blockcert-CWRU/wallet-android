@@ -1,11 +1,8 @@
 package com.learningmachine.android.app.data.store.pda;
 
 import com.learningmachine.android.app.data.cert.BlockCert;
-//import com.learningmachine.android.app.data.inject.DaggerPDAComponent;
-//import com.learningmachine.android.app.data.inject.PDAComponent;
 import com.learningmachine.android.app.data.model.CertificateRecord;
 import com.learningmachine.android.app.data.store.CertificateStore;
-import com.learningmachine.android.app.util.ListUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +13,7 @@ import rx.Observable;
 
 public class PDACertificateStore implements CertificateStore {
 
-//    private static final PDAComponent COMPONENT = DaggerPDAComponent.builder().build();
+    //    private static final PDAComponent COMPONENT = DaggerPDAComponent.builder().build();
     private final PDAIndexService mIndexService;
     private final PDACertificateStoreService mStoreService;
     private final String mHatName;
@@ -46,21 +43,13 @@ public class PDACertificateStore implements CertificateStore {
 
     @Override
     public Observable<List<CertificateRecord>> loadForIssuer(String issuerId) {
-        List<Observable<CertificateRecord>> list =
-                mIndexService.get(mHatName, mAuthToken).toBlocking().first()
-                .records()
-                .stream()
+        return mIndexService.get(mHatName, mAuthToken)
+                .map(PDAIndex::records)
+                .flatMap(Observable::from)
                 .filter(record -> record.issuerId().equals(issuerId))
                 .map(PDAIndexRecord::certId)
                 .map(this::load)
-                .collect(ListUtils.toImmutableList());
-
-        List<CertificateRecord> records = new ArrayList<>();
-        for (Observable<CertificateRecord> recordObservable :list) {
-            records.add(recordObservable.toBlocking().first());
-        }
-
-        return Observable.just(records);
+                .collect(ArrayList::new, (records, obs) -> records.add(obs.toBlocking().first()));
     }
 
     @Override
