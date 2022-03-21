@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+//apply plugin: "android-apt"
 
 android {
     compileSdkVersion 30
@@ -180,6 +181,11 @@ dependencies {
     implementation "nl.littlerobots.rxlint:rxlint:$RXLINT_VERSION"
     implementation "com.squareup.picasso:picasso:$PICASSO_VERSION"
     implementation "com.google.guava:guava:$GUAVA_VERSION"
+    implementation "org.immutables:value:2.8.2:annotations" // annotation-only artifact
+    implementation "org.immutables:builder:2.8.2" // there are only annotations anyway
+    implementation "org.immutables:gson:2.8.2:annotations" // annotation-only artifact
+    annotationProcessor "org.immutables:value:2.8.2" // <-- for annotation API
+
 
     implementation 'com.google.android.exoplayer:exoplayer:2.8.4'
 
