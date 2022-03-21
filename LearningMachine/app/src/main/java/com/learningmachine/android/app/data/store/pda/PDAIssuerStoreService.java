@@ -20,7 +20,7 @@ public interface PDAIssuerStoreService {
             @Header("x-auth-token") String authToken);
 
     @GET("/issuerRecords")
-    List<IssuerRecord> loadAll(
+    Observable<List<IssuerRecord>> loadAll(
             @Path("hatName") String hatName,
             @Header("x-auth-token") String authToken);
 

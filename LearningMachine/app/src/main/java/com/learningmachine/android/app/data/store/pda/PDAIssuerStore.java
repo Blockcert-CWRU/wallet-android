@@ -71,7 +71,7 @@ public class PDAIssuerStore extends AbstractIssuerStore {
 
     @Override
     public Observable<List<IssuerRecord>> loadAll() {
-        return Observable.just(ImmutableList.copyOf(mStoreService.loadAll(mHatName, mAuthToken)));
+        return mStoreService.loadAll(mHatName, mAuthToken);
     }
 
     @Override

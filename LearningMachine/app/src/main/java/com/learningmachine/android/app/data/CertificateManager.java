@@ -92,7 +92,7 @@ public class CertificateManager {
 
     public Observable<Boolean> removeCertificate(String uuid) {
         return Observable.just(FileUtils.deleteCertificate(mContext, uuid))
-                .map(success -> mCertificateStore.delete(uuid));
+                .compose(success -> mCertificateStore.delete(uuid));
     }
 
     /**
