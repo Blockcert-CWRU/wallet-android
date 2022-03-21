@@ -1,5 +1,7 @@
 package com.learningmachine.android.app.data.inject;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.learningmachine.android.app.LMConstants;
 import com.learningmachine.android.app.data.store.pda.PDACertificateStoreService;
 import com.learningmachine.android.app.data.store.pda.PDAIndexService;
@@ -63,6 +65,10 @@ public class ApiModule {
         };
     }
 
+
+    private static final GsonBuilder gsonBuilder = new GsonBuilder();
+    private static final Gson gson = gsonBuilder.create();
+
     @Provides
     @Singleton
     @Named("certStore")
@@ -74,7 +80,7 @@ public class ApiModule {
     @Singleton
     @Named("certStore")
     static Retrofit certStoreRetrofit(@Named("certStore") OkHttpClient client) {
-        return retrofit(LMConstants.BASE_PDA_URL, client);
+        return retrofit(LMConstants.BASE_PDA_URL, client, gson);
     }
 
     @Provides
@@ -94,7 +100,7 @@ public class ApiModule {
     @Singleton
     @Named("issuerStore")
     static Retrofit issuerStoreRetrofit(@Named("issuerStore") OkHttpClient client) {
-        return retrofit(LMConstants.BASE_PDA_URL, client);
+        return retrofit(LMConstants.BASE_PDA_URL, client, gson);
     }
 
     @Provides
@@ -115,7 +121,7 @@ public class ApiModule {
     @Singleton
     @Named("index")
     static Retrofit provideIndexServiceRetrofit(@Named("index") OkHttpClient client) {
-        return retrofit(LMConstants.BASE_PDA_URL, client);
+        return retrofit(LMConstants.BASE_PDA_URL, client, gson);
     }
 
     @Provides
@@ -135,7 +141,7 @@ public class ApiModule {
     @Singleton
     @Named("issuer")
     static Retrofit issuerRetrofit(@Named("issuer") OkHttpClient client) {
-        return retrofit(LMConstants.BASE_URL, client);
+        return retrofit(LMConstants.BASE_URL, client, gson);
     }
 
     @Provides
@@ -156,7 +162,7 @@ public class ApiModule {
     @Singleton
     @Named("certificate")
     static Retrofit certificateRetrofit(@Named("certificate") OkHttpClient client) {
-        return retrofit(LMConstants.BASE_URL, client);
+        return retrofit(LMConstants.BASE_URL, client, gson);
     }
 
     @Provides
@@ -169,7 +175,7 @@ public class ApiModule {
     @Singleton
     @Named("blockchain")
     static Retrofit blockchainRetrofit(@Named("issuer") OkHttpClient client) {
-        return retrofit(LMConstants.BLOCKCHAIN_SERVICE_URL, client);
+        return retrofit(LMConstants.BLOCKCHAIN_SERVICE_URL, client, gson);
     }
 
     @Provides
@@ -182,7 +188,7 @@ public class ApiModule {
     @Singleton
     @Named("version")
     static Retrofit versionRetrofit(@Named("issuer") OkHttpClient client) {
-        return retrofit(LMConstants.VERSION_BASE_URL, client);
+        return retrofit(LMConstants.VERSION_BASE_URL, client, gson);
     }
 
     @Provides
@@ -191,10 +197,10 @@ public class ApiModule {
         return retrofit.create(VersionService.class);
     }
 
-    private static Retrofit retrofit(String baseUrl, OkHttpClient client) {
+    private static Retrofit retrofit(String baseUrl, OkHttpClient client, Gson gson) {
         return new Retrofit.Builder().baseUrl(baseUrl)
                 .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(
                         RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .build();

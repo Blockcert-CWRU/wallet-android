@@ -1,9 +1,13 @@
 package com.learningmachine.android.app.data.store.pda;
 
+import com.google.gson.annotations.SerializedName;
+
+import org.immutables.gson.Gson;
 import org.immutables.value.Value;
 
 import java.util.Set;
 
+@Gson.TypeAdapters
 @Value.Immutable
 public abstract class PDAIndex {
 
@@ -11,6 +15,7 @@ public abstract class PDAIndex {
         return ImmutablePDAIndex.builder();
     }
 
+    @SerializedName("records")
     public abstract Set<PDAIndexRecord> records();
 
     public abstract static class Builder {
