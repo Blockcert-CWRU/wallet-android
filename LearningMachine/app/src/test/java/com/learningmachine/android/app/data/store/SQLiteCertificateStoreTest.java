@@ -54,7 +54,7 @@ public class SQLiteCertificateStoreTest {
 
         mCertificateStore.save(blockCert);
 
-        CertificateRecord actualCertificate = mCertificateStore.load(certUuid);
+        CertificateRecord actualCertificate = mCertificateStore.load(certUuid).toBlocking().first();
 
         assertNotNull(actualCertificate);
         assertEquals(certUuid, actualCertificate.getUuid());
@@ -83,7 +83,7 @@ public class SQLiteCertificateStoreTest {
         blockCert.setIssuedOn("2017-05-11T18:28:27.415+00:00");
 
         mCertificateStore.save(blockCert);
-        CertificateRecord certificateRecord = mCertificateStore.load(certUuid);
+        CertificateRecord certificateRecord = mCertificateStore.load(certUuid).toBlocking().first();
 
         assertNotNull("Should be able to load the certificate by UUID", certificateRecord);
         assertTrue(certificateRecord.urlStringContainsUrl());
