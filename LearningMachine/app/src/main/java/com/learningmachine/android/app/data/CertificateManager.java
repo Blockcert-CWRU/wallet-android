@@ -60,7 +60,6 @@ public class CertificateManager {
         mIssuerManager = issuerManager;
     }
 
-
     public Observable<String> loadSampleCertificate() {
         AssetManager assetManager = mContext.getAssets();
         try (InputStream inputStream = assetManager.open("sample-certificate.json")) {
@@ -71,11 +70,11 @@ public class CertificateManager {
     }
 
     public Observable<CertificateRecord> getCertificate(String certificateUuid) {
-        return Observable.just(mCertificateStore.load(certificateUuid));
+        return mCertificateStore.load(certificateUuid);
     }
 
     public Observable<List<CertificateRecord>> getCertificatesForIssuer(String issuerUuid) {
-        return Observable.just(mCertificateStore.loadForIssuer(issuerUuid));
+        return mCertificateStore.loadForIssuer(issuerUuid);
     }
 
     public Observable<String> addCertificate(String url) {

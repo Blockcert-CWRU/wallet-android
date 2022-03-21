@@ -25,6 +25,8 @@ import org.robolectric.annotation.Config;
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.Observable;
+
 /**
  * Currently only tests saving and loading since users cannot modify Issuer or KeyRotations
  */
@@ -61,15 +63,15 @@ public class IssuerStoreTest {
         issuerOrig.setIssuerKeys(new ArrayList<>());
         mIssuerStore.saveRecord(issuerOrig, recipientPubKey);
 
-        IssuerRecord issuerLoaded = mIssuerStore.load(issuerUuid);
+        Observable<IssuerRecord> issuerLoaded = mIssuerStore.load(issuerUuid);
 
         assertNotNull(issuerLoaded);
-        assertEquals(name, issuerLoaded.getName());
-        assertEquals(email, issuerLoaded.getEmail());
-        assertEquals(issuerUuid, issuerLoaded.getUuid());
-        assertEquals(certsUrl, issuerLoaded.getCertsUrl());
-        assertEquals(introUrl, issuerLoaded.getIntroUrl());
-        assertEquals(introducedOn, issuerLoaded.getIntroducedOn());
+        assertEquals(name, issuerLoaded.toBlocking().first().getName());
+        assertEquals(email, issuerLoaded.toBlocking().first().getEmail());
+        assertEquals(issuerUuid, issuerLoaded.toBlocking().first().getUuid());
+        assertEquals(certsUrl, issuerLoaded.toBlocking().first().getCertsUrl());
+        assertEquals(introUrl, issuerLoaded.toBlocking().first().getIntroUrl());
+        assertEquals(introducedOn, issuerLoaded.toBlocking().first().getIntroducedOn());
     }
 
     @Test
@@ -82,11 +84,11 @@ public class IssuerStoreTest {
         String tableName = LMDatabaseHelper.Table.ISSUER_KEY;
         mIssuerStore.saveKeyRotation(keyRotation, issuerUuid, tableName);
 
-        List<KeyRotation> keyRotationList = mIssuerStore.loadKeyRotations(issuerUuid, tableName);
+        Observable<List<KeyRotation>> keyRotationList = mIssuerStore.loadKeyRotations(issuerUuid, tableName);
 
-        assertFalse(ListUtils.isEmpty(keyRotationList));
+        assertFalse(ListUtils.isEmpty(keyRotationList.toBlocking().first()));
 
-        KeyRotation actualKeyRotation = keyRotationList.get(0);
+        KeyRotation actualKeyRotation = keyRotationList.toBlocking().first().get(0);
 
         assertEquals(createdDate, actualKeyRotation.getCreatedDate());
         assertEquals(key, actualKeyRotation.getKey());

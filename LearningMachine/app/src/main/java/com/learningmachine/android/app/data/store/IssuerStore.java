@@ -6,6 +6,8 @@ import com.learningmachine.android.app.data.webservice.response.IssuerResponse;
 
 import java.util.List;
 
+import rx.Observable;
+
 public interface IssuerStore extends DataStore {
 
     void saveResponse(IssuerResponse response, String recipientPubKey);
@@ -13,14 +15,13 @@ public interface IssuerStore extends DataStore {
 
     void saveRecord(IssuerRecord record, String recipientPubKey);
 
-    List<IssuerRecord> loadAll();
+    Observable<List<IssuerRecord>> loadAll();
 
-    IssuerRecord load(String issuerId);
+    Observable<IssuerRecord> load(String issuerId);
 
-    IssuerRecord loadForCertificate(String certId);
-
+    Observable<IssuerRecord> loadForCertificate(String certId);
 
     void saveKeyRotation(KeyRotation keyRotation, String issuerId, String tableName);
 
-    List<KeyRotation> loadKeyRotations(String issuerId, String tableName);
+    Observable<List<KeyRotation>> loadKeyRotations(String issuerId, String tableName);
 }

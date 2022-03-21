@@ -5,13 +5,15 @@ import com.learningmachine.android.app.data.model.CertificateRecord;
 
 import java.util.List;
 
+import rx.Observable;
+
 public interface CertificateStore extends DataStore {
 
-    CertificateRecord load(String certId);
+    Observable<CertificateRecord> load(String certId);
 
-    List<CertificateRecord> loadForIssuer(String issuerId);
+    Observable<List<CertificateRecord>> loadForIssuer(String issuerId);
 
     void save(BlockCert cert);
 
-    boolean delete(String certId);
+    Observable<Boolean> delete(String certId);
 }

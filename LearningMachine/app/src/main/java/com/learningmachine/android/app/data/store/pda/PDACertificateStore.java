@@ -7,10 +7,12 @@ import com.learningmachine.android.app.data.model.CertificateRecord;
 import com.learningmachine.android.app.data.store.CertificateStore;
 import com.learningmachine.android.app.util.ListUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import dagger.assisted.Assisted;
 import dagger.assisted.AssistedInject;
+import rx.Observable;
 
 public class PDACertificateStore implements CertificateStore {
 
@@ -38,19 +40,27 @@ public class PDACertificateStore implements CertificateStore {
     }
 
     @Override
-    public CertificateRecord load(String certId) {
+    public Observable<CertificateRecord> load(String certId) {
         return mStoreService.load(certId, mHatName, mAuthToken);
     }
 
     @Override
-    public List<CertificateRecord> loadForIssuer(String issuerId) {
-        return mIndexService.get(mHatName, mAuthToken)
+    public Observable<List<CertificateRecord>> loadForIssuer(String issuerId) {
+        List<Observable<CertificateRecord>> list =
+                mIndexService.get(mHatName, mAuthToken).toBlocking().first()
                 .records()
                 .stream()
                 .filter(record -> record.issuerId().equals(issuerId))
                 .map(PDAIndexRecord::certId)
                 .map(this::load)
                 .collect(ListUtils.toImmutableList());
+
+        List<CertificateRecord> records = new ArrayList<>();
+        for (Observable<CertificateRecord> recordObservable :list) {
+            records.add(recordObservable.toBlocking().first());
+        }
+
+        return Observable.just(records);
     }
 
     @Override
@@ -59,9 +69,9 @@ public class PDACertificateStore implements CertificateStore {
     }
 
     @Override
-    public boolean delete(String certId) {
+    public Observable<Boolean> delete(String certId) {
         mStoreService.delete(certId, mHatName, mAuthToken);
-        return true;
+        return Observable.just(true);
     }
 
     @Override

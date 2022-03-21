@@ -46,15 +46,15 @@ public class IssuerManager {
     }
 
     public Observable<IssuerRecord> getIssuer(String issuerUuid) {
-        return Observable.just(mIssuerStore.load(issuerUuid));
+        return mIssuerStore.load(issuerUuid);
     }
 
     public Observable<IssuerRecord> getIssuerForCertificate(String certUuid) {
-        return Observable.just(mIssuerStore.loadForCertificate(certUuid));
+        return mIssuerStore.loadForCertificate(certUuid);
     }
 
     public Observable<List<IssuerRecord>> getIssuers() {
-        return Observable.just(mIssuerStore.loadAll());
+        return mIssuerStore.loadAll();
     }
 
     public Observable<IssuerResponse> fetchIssuer(String url) {

@@ -9,11 +9,12 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import rx.Observable;
 
 public interface PDAIssuerStoreService {
 
     @GET("/issuerRecords/{issuerId}")
-    IssuerRecord load(
+    Observable<IssuerRecord> load(
             @Path("issuerId") String issuerId,
             @Path("hatName") String hatName,
             @Header("x-auth-token") String authToken);

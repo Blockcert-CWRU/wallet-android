@@ -23,6 +23,8 @@ import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
 
+import rx.Observable;
+
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 27)
 public class InnerJoinTest {
@@ -69,15 +71,15 @@ public class InnerJoinTest {
 
         mCertificateStore.save(blockCert);
 
-        IssuerRecord issuerLoaded = mIssuerStore.loadForCertificate(certUuid);
+        Observable<IssuerRecord> issuerLoaded = mIssuerStore.loadForCertificate(certUuid);
 
         assertNotNull(issuerLoaded);
-        assertEquals(name, issuerLoaded.getName());
-        assertEquals(email, issuerLoaded.getEmail());
-        assertEquals(issuerUuid, issuerLoaded.getUuid());
-        assertEquals(certsUrl, issuerLoaded.getCertsUrl());
-        assertEquals(introUrl, issuerLoaded.getIntroUrl());
-        assertEquals(introducedOn, issuerLoaded.getIntroducedOn());
+        assertEquals(name, issuerLoaded.toBlocking().first().getName());
+        assertEquals(email, issuerLoaded.toBlocking().first().getEmail());
+        assertEquals(issuerUuid, issuerLoaded.toBlocking().first().getUuid());
+        assertEquals(certsUrl, issuerLoaded.toBlocking().first().getCertsUrl());
+        assertEquals(introUrl, issuerLoaded.toBlocking().first().getIntroUrl());
+        assertEquals(introducedOn, issuerLoaded.toBlocking().first().getIntroducedOn());
     }
 
 }

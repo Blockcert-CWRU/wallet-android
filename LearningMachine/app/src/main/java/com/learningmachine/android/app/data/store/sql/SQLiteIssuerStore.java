@@ -19,6 +19,8 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import rx.Observable;
+
 @Singleton
 public class SQLiteIssuerStore extends AbstractIssuerStore {
 
@@ -76,7 +78,7 @@ public class SQLiteIssuerStore extends AbstractIssuerStore {
     }
 
     @Override
-    public List<IssuerRecord> loadAll() {
+    public Observable<List<IssuerRecord>> loadAll() {
 
         List<IssuerRecord> issuerList = new ArrayList<>();
 
@@ -94,10 +96,10 @@ public class SQLiteIssuerStore extends AbstractIssuerStore {
             while (!cursorWrapper.isAfterLast()) {
                 IssuerRecord issuer = cursorWrapper.getIssuer();
 
-                List<KeyRotation> issuerKeys = loadIssuerKeys(issuer.getUuid());
-                issuer.setIssuerKeys(issuerKeys);
-                List<KeyRotation> revocationKeys = loadRevocationKeys(issuer.getUuid());
-                issuer.setRevocationKeys(revocationKeys);
+                Observable<List<KeyRotation>> issuerKeys = loadIssuerKeys(issuer.getUuid());
+                issuer.setIssuerKeys(issuerKeys.toBlocking().first());
+                Observable<List<KeyRotation>> revocationKeys = loadRevocationKeys(issuer.getUuid());
+                issuer.setRevocationKeys(revocationKeys.toBlocking().first());
 
                 issuerList.add(issuer);
                 cursorWrapper.moveToNext();
@@ -106,11 +108,11 @@ public class SQLiteIssuerStore extends AbstractIssuerStore {
 
         cursor.close();
 
-        return issuerList;
+        return Observable.just(issuerList);
     }
 
     @Override
-    public IssuerRecord load(String issuerId) {
+    public Observable<IssuerRecord> load(String issuerId) {
         IssuerRecord issuer = null;
         Cursor cursor = mDatabase.query(
                 LMDatabaseHelper.Table.ISSUER,
@@ -124,19 +126,19 @@ public class SQLiteIssuerStore extends AbstractIssuerStore {
         if (cursor.moveToFirst()) {
             IssuerCursorWrapper cursorWrapper = new IssuerCursorWrapper(cursor);
             issuer = cursorWrapper.getIssuer();
-            List<KeyRotation> issuerKeys = loadIssuerKeys(issuer.getUuid());
-            issuer.setIssuerKeys(issuerKeys);
-            List<KeyRotation> revocationKeys = loadRevocationKeys(issuer.getUuid());
-            issuer.setRevocationKeys(revocationKeys);
+            Observable<List<KeyRotation>> issuerKeys = loadIssuerKeys(issuer.getUuid());
+            issuer.setIssuerKeys(issuerKeys.toBlocking().first());
+            Observable<List<KeyRotation>> revocationKeys = loadRevocationKeys(issuer.getUuid());
+            issuer.setRevocationKeys(revocationKeys.toBlocking().first());
         }
 
         cursor.close();
 
-        return issuer;
+        return Observable.just(issuer);
     }
 
     @Override
-    public IssuerRecord loadForCertificate(String certId) {
+    public Observable<IssuerRecord> loadForCertificate(String certId) {
         IssuerRecord issuer = null;
 
         String selectQuery = "SELECT "
@@ -163,15 +165,15 @@ public class SQLiteIssuerStore extends AbstractIssuerStore {
         if (cursor.moveToFirst()) {
             IssuerCursorWrapper cursorWrapper = new IssuerCursorWrapper(cursor);
             issuer = cursorWrapper.getIssuer();
-            List<KeyRotation> issuerKeys = loadIssuerKeys(issuer.getUuid());
-            issuer.setIssuerKeys(issuerKeys);
-            List<KeyRotation> revocationKeys = loadRevocationKeys(issuer.getUuid());
-            issuer.setRevocationKeys(revocationKeys);
+            Observable<List<KeyRotation>> issuerKeys = loadIssuerKeys(issuer.getUuid());
+            issuer.setIssuerKeys(issuerKeys.toBlocking().first());
+            Observable<List<KeyRotation>> revocationKeys = loadRevocationKeys(issuer.getUuid());
+            issuer.setRevocationKeys(revocationKeys.toBlocking().first());
         }
 
         cursor.close();
 
-        return issuer;
+        return Observable.just(issuer);
     }
 
     @Override
@@ -182,7 +184,7 @@ public class SQLiteIssuerStore extends AbstractIssuerStore {
         contentValues.put(LMDatabaseHelper.Column.KeyRotation.CREATED_DATE, keyRotation.getCreatedDate());
         contentValues.put(LMDatabaseHelper.Column.KeyRotation.ISSUER_UUID, issuerId);
 
-        if (ListUtils.isEmpty(loadKeyRotations(issuerId, tableName))) {
+        if (ListUtils.isEmpty(loadKeyRotations(issuerId, tableName).toBlocking().first())) {
             mDatabase.insert(tableName,
                     null,
                     contentValues);
@@ -196,7 +198,7 @@ public class SQLiteIssuerStore extends AbstractIssuerStore {
     }
 
     @Override
-    public List<KeyRotation> loadKeyRotations(String issuerId, String tableName) {
+    public Observable<List<KeyRotation>> loadKeyRotations(String issuerId, String tableName) {
         return null;
     }
 
@@ -208,11 +210,11 @@ public class SQLiteIssuerStore extends AbstractIssuerStore {
         mImageStore.reset();
     }
 
-    private List<KeyRotation> loadIssuerKeys(String issuerId) {
+    private Observable<List<KeyRotation>> loadIssuerKeys(String issuerId) {
         return loadKeyRotations(issuerId, LMDatabaseHelper.Table.ISSUER_KEY);
     }
 
-    private List<KeyRotation> loadRevocationKeys(String issuerId) {
+    private Observable<List<KeyRotation>> loadRevocationKeys(String issuerId) {
         return loadKeyRotations(issuerId, LMDatabaseHelper.Table.REVOCATION_KEY);
     }
 

@@ -7,11 +7,12 @@ import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import rx.Observable;
 
 public interface PDAIndexService {
 
     @GET("/index")
-    PDAIndex get(@Path("hatName") String hatName, @Header("x-auth-token") String authToken);
+    Observable<PDAIndex> get(@Path("hatName") String hatName, @Header("x-auth-token") String authToken);
 
     @POST("/index")
     void create(

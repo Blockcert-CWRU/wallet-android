@@ -10,6 +10,7 @@ import com.learningmachine.android.app.util.StringUtils;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import rx.Observable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -32,19 +33,19 @@ public class SQLiteImageStore implements ImageStore {
      * @return true if the image was written to file successfully
      */
     @Override
-    public boolean saveImage(String issuerId, String jsonData) {
+    public Observable<Boolean> saveImage(String issuerId, String jsonData) {
         if (StringUtils.isEmpty(issuerId) || StringUtils.isEmpty(jsonData)) {
-            return false;
+            return Observable.just(false);
         }
 
         String filename = ImageUtils.getImageFilename(issuerId);
         if (StringUtils.isEmpty(filename)) {
-            return false;
+            return Observable.just(false);
         }
 
         String imageData = ImageUtils.getImageDataFromJson(jsonData);
         if (StringUtils.isEmpty(imageData)) {
-            return false;
+            return Observable.just(false);
         }
 
         boolean success = false;
@@ -60,7 +61,7 @@ public class SQLiteImageStore implements ImageStore {
             Timber.e(e, "Unable to write to file");
         }
 
-        return success;
+        return Observable.just(success);
     }
 
     @Override

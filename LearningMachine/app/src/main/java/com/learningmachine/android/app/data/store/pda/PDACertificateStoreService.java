@@ -10,11 +10,12 @@ import retrofit2.http.Header;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import rx.Observable;
 
 public interface PDACertificateStoreService {
 
     @GET("/certs/{certId}")
-    CertificateRecord load(
+    Observable<CertificateRecord> load(
             @Path("certId") String certId,
             @Path("hatName") String hatName,
             @Header("x-auth-token") String authToken);

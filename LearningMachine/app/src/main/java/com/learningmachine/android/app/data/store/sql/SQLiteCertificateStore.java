@@ -16,6 +16,8 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import rx.Observable;
+
 @Singleton
 public class SQLiteCertificateStore implements CertificateStore {
 
@@ -26,7 +28,7 @@ public class SQLiteCertificateStore implements CertificateStore {
         mDatabase = database;
     }
 
-    public CertificateRecord load(String certId) {
+    public Observable<CertificateRecord> load(String certId) {
         CertificateRecord certificate = null;
         Cursor cursor = mDatabase.query(
                 LMDatabaseHelper.Table.CERTIFICATE,
@@ -44,10 +46,10 @@ public class SQLiteCertificateStore implements CertificateStore {
 
         cursor.close();
 
-        return certificate;
+        return Observable.just(certificate);
     }
 
-    public List<CertificateRecord> loadForIssuer(String issuerId) {
+    public Observable<List<CertificateRecord>> loadForIssuer(String issuerId) {
         List<CertificateRecord> certificateList = new ArrayList<>();
 
         Cursor cursor = mDatabase.query(
@@ -70,7 +72,7 @@ public class SQLiteCertificateStore implements CertificateStore {
 
         cursor.close();
 
-        return certificateList;
+        return Observable.just(certificateList);
     }
 
     public void save(BlockCert cert) {
@@ -106,11 +108,11 @@ public class SQLiteCertificateStore implements CertificateStore {
         }
     }
 
-    public boolean delete(String certId) {
+    public Observable<Boolean> delete(String certId) {
         // the delete operation should remove 1 row from the table
-        return 1 == mDatabase.delete(LMDatabaseHelper.Table.CERTIFICATE,
+        return Observable.just(1 == mDatabase.delete(LMDatabaseHelper.Table.CERTIFICATE,
                 LMDatabaseHelper.Column.Certificate.UUID + " = ? ",
-                new String[]{certId});
+                new String[]{certId}));
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.learningmachine.android.app.data.store.pda;
 import com.google.common.collect.ImmutableList;
 //import com.learningmachine.android.app.data.inject.DaggerPDAComponent;
 //import com.learningmachine.android.app.data.inject.PDAComponent;
+import com.learningmachine.android.app.data.model.CertificateRecord;
 import com.learningmachine.android.app.data.model.IssuerRecord;
 import com.learningmachine.android.app.data.model.KeyRotation;
 import com.learningmachine.android.app.data.store.AbstractIssuerStore;
@@ -10,6 +11,7 @@ import com.learningmachine.android.app.data.store.ImageStore;
 import com.learningmachine.android.app.data.store.IssuerStore;
 import com.learningmachine.android.app.data.store.sql.SQLiteIssuerStore;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -17,6 +19,7 @@ import java.util.stream.Collectors;
 
 import dagger.assisted.Assisted;
 import dagger.assisted.AssistedInject;
+import rx.Observable;
 
 public class PDAIssuerStore extends AbstractIssuerStore {
 
@@ -48,7 +51,7 @@ public class PDAIssuerStore extends AbstractIssuerStore {
         return null;
     }
 
-    private static void checkRecords(Collection<IssuerRecord> records) {
+    private static void checkRecords(Collection<Observable<IssuerRecord>> records) {
         if (records.isEmpty()) {
             throw new NoSuchElementException();
         } else if (records.size() > 1) {
@@ -67,26 +70,27 @@ public class PDAIssuerStore extends AbstractIssuerStore {
     }
 
     @Override
-    public List<IssuerRecord> loadAll() {
-        return ImmutableList.copyOf(mStoreService.loadAll(mHatName, mAuthToken));
+    public Observable<List<IssuerRecord>> loadAll() {
+        return Observable.just(ImmutableList.copyOf(mStoreService.loadAll(mHatName, mAuthToken)));
     }
 
     @Override
-    public IssuerRecord load(String issuerId) {
+    public Observable<IssuerRecord> load(String issuerId) {
         return mStoreService.load(issuerId, mHatName, mAuthToken);
     }
 
     @Override
-    public IssuerRecord loadForCertificate(String certId) {
-        List<IssuerRecord> records = mIndexService.get(mHatName, mAuthToken)
+    public Observable<IssuerRecord> loadForCertificate(String certId) {
+        List<Observable<IssuerRecord>> list = mIndexService.get(mHatName, mAuthToken).toBlocking().first()
                 .records()
                 .stream()
                 .filter(record -> record.certId().equals(certId))
                 .map(PDAIndexRecord::issuerId)
                 .map(this::load)
                 .collect(Collectors.toList());
-        checkRecords(records);
-        return records.get(0);
+
+        checkRecords(list);
+        return list.get(0);
     }
 
     @Override
@@ -95,7 +99,7 @@ public class PDAIssuerStore extends AbstractIssuerStore {
     }
 
     @Override
-    public List<KeyRotation> loadKeyRotations(String issuerId, String tableName) {
-        return ImmutableList.copyOf(mKeyStore.loadKeyRotations(issuerId, tableName));
+    public Observable<List<KeyRotation>> loadKeyRotations(String issuerId, String tableName) {
+        return mKeyStore.loadKeyRotations(issuerId, tableName);
     }
 }
