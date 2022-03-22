@@ -10,10 +10,9 @@ import rx.Observable;
 
 public interface IssuerStore extends DataStore {
 
-    void saveResponse(IssuerResponse response, String recipientPubKey);
+    Observable<Void> saveResponse(IssuerResponse response, String recipientPubKey);
 
-
-    void saveRecord(IssuerRecord record, String recipientPubKey);
+    Observable<Void> saveRecord(IssuerRecord record, String recipientPubKey);
 
     Observable<List<IssuerRecord>> loadAll();
 
@@ -21,7 +20,7 @@ public interface IssuerStore extends DataStore {
 
     Observable<IssuerRecord> loadForCertificate(String certId);
 
-    void saveKeyRotation(KeyRotation keyRotation, String issuerId, String tableName);
+    Observable<Void> saveKeyRotation(KeyRotation keyRotation, String issuerId, String tableName);
 
     Observable<List<KeyRotation>> loadKeyRotations(String issuerId, String tableName);
 }

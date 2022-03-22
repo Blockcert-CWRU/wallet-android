@@ -15,17 +15,17 @@ public interface PDAIndexService {
     Observable<PDAIndex> get(@Path("hatName") String hatName, @Header("x-auth-token") String authToken);
 
     @POST("/index")
-    void create(
+    Observable<Void> create(
             @Body PDAIndex index,
             @Path("hatName") String hatName,
             @Header("x-auth-token") String authToken);
 
     @PUT("/index")
-    void update(
+    Observable<Void> update(
             @Body PDAIndex index,
             @Path("hatName") String hatName,
             @Header("x-auth-token") String authToken);
 
     @DELETE("/index")
-    void delete(@Path("hatName") String hatName, @Header("x-auth-token") String authToken);
+    Observable<Void> delete(@Path("hatName") String hatName, @Header("x-auth-token") String authToken);
 }

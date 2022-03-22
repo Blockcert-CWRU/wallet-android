@@ -21,14 +21,14 @@ public interface PDACertificateStoreService {
             @Header("x-auth-token") String authToken);
 
     @PUT("/certs/{certId}")
-    void save(
+    Observable<Void> save(
             @Body BlockCert cert,
             @Path("certId") String certId,
             @Path("hatName") String hatName,
             @Header("x-auth-token") String authToken);
 
     @DELETE("/certs")
-    void delete(
+    Observable<Void> delete(
             @Query("records") String certId,
             @Path("hatName") String hatName,
             @Header("x-auth-token") String authToken);

@@ -13,7 +13,7 @@ public interface CertificateStore extends DataStore {
 
     Observable<List<CertificateRecord>> loadForIssuer(String issuerId);
 
-    void save(BlockCert cert);
+    Observable<Void> save(BlockCert cert);
 
     Observable<Boolean> delete(String certId);
 }

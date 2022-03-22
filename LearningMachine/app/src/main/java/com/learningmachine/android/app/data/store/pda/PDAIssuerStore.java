@@ -44,13 +44,8 @@ public class PDAIssuerStore extends AbstractIssuerStore {
     }
 
     @Override
-    public void reset() {
-        // no-op
-    }
-
-    @Override
-    public void saveRecord(IssuerRecord record, String recipientPubKey) {
-        mStoreService.save(record, record.getUuid(), recipientPubKey, mHatName, mAuthToken);
+    public Observable<Void> saveRecord(IssuerRecord record, String recipientPubKey) {
+        return mStoreService.save(record, record.getUuid(), recipientPubKey, mHatName, mAuthToken);
     }
 
     @Override
@@ -76,8 +71,8 @@ public class PDAIssuerStore extends AbstractIssuerStore {
     }
 
     @Override
-    public void saveKeyRotation(KeyRotation keyRotation, String issuerId, String tableName) {
-        mKeyStore.saveKeyRotation(keyRotation, issuerId, tableName);
+    public Observable<Void> saveKeyRotation(KeyRotation keyRotation, String issuerId, String tableName) {
+        return mKeyStore.saveKeyRotation(keyRotation, issuerId, tableName);
     }
 
     @Override

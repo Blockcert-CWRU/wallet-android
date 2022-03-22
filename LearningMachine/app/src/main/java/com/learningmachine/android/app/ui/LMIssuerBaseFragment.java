@@ -141,7 +141,7 @@ public abstract class LMIssuerBaseFragment extends LMFragment {
             mIssuerManager.fetchIssuer(mIntroUrl)
                     .doOnSubscribe(() -> displayProgressDialog(R.string.fragment_add_issuer_adding_issuer_progress_dialog_message))
                     .compose(bindToMainThread())
-                    .map(issuer -> mIssuerManager.saveIssuer(issuer, bitcoinAddress))
+                    .flatMap(issuer -> mIssuerManager.saveIssuer(issuer, bitcoinAddress))
                     .subscribe(this::addIssuerOnIssuerAdded, throwable -> {
                         Timber.e(throwable, "Error during issuer introduction: " + ErrorUtils.getErrorFromThrowable(throwable));
                         displayErrors(throwable, DialogUtils.ErrorCategory.ISSUER, R.string.error_title_message);

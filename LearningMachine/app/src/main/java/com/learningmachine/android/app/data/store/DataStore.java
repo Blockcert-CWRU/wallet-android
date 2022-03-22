@@ -1,5 +1,10 @@
 package com.learningmachine.android.app.data.store;
 
+import rx.Observable;
+
 public interface DataStore {
-    void reset();
+
+    default Observable<Void> reset() {
+        return Observable.empty();
+    }
 }

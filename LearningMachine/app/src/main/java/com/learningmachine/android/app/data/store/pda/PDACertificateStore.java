@@ -53,18 +53,12 @@ public class PDACertificateStore implements CertificateStore {
     }
 
     @Override
-    public void save(BlockCert cert) {
-        mStoreService.save(cert, cert.getCertUid(), mHatName, mAuthToken);
+    public Observable<Void> save(BlockCert cert) {
+        return mStoreService.save(cert, cert.getCertUid(), mHatName, mAuthToken);
     }
 
     @Override
     public Observable<Boolean> delete(String certId) {
-        mStoreService.delete(certId, mHatName, mAuthToken);
-        return Observable.just(true);
-    }
-
-    @Override
-    public void reset() {
-        // no-op
+        return mStoreService.delete(certId, mHatName, mAuthToken).map(x -> true);
     }
 }

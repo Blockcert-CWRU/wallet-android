@@ -10,11 +10,11 @@ import com.learningmachine.android.app.util.StringUtils;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import rx.Observable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import rx.Observable;
 import timber.log.Timber;
 
 @Singleton
@@ -65,12 +65,13 @@ public class SQLiteImageStore implements ImageStore {
     }
 
     @Override
-    public void reset() {
+    public Observable<Void> reset() {
         String[] fileList = mContext.fileList();
         for (String file : fileList) {
             if (file.contains(".png")) {
                 mContext.deleteFile(file);
             }
         }
+        return Observable.empty();
     }
 }

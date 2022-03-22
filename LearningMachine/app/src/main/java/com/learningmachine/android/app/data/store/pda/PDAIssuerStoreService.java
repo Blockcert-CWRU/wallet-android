@@ -26,7 +26,7 @@ public interface PDAIssuerStoreService {
 
     // TODO Figure out how to merge recipientPubKey into IssuerRecord
     @PUT("/issuerRecords/{issuerId}")
-    void save(
+    Observable<Void> save(
             @Body IssuerRecord record,
             @Path("issuerId") String issuerId,
             String recipientPubKey,

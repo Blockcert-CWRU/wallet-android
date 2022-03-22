@@ -4,6 +4,8 @@ import com.learningmachine.android.app.data.webservice.response.IssuerResponse;
 
 import org.joda.time.DateTime;
 
+import rx.Observable;
+
 public abstract class AbstractIssuerStore implements IssuerStore {
 
     private final ImageStore mImageStore;
@@ -12,11 +14,16 @@ public abstract class AbstractIssuerStore implements IssuerStore {
         mImageStore = imageStore;
     }
 
-    public void saveResponse(IssuerResponse response, String recipientPubKey) {
+    public Observable<Void> saveResponse(IssuerResponse response, String recipientPubKey) {
         if (response != null) {
-            mImageStore.saveImage(response.getUuid(), response.getImageData());
-            response.setIntroducedOn(DateTime.now().toString());
-            saveRecord(response, recipientPubKey);
+            return mImageStore.saveImage(response.getUuid(), response.getImageData())
+                    .compose(
+                            x -> {
+                                response.setIntroducedOn(DateTime.now().toString());
+                                return saveRecord(response, recipientPubKey);
+                            })
+                    .map(x -> null);
         }
+        return Observable.empty();
     }
 }

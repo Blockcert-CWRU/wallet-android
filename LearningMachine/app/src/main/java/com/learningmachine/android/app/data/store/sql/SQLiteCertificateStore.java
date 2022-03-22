@@ -75,7 +75,7 @@ public class SQLiteCertificateStore implements CertificateStore {
         return Observable.just(certificateList);
     }
 
-    public void save(BlockCert cert) {
+    public Observable<Void> save(BlockCert cert) {
         String certUid = cert.getCertUid();
         String urlString = cert.getUrl();
         String issuerId = cert.getIssuerId();
@@ -106,6 +106,7 @@ public class SQLiteCertificateStore implements CertificateStore {
                     LMDatabaseHelper.Column.Certificate.UUID + " = ? ",
                     new String[]{certUid});
         }
+        return Observable.empty();
     }
 
     public Observable<Boolean> delete(String certId) {
@@ -116,7 +117,8 @@ public class SQLiteCertificateStore implements CertificateStore {
     }
 
     @Override
-    public void reset() {
+    public Observable<Void> reset() {
         mDatabase.delete(LMDatabaseHelper.Table.CERTIFICATE, null, null);
+        return Observable.empty();
     }
 }

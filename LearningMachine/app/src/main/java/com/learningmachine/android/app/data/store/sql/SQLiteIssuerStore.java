@@ -14,6 +14,7 @@ import com.learningmachine.android.app.util.ListUtils;
 import com.learningmachine.android.app.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -35,7 +36,7 @@ public class SQLiteIssuerStore extends AbstractIssuerStore {
     }
 
     @Override
-    public void saveRecord(IssuerRecord record, String recipientPubKey) {
+    public Observable<Void> saveRecord(IssuerRecord record, String recipientPubKey) {
         ContentValues contentValues = new ContentValues();
 
         contentValues.put(LMDatabaseHelper.Column.Issuer.NAME, record.getName());
@@ -75,6 +76,7 @@ public class SQLiteIssuerStore extends AbstractIssuerStore {
                     contentValues, LMDatabaseHelper.Column.Issuer.UUID + " = ?",
                     new String[]{issuerId});
         }
+        return Observable.empty();
     }
 
     @Override
@@ -177,7 +179,7 @@ public class SQLiteIssuerStore extends AbstractIssuerStore {
     }
 
     @Override
-    public void saveKeyRotation(KeyRotation keyRotation, String issuerId, String tableName) {
+    public Observable<Void> saveKeyRotation(KeyRotation keyRotation, String issuerId, String tableName) {
         ContentValues contentValues = new ContentValues();
 
         contentValues.put(LMDatabaseHelper.Column.KeyRotation.KEY, keyRotation.getKey());
@@ -195,19 +197,20 @@ public class SQLiteIssuerStore extends AbstractIssuerStore {
                             + " AND " + LMDatabaseHelper.Column.KeyRotation.ISSUER_UUID + " = ?",
                     new String[]{keyRotation.getKey(), issuerId});
         }
+        return Observable.empty();
     }
 
     @Override
     public Observable<List<KeyRotation>> loadKeyRotations(String issuerId, String tableName) {
-        return null;
+        return Observable.just(Collections.emptyList());
     }
 
     @Override
-    public void reset() {
+    public Observable<Void> reset() {
         mDatabase.delete(LMDatabaseHelper.Table.ISSUER, null, null);
         mDatabase.delete(LMDatabaseHelper.Table.ISSUER_KEY, null, null);
         mDatabase.delete(LMDatabaseHelper.Table.REVOCATION_KEY, null, null);
-        mImageStore.reset();
+        return mImageStore.reset();
     }
 
     private Observable<List<KeyRotation>> loadIssuerKeys(String issuerId) {
