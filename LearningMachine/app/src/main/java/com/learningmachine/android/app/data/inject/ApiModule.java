@@ -15,6 +15,7 @@ import com.learningmachine.android.app.data.webservice.VersionService;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ServiceLoader;
+import java.util.stream.Stream;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -79,82 +80,38 @@ public class ApiModule {
 
     @Provides
     @Singleton
-    @Named("certStore")
-    static OkHttpClient certStoreServiceClient(Interceptor loggingInterceptor) {
+    static OkHttpClient defaultClient(Interceptor loggingInterceptor) {
         return okHttpClient(loggingInterceptor);
     }
 
     @Provides
     @Singleton
-    @Named("certStore")
-    static Retrofit certStoreRetrofit(@Named("certStore") OkHttpClient client, Gson gson) {
+    @Named("pda")
+    static Retrofit pdaRetrofit(OkHttpClient client, Gson gson) {
         return retrofit(LMConstants.BASE_PDA_URL, client, gson);
     }
 
     @Provides
     @Singleton
-    static PDACertificateStoreService certStoreService(@Named("certStore") Retrofit retrofit) {
+    static PDACertificateStoreService certStoreService(@Named("pda") Retrofit retrofit) {
         return retrofit.create(PDACertificateStoreService.class);
     }
 
     @Provides
     @Singleton
-    @Named("issuerStore")
-    static OkHttpClient issuerStoreServiceClient(Interceptor loggingInterceptor) {
-        return okHttpClient(loggingInterceptor);
-    }
-
-    @Provides
-    @Singleton
-    @Named("issuerStore")
-    static Retrofit issuerStoreRetrofit(@Named("issuerStore") OkHttpClient client, Gson gson) {
-        return retrofit(LMConstants.BASE_PDA_URL, client, gson);
-    }
-
-    @Provides
-    @Singleton
-    @Named("issuerStore")
-    static PDAIssuerStoreService issuerStoreService(@Named("issuerStore") Retrofit retrofit) {
+    static PDAIssuerStoreService issuerStoreService(@Named("pda") Retrofit retrofit) {
         return retrofit.create(PDAIssuerStoreService.class);
     }
 
     @Provides
     @Singleton
-    @Named("index")
-    static OkHttpClient indexServiceClient(Interceptor loggingInterceptor) {
-        return okHttpClient(loggingInterceptor);
-    }
-
-    @Provides
-    @Singleton
-    @Named("index")
-    static Retrofit provideIndexServiceRetrofit(@Named("index") OkHttpClient client, Gson gson) {
-        return retrofit(LMConstants.BASE_PDA_URL, client, gson);
-    }
-
-    @Provides
-    @Singleton
-    static PDAIndexService provideIndexService(@Named("index") Retrofit retrofit) {
+    static PDAIndexService provideIndexService(@Named("pda") Retrofit retrofit) {
         return retrofit.create(PDAIndexService.class);
     }
 
     @Provides
     @Singleton
-    @Named("issuer")
-    static OkHttpClient issuerClient(Interceptor loggingInterceptor) {
-        return okHttpClient(loggingInterceptor);
-    }
-
-    @Provides
-    @Singleton
-    @Named("issuer")
-    static Retrofit issuerRetrofit(@Named("issuer") OkHttpClient client, Gson gson) {
-        return retrofit(LMConstants.BASE_URL, client, gson);
-    }
-
-    @Provides
-    @Singleton
-    static IssuerService issuerService(@Named("issuer") Retrofit retrofit) {
+    static IssuerService issuerService(@Named("certificate") Retrofit retrofit) {
         return retrofit.create(IssuerService.class);
     }
 
@@ -182,7 +139,7 @@ public class ApiModule {
     @Provides
     @Singleton
     @Named("blockchain")
-    static Retrofit blockchainRetrofit(@Named("issuer") OkHttpClient client, Gson gson) {
+    static Retrofit blockchainRetrofit(OkHttpClient client, Gson gson) {
         return retrofit(LMConstants.BLOCKCHAIN_SERVICE_URL, client, gson);
     }
 
@@ -195,7 +152,7 @@ public class ApiModule {
     @Provides
     @Singleton
     @Named("version")
-    static Retrofit versionRetrofit(@Named("issuer") OkHttpClient client, Gson gson) {
+    static Retrofit versionRetrofit(OkHttpClient client, Gson gson) {
         return retrofit(LMConstants.VERSION_BASE_URL, client, gson);
     }
 
@@ -216,9 +173,7 @@ public class ApiModule {
 
     private static OkHttpClient okHttpClient(Interceptor... interceptors) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        for (Interceptor interceptor : interceptors) {
-            builder = builder.addInterceptor(interceptor);
-        }
+        Stream.of(interceptors).forEach(builder::addInterceptor);
         return builder.build();
     }
 }
