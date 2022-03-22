@@ -111,12 +111,6 @@ public class ApiModule {
 
     @Provides
     @Singleton
-    static IssuerService issuerService(@Named("certificate") Retrofit retrofit) {
-        return retrofit.create(IssuerService.class);
-    }
-
-    @Provides
-    @Singleton
     @Named("certificate")
     static OkHttpClient certificateClient(
             Interceptor loggingInterceptor, CertificateInterceptor certificateInterceptor) {
@@ -128,6 +122,12 @@ public class ApiModule {
     @Named("certificate")
     static Retrofit certificateRetrofit(@Named("certificate") OkHttpClient client, Gson gson) {
         return retrofit(LMConstants.BASE_URL, client, gson);
+    }
+
+    @Provides
+    @Singleton
+    static IssuerService issuerService(@Named("certificate") Retrofit retrofit) {
+        return retrofit.create(IssuerService.class);
     }
 
     @Provides
