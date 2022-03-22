@@ -163,7 +163,8 @@ public class ApiModule {
     }
 
     private static Retrofit retrofit(String baseUrl, OkHttpClient client, Gson gson) {
-        return new Retrofit.Builder().baseUrl(baseUrl)
+        return new Retrofit.Builder()
+                .baseUrl(baseUrl)
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(
