@@ -1,7 +1,6 @@
 package com.learningmachine.android.app.util;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 
 import com.google.gson.Gson;
 
@@ -9,23 +8,26 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import javax.inject.Inject;
+
 /**
  * Class can be moved to test package when mock data is no longer necessary
  */
 public class GsonUtil {
 
-    private static final Gson GSON = new Gson();
     private final Context mContext;
+    private final Gson mGson;
 
-    public GsonUtil(Context context) {
+    @Inject
+    public GsonUtil(Context context, Gson gson) {
         mContext = context;
+        mGson = gson;
     }
 
     public <T> T loadModelObject(String file, Class<T> clazz) throws IOException {
         String filename = file + ".json";
-        AssetManager assetManager = mContext.getAssets();
-        InputStream inputStream = assetManager.open(filename);
+        InputStream inputStream = mContext.getAssets().open(filename);
         InputStreamReader reader = new InputStreamReader(inputStream);
-        return GSON.fromJson(reader, clazz);
+        return mGson.fromJson(reader, clazz);
     }
 }

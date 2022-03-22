@@ -1,7 +1,5 @@
 package com.learningmachine.android.app.data;
 
-import android.content.Context;
-
 import com.learningmachine.android.app.data.error.IssuerAnalyticsException;
 import com.learningmachine.android.app.data.model.IssuerRecord;
 import com.learningmachine.android.app.data.store.IssuerStore;
@@ -26,18 +24,19 @@ public class IssuerManager {
 
     private final IssuerStore mIssuerStore;
     private final IssuerService mIssuerService;
+    private final GsonUtil mGsonUtil;
 
     @Inject
-    public IssuerManager(IssuerStore issuerStore, IssuerService issuerService) {
+    public IssuerManager(IssuerStore issuerStore, IssuerService issuerService, GsonUtil gsonUtil) {
         mIssuerStore = issuerStore;
         mIssuerService = issuerService;
+        mGsonUtil = gsonUtil;
     }
 
-    public Observable<Void> loadSampleIssuer(Context context) {
-        Timber.d("Loading Sample Issuer");
+    public Observable<Void> loadSampleIssuer() {
         try {
-            GsonUtil gsonUtil = new GsonUtil(context);
-            IssuerResponse issuerResponse = gsonUtil.loadModelObject("sample-issuer", IssuerResponse.class);
+            Timber.d("Loading Sample Issuer");
+            IssuerResponse issuerResponse = mGsonUtil.loadModelObject("sample-issuer", IssuerResponse.class);
             return mIssuerStore.saveResponse(issuerResponse, null);
         } catch (IOException e) {
             Timber.e(e, "Unable to load Sample Issuer");
