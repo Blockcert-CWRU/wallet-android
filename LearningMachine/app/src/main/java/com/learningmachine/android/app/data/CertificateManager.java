@@ -3,11 +3,8 @@ package com.learningmachine.android.app.data;
 import android.content.Context;
 import android.content.res.AssetManager;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.TypeAdapterFactory;
 import com.learningmachine.android.app.LMConstants;
 import com.learningmachine.android.app.R;
 import com.learningmachine.android.app.data.bitcoin.BitcoinManager;
@@ -27,7 +24,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.ServiceLoader;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -61,6 +57,7 @@ public class CertificateManager {
     }
 
     public Observable<String> loadSampleCertificate() {
+        Timber.d("Loading Sample Certificate");
         AssetManager assetManager = mContext.getAssets();
         try (InputStream inputStream = assetManager.open("sample-certificate.json")) {
             return handleCertificateInputStream(inputStream);
@@ -96,7 +93,7 @@ public class CertificateManager {
     }
 
     /**
-     * @param responseBody   Unparsed certificate response json
+     * @param responseBody Unparsed certificate response json
      * @return Error if save was unsuccessful
      */
     private Observable<String> handleCertificateResponse(ResponseBody responseBody) {
@@ -162,7 +159,7 @@ public class CertificateManager {
 
         BlockCert blockCert;
         File tempFile = FileUtils.getCertificateFile(mContext, tempFilename);
-        try(FileInputStream fileInputStream = new FileInputStream(tempFile)) {
+        try (FileInputStream fileInputStream = new FileInputStream(tempFile)) {
             BlockCertParser blockCertParser = new BlockCertParser();
             blockCert = blockCertParser.fromJson(fileInputStream);
         } catch (IOException e) {
