@@ -236,5 +236,8 @@
     <string name="dialog_confirm">Confirm Delete</string>
     <string name="dialog_cancel">Cancel</string>
     <string name="onboarding_paste_passphrase_choose_backup_button">Choose Backup File...</string>
+    <string name="title_activity_qrcode_scan">QRCodeScanActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 
 </resources>

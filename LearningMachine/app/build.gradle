@@ -109,6 +109,9 @@ android {
     lintOptions {
         abortOnError false
     }
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 final DESUGAR_VERSION = '1.1.5'

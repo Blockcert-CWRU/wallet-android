@@ -37,13 +37,17 @@ import com.learningmachine.android.app.data.model.IssuerRecord;
 import com.learningmachine.android.app.databinding.FragmentCertificateBinding;
 import com.learningmachine.android.app.dialog.AlertDialogFragment;
 import com.learningmachine.android.app.ui.LMFragment;
+import com.learningmachine.android.app.ui.share.DashboardShareService;
 import com.learningmachine.android.app.util.DialogUtils;
 import com.learningmachine.android.app.util.FileUtils;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import javax.inject.Inject;
 
+import retrofit2.http.Url;
 import rx.Observable;
 import timber.log.Timber;
 
@@ -59,11 +63,17 @@ public class CertificateFragment extends LMFragment {
     protected IssuerManager mIssuerManager;
     @Inject
     protected CertificateVerifier mCertificateVerifier;
+    @Inject
+    private DashboardShareService dashboardShareService;
 
+    private final String dashboardEndpointURL = "https://localhost:8800";
     private FragmentCertificateBinding mBinding;
     private String mCertUuid;
 
-    public static CertificateFragment newInstance(String certificateUuid) {
+    public CertificateFragment() throws MalformedURLException {
+    }
+
+    public static CertificateFragment newInstance(String certificateUuid) throws MalformedURLException {
         Bundle args = new Bundle();
         args.putString(ARG_CERTIFICATE_UUID, certificateUuid);
 
@@ -105,6 +115,15 @@ public class CertificateFragment extends LMFragment {
                 case R.id.fragment_certificate_share_menu_item:
                     Timber.i("Share Certificate tapped on the Certificate display");
                     shareCertificate();
+                    return true;
+                case R.id.fragment_certificate_dashboard_share_menu_item:
+                    Timber.i("Share Certificate to Dashboard tapped on the Certificate display");
+                    // Dummy QR Code scanner window
+//                    Intent myIntent = new Intent(CurrentActivity.this, NextActivity.class);
+//                    myIntent.putExtra("key", value); //Optional parameters
+//                    CurrentActivity.this.startActivity(myIntent);
+                    //
+                    shareCertificateToDashboard();
                     return true;
             }
             return false;
@@ -255,6 +274,84 @@ public class CertificateFragment extends LMFragment {
                     } else {
                         shareCertificateTypeResult(true);
                     }
+                }, throwable -> Timber.e(throwable, "Unable to share certificate"));
+    }
+
+    // Method for Dashboard Sharing
+    private void shareCertificateToDashboard() {
+        String certUuid = requireArguments().getString(ARG_CERTIFICATE_UUID);
+        mCertificateManager.getCertificate(certUuid)
+                .compose(bindToMainThread())
+                .subscribe(certificateRecord -> {
+                    if (certificateRecord.urlStringContainsUrl()) {
+                        String cert = null;
+                        try {
+                            cert = FileUtils.getCertificateFileJSON(requireContext(), mCertUuid);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        Timber.i("Invoking API to  share certificate for " + mCertUuid);
+                        dashboardShareService.sendCert(dashboardEndpointURL, cert);
+                    } else {
+                        shareCertificateTypeResult(true);
+                    }
+                }, throwable -> Timber.e(throwable, "Unable to share certificate"));
+    }
+
+
+//        String url = "htttps://localhost:9000";
+//        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+//        try {
+//            urlConnection.setDoOutput(true);
+//            urlConnection.setChunkedStreamingMode(0);
+//
+//            OutputStream out = new BufferedOutputStream(urlConnection.getOutputStream());
+//            writeStream(out);
+//
+//            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+//            readStream(in);
+//        } finally {
+//            urlConnection.disconnect();
+//        }
+//    }
+
+    private void shareCertificateToDashboardTypeResult(boolean shareFile) {
+        mIssuerManager.certificateShared(mCertUuid)
+                .compose(bindToMainThread())
+                .subscribe(aVoid -> Timber.d("Issuer analytics: Certificate shared"),
+                        throwable -> Timber.e(throwable, "Issuer has no analytics url."));
+        Observable.combineLatest(mCertificateManager.getCertificate(mCertUuid),
+                mIssuerManager.getIssuerForCertificate(mCertUuid),
+                Pair::new)
+                .compose(bindToMainThread())
+                .subscribe(pair -> {
+                    CertificateRecord cert = pair.first;
+
+                    Intent intent = new Intent(Intent.ACTION_SEND);
+
+                    IssuerRecord issuer = pair.second;
+                    String issuerName = issuer.getName();
+
+                    String sharingText;
+
+                    if (shareFile) {
+                        File certFile = FileUtils.getCertificateFile(requireContext(), mCertUuid);
+                        Uri uri = FileProvider.getUriForFile(requireContext(), FILE_PROVIDER_AUTHORITY, certFile);
+                        String type = requireContext().getContentResolver().getType(uri);
+                        intent.setType(type);
+                        intent.putExtra(Intent.EXTRA_STREAM, uri);
+                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        sharingText = getString(R.string.fragment_certificate_share_file_format, issuerName);
+                    } else {
+                        intent.setType(TEXT_MIME_TYPE);
+                        String certUrlString = cert.getUrlString();
+                        sharingText = getString(R.string.fragment_certificate_share_url_format,
+                                issuerName,
+                                certUrlString);
+                    }
+
+                    intent.putExtra(Intent.EXTRA_TEXT, sharingText);
+                    startActivity(intent);
                 }, throwable -> Timber.e(throwable, "Unable to share certificate"));
     }
 

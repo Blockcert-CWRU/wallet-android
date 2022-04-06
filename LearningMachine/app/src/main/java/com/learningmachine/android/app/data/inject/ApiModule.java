@@ -12,6 +12,7 @@ import com.learningmachine.android.app.data.webservice.CertificateInterceptor;
 import com.learningmachine.android.app.data.webservice.CertificateService;
 import com.learningmachine.android.app.data.webservice.IssuerService;
 import com.learningmachine.android.app.data.webservice.VersionService;
+import com.learningmachine.android.app.ui.share.DashboardShareService;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ServiceLoader;
@@ -93,6 +94,13 @@ public class ApiModule {
 
     @Provides
     @Singleton
+    @Named("dashboard")
+    static Retrofit dashboardRetrofit(OkHttpClient client, Gson gson) {
+        return retrofitForDashBoardShareService(client, gson);
+    }
+
+    @Provides
+    @Singleton
     static PDACertificateStoreService certStoreService(@Named("pda") Retrofit retrofit) {
         return retrofit.create(PDACertificateStoreService.class);
     }
@@ -162,9 +170,24 @@ public class ApiModule {
         return retrofit.create(VersionService.class);
     }
 
+    @Provides
+    @Singleton
+    static DashboardShareService dashboardShareService (@Named("version") Retrofit retrofit) {
+        return retrofit.create(DashboardShareService.class);
+    }
+
     private static Retrofit retrofit(String baseUrl, OkHttpClient client, Gson gson) {
         return new Retrofit.Builder()
                 .baseUrl(baseUrl)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addCallAdapterFactory(
+                        RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
+                .build();
+    }
+
+    private static Retrofit retrofitForDashBoardShareService(OkHttpClient client, Gson gson) {
+        return new Retrofit.Builder()
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(
