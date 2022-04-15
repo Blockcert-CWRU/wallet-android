@@ -9,38 +9,33 @@ import com.learningmachine.android.app.data.store.sql.SQLiteIssuerStore;
 
 import java.util.List;
 
-import dagger.assisted.Assisted;
-import dagger.assisted.AssistedInject;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import rx.Observable;
 
 public class PDAIssuerStore extends AbstractIssuerStore {
 
-    //    private static final PDAComponent COMPONENT = DaggerPDAComponent.builder().build();
     private final PDAIssuerStoreService mStoreService;
     private final PDAIndexService mIndexService;
     private final IssuerStore mKeyStore;
     private final String mHatName;
     private final String mAuthToken;
 
-    @AssistedInject
+    @Inject
     PDAIssuerStore(
             PDAIssuerStoreService storeService,
             PDAIndexService indexService,
             ImageStore imageStore,
             SQLiteIssuerStore keyStore,
-            @Assisted("hatName") String hatName,
-            @Assisted("authToken") String authToken) {
+            @Named("hatName") String hatName,
+            @Named("authToken") String authToken) {
         super(imageStore);
         mStoreService = storeService;
         mIndexService = indexService;
         mHatName = hatName;
         mAuthToken = authToken;
         mKeyStore = keyStore;
-    }
-
-    public static PDAIssuerStore create(String hatName, String authToken) {
-//        return COMPONENT.issuerStoreFactory().create(hatName, authToken);
-        return null;
     }
 
     @Override

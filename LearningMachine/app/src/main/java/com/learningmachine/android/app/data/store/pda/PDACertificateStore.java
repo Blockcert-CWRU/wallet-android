@@ -7,33 +7,28 @@ import com.learningmachine.android.app.data.store.CertificateStore;
 import java.util.ArrayList;
 import java.util.List;
 
-import dagger.assisted.Assisted;
-import dagger.assisted.AssistedInject;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import rx.Observable;
 
 public class PDACertificateStore implements CertificateStore {
 
-    //    private static final PDAComponent COMPONENT = DaggerPDAComponent.builder().build();
     private final PDAIndexService mIndexService;
     private final PDACertificateStoreService mStoreService;
     private final String mHatName;
     private final String mAuthToken;
 
-    @AssistedInject
+    @Inject
     PDACertificateStore(
             PDAIndexService indexService,
             PDACertificateStoreService storeService,
-            @Assisted("hatName") String hatName,
-            @Assisted("authToken") String authToken) {
+            @Named("hatName") String hatName,
+            @Named("authToken") String authToken) {
         mIndexService = indexService;
         mStoreService = storeService;
         mHatName = hatName;
         mAuthToken = authToken;
-    }
-
-    public static PDACertificateStore create(String hatName, String authToken) {
-//        return COMPONENT.certificateStoreFactory().create(hatName, authToken);
-        return null;
     }
 
     @Override

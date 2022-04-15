@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapterFactory;
 import com.learningmachine.android.app.LMConstants;
+import com.learningmachine.android.app.data.store.pda.PDAAuthResponse;
 import com.learningmachine.android.app.data.store.pda.PDACertificateStoreService;
 import com.learningmachine.android.app.data.store.pda.PDAIndexService;
 import com.learningmachine.android.app.data.store.pda.PDAIssuerStoreService;
@@ -14,6 +15,7 @@ import com.learningmachine.android.app.data.webservice.IssuerService;
 import com.learningmachine.android.app.data.webservice.VersionService;
 import com.learningmachine.android.app.ui.share.DashboardShareService;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ServiceLoader;
 import java.util.stream.Stream;
@@ -83,6 +85,53 @@ public class ApiModule {
     @Singleton
     static OkHttpClient defaultClient(Interceptor loggingInterceptor) {
         return okHttpClient(loggingInterceptor);
+    }
+
+    @Provides
+    @Singleton
+    @Named("hatName")
+    static String hatName() {
+        return "bobtheplumber";
+    }
+
+    @Provides
+    @Singleton
+    @Named("password")
+    static String password() {
+        return "burger-cheese-wine";
+    }
+
+    @Provides
+    @Singleton
+    @Named("authToken")
+    static String authToken(
+            OkHttpClient client,
+            Gson gson,
+            @Named("hatName") String hatName,
+            @Named("password") String password) {
+        Request request = new Request.Builder()
+                .url("https://postman.hubat.net/users/access_token")
+                .method("GET", null)
+                .addHeader("Accept", "application/json")
+                .addHeader("username", hatName)
+                .addHeader("password", password)
+                .build();
+        String authToken = null;
+        Timber.d("AUTHENTICATING PDA...");
+        try (Response response = client.newCall(request).execute()) {
+            ResponseBody body = response.body();
+            if (body != null) {
+                Timber.d("SUCCESSFULLY AUTHENTICATED WITH PDA!");
+                PDAAuthResponse authResponse = gson.fromJson(body.string(), PDAAuthResponse.class);
+                Timber.d(authResponse.toString());
+                authToken = authResponse.accessToken();
+            } else {
+                throw new IOException(response.message());
+            }
+        } catch (IOException exception) {
+            Timber.e(exception);
+        }
+        return authToken;
     }
 
     @Provides
@@ -172,7 +221,7 @@ public class ApiModule {
 
     @Provides
     @Singleton
-    static DashboardShareService dashboardShareService (@Named("version") Retrofit retrofit) {
+    static DashboardShareService dashboardShareService(@Named("version") Retrofit retrofit) {
         return retrofit.create(DashboardShareService.class);
     }
 
