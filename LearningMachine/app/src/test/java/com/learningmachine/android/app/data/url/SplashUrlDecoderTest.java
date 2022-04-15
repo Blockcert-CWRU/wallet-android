@@ -9,7 +9,8 @@ import org.junit.Test;
 
 public class SplashUrlDecoderTest {
 
-    private static final String ADD_ISSUER_URL = "https://certificates.learningmachine.com/#/introduce-recipient/https:%2F%2Fcertificates.learningmachine.com%2Fissuer%2Fasdf.json/a*bcd";
+    private static final String ADD_ISSUER_URL = "https://certificates.learningmachine.com/#/introduce-recipient/https:%2F%2Fcertificates." +
+            "learningmachine.com%2Fissuer%2Fasdf.json/a*bcd";
     private static final String ADD_CERTIFICATE_URL = "https://certificates.learningmachine.com/#/import-certificate/https:%2F%2Fcertificates.learningmachine.com%2Fcert%2Fasdf.json";
     private static final String BLOCKCERTS_ADD_ISSUER_URL = "https://wallet.blockcerts.org/#/introduce-recipient/https:%2F%2Fcertificates.learningmachine.com%2Fissuer%2Fasdf.json/a*bcd";
     private static final String BLOCKCERTS_ADD_CERTIFICATE_URL = "https://wallet.blockcerts.org/#/import-certificate/https:%2F%2Fcertificates.learningmachine.com%2Fcert%2Fasdf.json";

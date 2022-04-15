@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment;
 import com.learningmachine.android.app.R;
 import com.learningmachine.android.app.ui.LMSingleFragmentActivity;
 
+import java.net.MalformedURLException;
+
 public class CertificateActivity extends LMSingleFragmentActivity {
 
     public static final String EXTRA_CERTIFICATE_UUID = "CertificateActivity.CertificateUuid";
@@ -20,7 +22,7 @@ public class CertificateActivity extends LMSingleFragmentActivity {
     }
 
     @Override
-    protected Fragment createFragment() {
+    protected Fragment createFragment()  {
         String certificateUuid = getIntent().getStringExtra(EXTRA_CERTIFICATE_UUID);
         return CertificateFragment.newInstance(certificateUuid);
     }

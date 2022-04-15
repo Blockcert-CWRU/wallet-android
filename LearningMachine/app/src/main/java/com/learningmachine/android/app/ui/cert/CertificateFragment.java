@@ -64,16 +64,16 @@ public class CertificateFragment extends LMFragment {
     @Inject
     protected CertificateVerifier mCertificateVerifier;
     @Inject
-    private DashboardShareService dashboardShareService;
+    protected DashboardShareService dashboardShareService;
 
     private final String dashboardEndpointURL = "https://localhost:8800";
     private FragmentCertificateBinding mBinding;
     private String mCertUuid;
 
-    public CertificateFragment() throws MalformedURLException {
+    public CertificateFragment() {
     }
 
-    public static CertificateFragment newInstance(String certificateUuid) throws MalformedURLException {
+    public static CertificateFragment newInstance(String certificateUuid) {
         Bundle args = new Bundle();
         args.putString(ARG_CERTIFICATE_UUID, certificateUuid);
 
@@ -293,27 +293,11 @@ public class CertificateFragment extends LMFragment {
                         Timber.i("Invoking API to  share certificate for " + mCertUuid);
                         dashboardShareService.sendCert(dashboardEndpointURL, cert);
                     } else {
-                        shareCertificateTypeResult(true);
+                        shareCertificateToDashboardTypeResult(true);
                     }
                 }, throwable -> Timber.e(throwable, "Unable to share certificate"));
     }
 
-
-//        String url = "htttps://localhost:9000";
-//        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-//        try {
-//            urlConnection.setDoOutput(true);
-//            urlConnection.setChunkedStreamingMode(0);
-//
-//            OutputStream out = new BufferedOutputStream(urlConnection.getOutputStream());
-//            writeStream(out);
-//
-//            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-//            readStream(in);
-//        } finally {
-//            urlConnection.disconnect();
-//        }
-//    }
 
     private void shareCertificateToDashboardTypeResult(boolean shareFile) {
         mIssuerManager.certificateShared(mCertUuid)
