@@ -1,5 +1,6 @@
 package com.learningmachine.android.app.data.store.fake;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 
 import com.learningmachine.android.app.data.cert.BlockCert;
@@ -15,12 +16,19 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
 
 @Singleton
 public class FakeCertificateStore implements CertificateStore {
+
+    @Inject
+    public FakeCertificateStore() {
+
+    }
+
     @Override
     public Observable<CertificateRecord> load(String certId)  {
         String content = null;
