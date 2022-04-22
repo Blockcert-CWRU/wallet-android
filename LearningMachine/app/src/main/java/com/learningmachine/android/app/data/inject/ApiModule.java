@@ -41,7 +41,7 @@ public class ApiModule {
 
     @Provides
     @Singleton
-    static Interceptor loggingInterceptor() {
+    public static Interceptor loggingInterceptor() {
         return chain -> {
             Request request = chain.request();
 
@@ -81,7 +81,7 @@ public class ApiModule {
 
     @Provides
     @Singleton
-    static OkHttpClient defaultClient(Interceptor loggingInterceptor) {
+    public static OkHttpClient defaultClient(Interceptor loggingInterceptor) {
         return okHttpClient(loggingInterceptor);
     }
 
@@ -189,6 +189,8 @@ public class ApiModule {
     private static Retrofit retrofitForDashBoardShareService(OkHttpClient client, Gson gson) {
         return new Retrofit.Builder()
                 .client(client)
+                .baseUrl("https://abdcde.free.beeceptor.com")
+
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(
                         RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))

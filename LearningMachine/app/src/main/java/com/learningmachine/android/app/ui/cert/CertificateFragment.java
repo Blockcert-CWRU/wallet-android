@@ -24,13 +24,17 @@ import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.learningmachine.android.app.R;
 import com.learningmachine.android.app.data.CertificateManager;
 import com.learningmachine.android.app.data.CertificateVerifier;
 import com.learningmachine.android.app.data.IssuerManager;
 import com.learningmachine.android.app.data.cert.BlockCert;
+import com.learningmachine.android.app.data.cert.BlockCertParser;
 import com.learningmachine.android.app.data.cert.v20.BlockCertV20;
 import com.learningmachine.android.app.data.error.ExceptionWithResourceString;
+import com.learningmachine.android.app.data.inject.ApiModule;
 import com.learningmachine.android.app.data.inject.Injector;
 import com.learningmachine.android.app.data.model.CertificateRecord;
 import com.learningmachine.android.app.data.model.IssuerRecord;
@@ -42,13 +46,20 @@ import com.learningmachine.android.app.util.DialogUtils;
 import com.learningmachine.android.app.util.FileUtils;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.io.IOException;
 
 import javax.inject.Inject;
 
-import retrofit2.http.Url;
+import okhttp3.Interceptor;
+import okhttp3.Request;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Observable;
+import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 public class CertificateFragment extends LMFragment {
@@ -66,7 +77,7 @@ public class CertificateFragment extends LMFragment {
     @Inject
     protected DashboardShareService dashboardShareService;
 
-    private final String dashboardEndpointURL = "https://localhost:8800";
+    private final String dashboardEndpointURL = "https://localhost:8800/share/certificate";
     private FragmentCertificateBinding mBinding;
     private String mCertUuid;
 
@@ -278,66 +289,71 @@ public class CertificateFragment extends LMFragment {
     }
 
     // Method for Dashboard Sharing
-    private void shareCertificateToDashboard() {
+    private void  shareCertificateToDashboard() {
         String certUuid = requireArguments().getString(ARG_CERTIFICATE_UUID);
+        final BlockCert[] blockCert = new BlockCert[1];
         mCertificateManager.getCertificate(certUuid)
                 .compose(bindToMainThread())
                 .subscribe(certificateRecord -> {
-                    if (certificateRecord.urlStringContainsUrl()) {
                         String cert = null;
                         try {
                             cert = FileUtils.getCertificateFileJSON(requireContext(), mCertUuid);
+                            BlockCertParser blockCertParser = new BlockCertParser();
+                            blockCert[0] = blockCertParser.fromJson(cert);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        Timber.i("Invoking API to  share certificate for " + mCertUuid);
-                        dashboardShareService.sendCert(dashboardEndpointURL, cert);
-                    } else {
-                        shareCertificateToDashboardTypeResult(true);
-                    }
+                        postData(blockCert[0]);
+                        //dashboardShareService.sendCert(blockCert[0]);
+                        Timber.i("Certificate POST request made");
                 }, throwable -> Timber.e(throwable, "Unable to share certificate"));
     }
 
 
-    private void shareCertificateToDashboardTypeResult(boolean shareFile) {
-        mIssuerManager.certificateShared(mCertUuid)
-                .compose(bindToMainThread())
-                .subscribe(aVoid -> Timber.d("Issuer analytics: Certificate shared"),
-                        throwable -> Timber.e(throwable, "Issuer has no analytics url."));
-        Observable.combineLatest(mCertificateManager.getCertificate(mCertUuid),
-                mIssuerManager.getIssuerForCertificate(mCertUuid),
-                Pair::new)
-                .compose(bindToMainThread())
-                .subscribe(pair -> {
-                    CertificateRecord cert = pair.first;
 
-                    Intent intent = new Intent(Intent.ACTION_SEND);
+    private void postData(BlockCert cert) {
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
-                    IssuerRecord issuer = pair.second;
-                    String issuerName = issuer.getName();
+        // on below line we are creating a retrofit
+        // builder and passing our base url
+        Retrofit retrofit = new Retrofit.Builder()
+                .client(ApiModule.defaultClient(ApiModule.loggingInterceptor()))
+                .baseUrl("https://7404-146-70-58-132.ngrok.io")
+                // as we are sending data in json format so
+                // we have to add Gson converter factory
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                // at last we are building our retrofit builder.
+                .addCallAdapterFactory(
+                        RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
+                .build();
+        // below line is to create an instance for our retrofit api class.
+        DashboardShareService retrofitAPI = retrofit.create(DashboardShareService.class);
 
-                    String sharingText;
 
-                    if (shareFile) {
-                        File certFile = FileUtils.getCertificateFile(requireContext(), mCertUuid);
-                        Uri uri = FileProvider.getUriForFile(requireContext(), FILE_PROVIDER_AUTHORITY, certFile);
-                        String type = requireContext().getContentResolver().getType(uri);
-                        intent.setType(type);
-                        intent.putExtra(Intent.EXTRA_STREAM, uri);
-                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        sharingText = getString(R.string.fragment_certificate_share_file_format, issuerName);
-                    } else {
-                        intent.setType(TEXT_MIME_TYPE);
-                        String certUrlString = cert.getUrlString();
-                        sharingText = getString(R.string.fragment_certificate_share_url_format,
-                                issuerName,
-                                certUrlString);
-                    }
+        // calling a method to create a post and passing our modal class.
+        Call<BlockCert> call = retrofitAPI.sendCert(cert);
+        // on below line we are executing our method.
+        call.enqueue(new Callback<BlockCert>() {
+            @Override
+            public void onResponse(@NonNull Call<BlockCert> call, @NonNull Response<BlockCert> response) {
 
-                    intent.putExtra(Intent.EXTRA_TEXT, sharingText);
-                    startActivity(intent);
-                }, throwable -> Timber.e(throwable, "Unable to share certificate"));
+                // we are getting response from our body
+                // and passing it to our modal class.
+                // on below line we are getting our data from modal class and adding it to our string.
+                System.out.println("Response" + response);
+
+            }
+
+            @Override
+            public void onFailure(Call<BlockCert> call, Throwable t) {
+                Timber.i("Failure");
+
+            }
+        });
     }
+
+
+
 
     private void showShareTypeDialog() {
         Timber.i("Showing share certificate dialog for " + mCertUuid);
@@ -378,7 +394,7 @@ public class CertificateFragment extends LMFragment {
                     Intent intent = new Intent(Intent.ACTION_SEND);
 
                     IssuerRecord issuer = pair.second;
-                    String issuerName = issuer.getName();
+                    String issuerName = "dummyIssuerName";//issuer.getName();";
 
                     String sharingText;
 

@@ -84,12 +84,12 @@ public class IssuerManager {
 
     private Observable<Void> sendAnalyticsAction(String certUuid, IssuerAnalytic.Action action) {
         return getIssuerForCertificate(certUuid).flatMap(issuer -> {
-            String issuerAnalyticsUrlString = issuer.getAnalyticsUrlString();
+            String issuerAnalyticsUrlString = "www.fakeissuerurl.com";//issuer.getAnalyticsUrlString();
             if (StringUtils.isEmpty(issuerAnalyticsUrlString)) {
                 return Observable.error(new IssuerAnalyticsException());
             }
             IssuerAnalytic issuerAnalytic = new IssuerAnalytic(certUuid, action);
-            return mIssuerService.postIssuerAnalytics(issuerAnalyticsUrlString, issuerAnalytic);
+            return Observable.empty();//mIssuerService.postIssuerAnalytics(issuerAnalyticsUrlString, issuerAnalytic);
         });
     }
 }
