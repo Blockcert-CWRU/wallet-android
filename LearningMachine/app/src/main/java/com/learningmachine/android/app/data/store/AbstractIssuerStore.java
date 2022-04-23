@@ -17,13 +17,14 @@ public abstract class AbstractIssuerStore implements IssuerStore {
     public Observable<Void> saveResponse(IssuerResponse response, String recipientPubKey) {
         if (response != null) {
             return mImageStore.saveImage(response.getUuid(), response.getImageData())
-                    .compose(
-                            x -> {
-                                response.setIntroducedOn(DateTime.now().toString());
-                                return saveRecord(response, recipientPubKey);
-                            })
+                    .compose(x -> setIntroducedOnAndSave(response, recipientPubKey))
                     .map(x -> null);
         }
         return Observable.empty();
+    }
+
+    private Observable<Void> setIntroducedOnAndSave(IssuerResponse response, String recipientKey) {
+        response.setIntroducedOn(DateTime.now().toString());
+        return saveRecord(response, recipientKey);
     }
 }
