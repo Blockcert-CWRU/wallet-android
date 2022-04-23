@@ -10,7 +10,8 @@ public class LMConstants {
     public static final int WALLET_CREATION_TIME_SECONDS = 0;
 
     public static final String BASE_URL = "https://certificates.learningmachine.com";
-    public static final String BASE_PDA_URL = "https://iamishaangupta.hubofallthings.net/api/v2.6/data/";
+    public static final String BASE_PDA_URL =
+            "https://{hatName}.hubofallthings.net/api/v2.6/data/blockcerts";
     public static final String VERSION_BASE_URL = "https://www.blockcerts.org";
 
     public static final String BLOCKCHAIN_SERVICE_URL = "https://blockchain.info/";
