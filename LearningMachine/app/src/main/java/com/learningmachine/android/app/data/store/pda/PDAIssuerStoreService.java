@@ -24,7 +24,6 @@ public interface PDAIssuerStoreService {
             @Path("hatName") String hatName,
             @Header("x-auth-token") String authToken);
 
-    // TODO Figure out how to merge recipientPubKey into IssuerRecord
     @PUT("/issuerRecords/{issuerId}")
     Observable<Void> save(
             @Body IssuerRecord record,
