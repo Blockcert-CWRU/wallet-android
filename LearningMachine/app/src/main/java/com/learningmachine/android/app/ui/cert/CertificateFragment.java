@@ -25,7 +25,6 @@ import androidx.databinding.DataBindingUtil;
 
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.learningmachine.android.app.R;
 import com.learningmachine.android.app.data.CertificateManager;
 import com.learningmachine.android.app.data.CertificateVerifier;
@@ -34,7 +33,6 @@ import com.learningmachine.android.app.data.cert.BlockCert;
 import com.learningmachine.android.app.data.cert.BlockCertParser;
 import com.learningmachine.android.app.data.cert.v20.BlockCertV20;
 import com.learningmachine.android.app.data.error.ExceptionWithResourceString;
-import com.learningmachine.android.app.data.inject.ApiModule;
 import com.learningmachine.android.app.data.inject.Injector;
 import com.learningmachine.android.app.data.model.CertificateRecord;
 import com.learningmachine.android.app.data.model.IssuerRecord;
@@ -54,11 +52,7 @@ import javax.inject.Inject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Observable;
-import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 public class CertificateFragment extends LMFragment {
@@ -75,8 +69,9 @@ public class CertificateFragment extends LMFragment {
     protected CertificateVerifier mCertificateVerifier;
     @Inject
     protected DashboardShareService dashboardShareService;
+    @Inject
+    protected Gson gson;
 
-    private final String dashboardEndpointURL = "https://localhost:8800/share/certificate";
     private FragmentCertificateBinding mBinding;
     private String mCertUuid;
 
@@ -86,7 +81,6 @@ public class CertificateFragment extends LMFragment {
     public static CertificateFragment newInstance(String certificateUuid) {
         Bundle args = new Bundle();
         args.putString(ARG_CERTIFICATE_UUID, certificateUuid);
-
         CertificateFragment fragment = new CertificateFragment();
         fragment.setArguments(args);
 
@@ -288,64 +282,38 @@ public class CertificateFragment extends LMFragment {
     }
 
     // Method for Dashboard Sharing
-    private void  shareCertificateToDashboard() {
+    private void shareCertificateToDashboard() {
         String certUuid = requireArguments().getString(ARG_CERTIFICATE_UUID);
         final BlockCert[] blockCert = new BlockCert[1];
         mCertificateManager.getCertificate(certUuid)
                 .compose(bindToMainThread())
                 .subscribe(certificateRecord -> {
-                        String cert = null;
-                        try {
-                            cert = FileUtils.getCertificateFileJSON(requireContext(), mCertUuid);
-                            BlockCertParser blockCertParser = new BlockCertParser();
-                            blockCert[0] = blockCertParser.fromJson(cert);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        DashboardRequestBody dashboardRequestBody = new DashboardRequestBody(blockCert[0], UUID.randomUUID().toString());
-                        postData(dashboardRequestBody);
-                        //dashboardShareService.sendCert(blockCert[0]);
-                        Timber.i("Certificate POST request made");
+                    String cert;
+                    try {
+                        cert = FileUtils.getCertificateFileJSON(requireContext(), mCertUuid);
+                        BlockCertParser blockCertParser = new BlockCertParser();
+                        blockCert[0] = blockCertParser.fromJson(cert);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    DashboardRequestBody dashboardRequestBody = new DashboardRequestBody(blockCert[0], UUID.randomUUID().toString());
+                    postData(dashboardRequestBody);
+                    //dashboardShareService.sendCert(blockCert[0]);
+                    Timber.i("Certificate POST request made");
                 }, throwable -> Timber.e(throwable, "Unable to share certificate"));
     }
 
-
-
-
-
-
-
     private void postData(DashboardRequestBody dashboardRequestBody) {
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-
-        // on below line we are creating a retrofit
-        // builder and passing our base url
-        Retrofit retrofit = new Retrofit.Builder()
-                .client(ApiModule.defaultClient(ApiModule.loggingInterceptor()))
-                .baseUrl("https://64d8-89-187-178-174.ngrok.io")
-                // as we are sending data in json format so
-                // we have to add Gson converter factory
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                // at last we are building our retrofit builder.
-                .addCallAdapterFactory(
-                        RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
-                .build();
-        // below line is to create an instance for our retrofit api class.
-        DashboardShareService retrofitAPI = retrofit.create(DashboardShareService.class);
-
-
         // calling a method to create a post and passing our modal class.
-        Call<DashboardRequestBody> call = retrofitAPI.sendCert(dashboardRequestBody);
+        Call<DashboardRequestBody> call = dashboardShareService.sendCert(dashboardRequestBody);
         // on below line we are executing our method.
         call.enqueue(new Callback<DashboardRequestBody>() {
             @Override
             public void onResponse(@NonNull Call<DashboardRequestBody> call, @NonNull Response<DashboardRequestBody> response) {
-
                 // we are getting response from our body
                 // and passing it to our modal class.
                 // on below line we are getting our data from modal class and adding it to our string.
                 System.out.println("Response" + response);
-
             }
 
             @Override
@@ -355,9 +323,6 @@ public class CertificateFragment extends LMFragment {
             }
         });
     }
-
-
-
 
     private void showShareTypeDialog() {
         Timber.i("Showing share certificate dialog for " + mCertUuid);
@@ -378,7 +343,8 @@ public class CertificateFragment extends LMFragment {
                         shareCertificateTypeResult(false);
                     }
                 },
-                (dialogContent) -> {},
+                (dialogContent) -> {
+                },
                 (dialogContent) -> Timber.i("Share dialog cancelled"));
 
     }
@@ -431,13 +397,14 @@ public class CertificateFragment extends LMFragment {
 
     private void showFailureDialog(int errorId) {
 
-        DialogUtils.showAlertDialog( this,
+        DialogUtils.showAlertDialog(this,
                 R.drawable.ic_dialog_failure,
                 getResources().getString(R.string.cert_verification_failure_title),
                 getResources().getString(errorId),
                 null,
                 getResources().getString(R.string.ok_button),
-                (btnIdx) -> {});
+                (btnIdx) -> {
+                });
     }
 
 
