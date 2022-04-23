@@ -16,7 +16,6 @@ import com.learningmachine.android.app.ui.share.DashboardShareService;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ServiceLoader;
-import java.util.stream.Stream;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -30,6 +29,7 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 import okio.Buffer;
 import okio.BufferedSource;
+import retrofit2.CallAdapter;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -38,6 +38,28 @@ import timber.log.Timber;
 
 @Module
 public class ApiModule {
+
+    @Provides
+    @Singleton
+    @Named("hatName")
+    static String hatName() {
+        return System.getenv("PDA_USERNAME");
+    }
+
+    @Provides
+    @Singleton
+    @Named("password")
+    static String password() {
+        return System.getenv("PDA_PASSWORD");
+    }
+
+    @Provides
+    @Singleton
+    @Named("authToken")
+    static String authToken() {
+        // TODO
+        return null;
+    }
 
     @Provides
     @Singleton
@@ -71,20 +93,6 @@ public class ApiModule {
 
     @Provides
     @Singleton
-    @Named("hatName")
-    static String hatName() {
-        return System.getenv("PDA_USERNAME");
-    }
-
-    @Provides
-    @Singleton
-    @Named("password")
-    static String password() {
-        return System.getenv("PDA_PASSWORD");
-    }
-
-    @Provides
-    @Singleton
     static Gson gson() {
         GsonBuilder builder = new GsonBuilder();
         for (TypeAdapterFactory factory : ServiceLoader.load(TypeAdapterFactory.class)) {
@@ -95,22 +103,104 @@ public class ApiModule {
 
     @Provides
     @Singleton
-    public static OkHttpClient defaultClient(Interceptor loggingInterceptor) {
-        return okHttpClient(loggingInterceptor);
+    static GsonConverterFactory converterFactory(Gson gson) {
+        return GsonConverterFactory.create(gson);
+    }
+
+    @Provides
+    @Singleton
+    static CallAdapter.Factory callAdapterFactory() {
+        return RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io());
+    }
+
+    @Provides
+    @Singleton
+    @Named("base")
+    public static OkHttpClient baseClient(Interceptor loggingInterceptor) {
+        return new OkHttpClient.Builder().addInterceptor(loggingInterceptor).build();
+    }
+
+    @Provides
+    @Singleton
+    @Named("certificate")
+    static OkHttpClient certificateClient(
+            @Named("base") OkHttpClient baseClient, CertificateInterceptor certificateInterceptor) {
+        return baseClient.newBuilder().addInterceptor(certificateInterceptor).build();
     }
 
     @Provides
     @Singleton
     @Named("pda")
-    static Retrofit pdaRetrofit(OkHttpClient client, Gson gson) {
-        return retrofit(LMConstants.BASE_PDA_URL, client, gson);
+    static Retrofit pdaRetrofit(
+            @Named("base") OkHttpClient client,
+            GsonConverterFactory converterFactory,
+            CallAdapter.Factory callAdapterFactory) {
+        return new Retrofit.Builder()
+                .baseUrl(LMConstants.BASE_PDA_URL)
+                .client(client)
+                .addConverterFactory(converterFactory)
+                .addCallAdapterFactory(callAdapterFactory)
+                .build();
     }
 
     @Provides
     @Singleton
     @Named("dashboard")
-    static Retrofit dashboardRetrofit(OkHttpClient client, Gson gson) {
-        return retrofitForDashBoardShareService(client, gson);
+    static Retrofit dashboardRetrofit(
+            @Named("base") OkHttpClient client,
+            GsonConverterFactory converterFactory,
+            CallAdapter.Factory callAdapterFactory) {
+        return new Retrofit.Builder()
+                .baseUrl("https://abdcde.free.beeceptor.com")
+                .client(client)
+                .addConverterFactory(converterFactory)
+                .addCallAdapterFactory(callAdapterFactory)
+                .build();
+    }
+
+    @Provides
+    @Singleton
+    @Named("certificate")
+    static Retrofit certificateRetrofit(
+            @Named("certificate") OkHttpClient client,
+            GsonConverterFactory converterFactory,
+            CallAdapter.Factory callAdapterFactory) {
+        return new Retrofit.Builder()
+                .baseUrl(LMConstants.BASE_URL)
+                .client(client)
+                .addConverterFactory(converterFactory)
+                .addCallAdapterFactory(callAdapterFactory)
+                .build();
+    }
+
+    @Provides
+    @Singleton
+    @Named("blockchain")
+    static Retrofit blockchainRetrofit(
+            @Named("base") OkHttpClient client,
+            GsonConverterFactory converterFactory,
+            CallAdapter.Factory callAdapterFactory) {
+        return new Retrofit.Builder()
+                .baseUrl(LMConstants.BLOCKCHAIN_SERVICE_URL)
+                .client(client)
+                .addConverterFactory(converterFactory)
+                .addCallAdapterFactory(callAdapterFactory)
+                .build();
+    }
+
+    @Provides
+    @Singleton
+    @Named("version")
+    static Retrofit versionRetrofit(
+            @Named("base") OkHttpClient client,
+            GsonConverterFactory converterFactory,
+            CallAdapter.Factory callAdapterFactory) {
+        return new Retrofit.Builder()
+                .baseUrl(LMConstants.VERSION_BASE_URL)
+                .client(client)
+                .addConverterFactory(converterFactory)
+                .addCallAdapterFactory(callAdapterFactory)
+                .build();
     }
 
     @Provides
@@ -133,17 +223,20 @@ public class ApiModule {
 
     @Provides
     @Singleton
-    @Named("certificate")
-    static OkHttpClient certificateClient(
-            Interceptor loggingInterceptor, CertificateInterceptor certificateInterceptor) {
-        return okHttpClient(loggingInterceptor, certificateInterceptor);
+    static VersionService versionService(@Named("version") Retrofit retrofit) {
+        return retrofit.create(VersionService.class);
     }
 
     @Provides
     @Singleton
-    @Named("certificate")
-    static Retrofit certificateRetrofit(@Named("certificate") OkHttpClient client, Gson gson) {
-        return retrofit(LMConstants.BASE_URL, client, gson);
+    static DashboardShareService dashboardShareService(@Named("dashboard") Retrofit retrofit) {
+        return retrofit.create(DashboardShareService.class);
+    }
+
+    @Provides
+    @Singleton
+    static BlockchainService blockchainService(@Named("blockchain") Retrofit retrofit) {
+        return retrofit.create(BlockchainService.class);
     }
 
     @Provides
@@ -156,64 +249,5 @@ public class ApiModule {
     @Singleton
     static CertificateService certificateService(@Named("certificate") Retrofit retrofit) {
         return retrofit.create(CertificateService.class);
-    }
-
-    @Provides
-    @Singleton
-    @Named("blockchain")
-    static Retrofit blockchainRetrofit(OkHttpClient client, Gson gson) {
-        return retrofit(LMConstants.BLOCKCHAIN_SERVICE_URL, client, gson);
-    }
-
-    @Provides
-    @Singleton
-    static BlockchainService blockchainService(@Named("blockchain") Retrofit retrofit) {
-        return retrofit.create(BlockchainService.class);
-    }
-
-    @Provides
-    @Singleton
-    @Named("version")
-    static Retrofit versionRetrofit(OkHttpClient client, Gson gson) {
-        return retrofit(LMConstants.VERSION_BASE_URL, client, gson);
-    }
-
-    @Provides
-    @Singleton
-    static VersionService versionService(@Named("version") Retrofit retrofit) {
-        return retrofit.create(VersionService.class);
-    }
-
-    @Provides
-    @Singleton
-    static DashboardShareService dashboardShareService(@Named("version") Retrofit retrofit) {
-        return retrofit.create(DashboardShareService.class);
-    }
-
-    private static Retrofit retrofit(String baseUrl, OkHttpClient client, Gson gson) {
-        return new Retrofit.Builder()
-                .baseUrl(baseUrl)
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .addCallAdapterFactory(
-                        RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
-                .build();
-    }
-
-    private static Retrofit retrofitForDashBoardShareService(OkHttpClient client, Gson gson) {
-        return new Retrofit.Builder()
-                .client(client)
-                .baseUrl("https://abdcde.free.beeceptor.com")
-
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .addCallAdapterFactory(
-                        RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
-                .build();
-    }
-
-    private static OkHttpClient okHttpClient(Interceptor... interceptors) {
-        OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        Stream.of(interceptors).forEach(builder::addInterceptor);
-        return builder.build();
     }
 }
