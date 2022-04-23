@@ -41,12 +41,14 @@ import com.learningmachine.android.app.data.model.IssuerRecord;
 import com.learningmachine.android.app.databinding.FragmentCertificateBinding;
 import com.learningmachine.android.app.dialog.AlertDialogFragment;
 import com.learningmachine.android.app.ui.LMFragment;
+import com.learningmachine.android.app.ui.share.DashboardRequestBody;
 import com.learningmachine.android.app.ui.share.DashboardShareService;
 import com.learningmachine.android.app.util.DialogUtils;
 import com.learningmachine.android.app.util.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.UUID;
 
 import javax.inject.Inject;
 
@@ -303,7 +305,8 @@ public class CertificateFragment extends LMFragment {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        postData(blockCert[0]);
+                        DashboardRequestBody dashboardRequestBody = new DashboardRequestBody(blockCert[0], UUID.randomUUID().toString());
+                        postData(dashboardRequestBody);
                         //dashboardShareService.sendCert(blockCert[0]);
                         Timber.i("Certificate POST request made");
                 }, throwable -> Timber.e(throwable, "Unable to share certificate"));
@@ -311,14 +314,18 @@ public class CertificateFragment extends LMFragment {
 
 
 
-    private void postData(BlockCert cert) {
+
+
+
+
+    private void postData(DashboardRequestBody dashboardRequestBody) {
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
         // on below line we are creating a retrofit
         // builder and passing our base url
         Retrofit retrofit = new Retrofit.Builder()
                 .client(ApiModule.defaultClient(ApiModule.loggingInterceptor()))
-                .baseUrl("https://7404-146-70-58-132.ngrok.io")
+                .baseUrl("https://64d8-89-187-178-174.ngrok.io")
                 // as we are sending data in json format so
                 // we have to add Gson converter factory
                 .addConverterFactory(GsonConverterFactory.create(gson))
@@ -331,11 +338,11 @@ public class CertificateFragment extends LMFragment {
 
 
         // calling a method to create a post and passing our modal class.
-        Call<BlockCert> call = retrofitAPI.sendCert(cert);
+        Call<DashboardRequestBody> call = retrofitAPI.sendCert(dashboardRequestBody);
         // on below line we are executing our method.
-        call.enqueue(new Callback<BlockCert>() {
+        call.enqueue(new Callback<DashboardRequestBody>() {
             @Override
-            public void onResponse(@NonNull Call<BlockCert> call, @NonNull Response<BlockCert> response) {
+            public void onResponse(@NonNull Call<DashboardRequestBody> call, @NonNull Response<DashboardRequestBody> response) {
 
                 // we are getting response from our body
                 // and passing it to our modal class.
@@ -345,7 +352,7 @@ public class CertificateFragment extends LMFragment {
             }
 
             @Override
-            public void onFailure(Call<BlockCert> call, Throwable t) {
+            public void onFailure(Call<DashboardRequestBody> call, Throwable t) {
                 Timber.i("Failure");
 
             }

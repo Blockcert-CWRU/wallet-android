@@ -191,6 +191,8 @@ dependencies {
     implementation "org.immutables:value:2.8.2:annotations" // annotation-only artifact
     annotationProcessor "org.immutables:value:2.8.2" // <-- for annotation API
 
+//    implementation 'com.github.yuriy-budiyev:code-scanner:2.1.2'
+
 
     implementation 'com.google.android.exoplayer:exoplayer:2.8.4'
 

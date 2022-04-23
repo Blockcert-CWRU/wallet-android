@@ -17,6 +17,6 @@ public interface DashboardShareService {
     String connect(@Url Url url);
 
     @POST("/share")
-    Call<BlockCert> sendCert(@Body BlockCert cert);
+    Call<DashboardRequestBody> sendCert(@Body DashboardRequestBody cert);
 
 }
