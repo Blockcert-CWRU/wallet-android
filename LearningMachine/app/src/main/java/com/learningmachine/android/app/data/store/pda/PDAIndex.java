@@ -9,23 +9,23 @@ import java.util.Set;
 
 @Gson.TypeAdapters
 @Value.Immutable
-public abstract class PDAIndex {
+public interface PDAIndex {
 
-    public static Builder builder() {
+    static Builder builder() {
         return ImmutablePDAIndex.builder();
     }
 
     @SerializedName("records")
-    public abstract Set<PDAIndexRecord> records();
+    Set<PDAIndexRecord> records();
 
-    public abstract static class Builder {
+    interface Builder {
 
-        public abstract PDAIndex build();
+        PDAIndex build();
 
-        public abstract Builder addRecord(PDAIndexRecord element);
+        Builder addRecord(PDAIndexRecord element);
 
-        public abstract Builder addRecords(PDAIndexRecord... elements);
+        Builder addRecords(PDAIndexRecord... elements);
 
-        public abstract Builder addAllRecords(Iterable<? extends PDAIndexRecord> elements);
+        Builder addAllRecords(Iterable<? extends PDAIndexRecord> elements);
     }
 }

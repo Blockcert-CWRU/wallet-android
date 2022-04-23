@@ -7,29 +7,29 @@ import org.immutables.value.Value;
 
 @Gson.TypeAdapters
 @Value.Immutable
-public abstract class PDAIndexRecord {
+public interface PDAIndexRecord {
 
-    public static PDAIndexRecord.Builder builder() {
+    static PDAIndexRecord.Builder builder() {
         return ImmutablePDAIndexRecord.builder();
     }
 
     @SerializedName("certId")
-    public abstract String certId();
+    String certId();
 
     @SerializedName("recordId")
-    public abstract String recordId();
+    String recordId();
 
     @SerializedName("issuerId")
-    public abstract String issuerId();
+    String issuerId();
 
-    public abstract static class Builder {
+    interface Builder {
 
-        public abstract PDAIndexRecord build();
+        PDAIndexRecord build();
 
-        public abstract Builder recordId(String recordId);
+        Builder recordId(String recordId);
 
-        public abstract Builder issuerId(String issuerId);
+        Builder issuerId(String issuerId);
 
-        public abstract Builder certId(String certId);
+        Builder certId(String certId);
     }
 }
