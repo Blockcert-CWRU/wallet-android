@@ -12,7 +12,6 @@ import javax.inject.Singleton;
 import dagger.Binds;
 import dagger.Module;
 
-
 @Module
 interface DataBindings {
 
