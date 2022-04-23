@@ -71,6 +71,20 @@ public class ApiModule {
 
     @Provides
     @Singleton
+    @Named("hatName")
+    static String hatName() {
+        return System.getenv("PDA_USERNAME");
+    }
+
+    @Provides
+    @Singleton
+    @Named("password")
+    static String password() {
+        return System.getenv("PDA_PASSWORD");
+    }
+
+    @Provides
+    @Singleton
     static Gson gson() {
         GsonBuilder builder = new GsonBuilder();
         for (TypeAdapterFactory factory : ServiceLoader.load(TypeAdapterFactory.class)) {
@@ -172,7 +186,7 @@ public class ApiModule {
 
     @Provides
     @Singleton
-    static DashboardShareService dashboardShareService (@Named("version") Retrofit retrofit) {
+    static DashboardShareService dashboardShareService(@Named("version") Retrofit retrofit) {
         return retrofit.create(DashboardShareService.class);
     }
 
