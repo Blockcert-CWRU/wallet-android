@@ -57,8 +57,7 @@ public class ApiModule {
     @Singleton
     @Named("authToken")
     static String authToken() {
-        // TODO
-        return null;
+        return System.getenv("PDA_AUTH_TOKEN");
     }
 
     @Provides
