@@ -9,8 +9,6 @@ import androidx.fragment.app.Fragment;
 import com.learningmachine.android.app.R;
 import com.learningmachine.android.app.ui.LMSingleFragmentActivity;
 
-import java.net.MalformedURLException;
-
 public class CertificateActivity extends LMSingleFragmentActivity {
 
     public static final String EXTRA_CERTIFICATE_UUID = "CertificateActivity.CertificateUuid";

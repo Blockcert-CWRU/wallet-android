@@ -47,13 +47,10 @@ import com.learningmachine.android.app.util.DialogUtils;
 import com.learningmachine.android.app.util.FileUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.UUID;
 
 import javax.inject.Inject;
 
-import okhttp3.Interceptor;
-import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

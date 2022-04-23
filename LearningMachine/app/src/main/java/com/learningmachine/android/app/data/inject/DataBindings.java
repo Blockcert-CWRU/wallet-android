@@ -4,8 +4,6 @@ import com.learningmachine.android.app.data.store.CertificateStore;
 import com.learningmachine.android.app.data.store.ImageStore;
 import com.learningmachine.android.app.data.store.IssuerStore;
 import com.learningmachine.android.app.data.store.pda.PDACertificateStore;
-import com.learningmachine.android.app.data.store.pda.PDAIssuerStore;
-import com.learningmachine.android.app.data.store.sql.SQLiteCertificateStore;
 import com.learningmachine.android.app.data.store.sql.SQLiteImageStore;
 import com.learningmachine.android.app.data.store.sql.SQLiteIssuerStore;
 

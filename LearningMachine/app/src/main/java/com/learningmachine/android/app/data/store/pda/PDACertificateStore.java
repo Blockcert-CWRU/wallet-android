@@ -10,8 +10,6 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import dagger.assisted.Assisted;
-import dagger.assisted.AssistedInject;
 import rx.Observable;
 import timber.log.Timber;
 

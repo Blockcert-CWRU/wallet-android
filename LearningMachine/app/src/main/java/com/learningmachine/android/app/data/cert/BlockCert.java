@@ -1,7 +1,6 @@
 package com.learningmachine.android.app.data.cert;
 
 import com.google.gson.JsonObject;
-import com.google.gson.annotations.SerializedName;
 import com.learningmachine.android.app.data.webservice.response.IssuerResponse;
 
 public interface BlockCert {
