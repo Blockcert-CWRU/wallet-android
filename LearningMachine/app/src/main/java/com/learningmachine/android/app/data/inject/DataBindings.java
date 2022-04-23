@@ -12,8 +12,6 @@ import javax.inject.Singleton;
 import dagger.Binds;
 import dagger.Module;
 
-// TODO Dagger does not support injecting @AssistedInject type
-//   We will need to migrate to providing these at runtime with authentication
 
 @Module
 interface DataBindings {
