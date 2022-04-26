@@ -22,8 +22,8 @@
 
     <item
         android:id="@+id/fragment_certificate_dashboard_share_menu_item"
-        android:icon="@drawable/ic_action_share"
-        android:title="DShare"
+        android:icon="@drawable/ic_link"
+        android:title="CertShare"
         app:showAsAction="ifRoom" />
 
 

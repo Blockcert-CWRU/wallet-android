@@ -43,6 +43,7 @@ import com.learningmachine.android.app.dialog.AlertDialogFragment;
 import com.learningmachine.android.app.ui.LMFragment;
 import com.learningmachine.android.app.ui.share.DashboardRequestBody;
 import com.learningmachine.android.app.ui.share.DashboardShareService;
+import com.learningmachine.android.app.ui.share.ShareSuccessful;
 import com.learningmachine.android.app.util.DialogUtils;
 import com.learningmachine.android.app.util.FileUtils;
 
@@ -131,12 +132,8 @@ public class CertificateFragment extends LMFragment {
                     return true;
                 case R.id.fragment_certificate_dashboard_share_menu_item:
                     Timber.i("Share Certificate to Dashboard tapped on the Certificate display");
-                    // Dummy QR Code scanner window
-//                    Intent myIntent = new Intent(CurrentActivity.this, NextActivity.class);
-//                    myIntent.putExtra("key", value); //Optional parameters
-//                    CurrentActivity.this.startActivity(myIntent);
-                    //
                     shareCertificateToDashboard();
+                    shareSuccessfulLoadScreen();
                     return true;
             }
             return false;
@@ -302,33 +299,35 @@ public class CertificateFragment extends LMFragment {
                             cert = FileUtils.getCertificateFileJSON(requireContext(), mCertUuid);
                             BlockCertParser blockCertParser = new BlockCertParser();
                             blockCert[0] = blockCertParser.fromJson(cert);
+                            Timber.i(cert);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        DashboardRequestBody dashboardRequestBody = new DashboardRequestBody(blockCert[0], UUID.randomUUID().toString());
+                        DashboardRequestBody dashboardRequestBody =
+                                new DashboardRequestBody(cert, UUID.randomUUID().toString());
                         postData(dashboardRequestBody);
                         //dashboardShareService.sendCert(blockCert[0]);
                         Timber.i("Certificate POST request made");
                 }, throwable -> Timber.e(throwable, "Unable to share certificate"));
     }
 
-
-
-
-
-
+    public void shareSuccessfulLoadScreen() {
+        Intent intent = new Intent(getActivity(), ShareSuccessful.class);
+        startActivity(intent);
+    }
 
     private void postData(DashboardRequestBody dashboardRequestBody) {
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        BlockCertParser blockCertParser = new BlockCertParser();
 
         // on below line we are creating a retrofit
         // builder and passing our base url
         Retrofit retrofit = new Retrofit.Builder()
                 .client(ApiModule.defaultClient(ApiModule.loggingInterceptor()))
-                .baseUrl("https://64d8-89-187-178-174.ngrok.io")
+                .baseUrl("https://158b-71-73-76-133.ngrok.io")
                 // as we are sending data in json format so
                 // we have to add Gson converter factory
-                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addConverterFactory(GsonConverterFactory.create(blockCertParser.mGson))
                 // at last we are building our retrofit builder.
                 .addCallAdapterFactory(
                         RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))

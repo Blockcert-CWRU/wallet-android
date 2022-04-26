@@ -16,6 +16,7 @@ import com.learningmachine.android.app.ui.share.DashboardShareService;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ServiceLoader;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 import javax.inject.Named;
@@ -82,7 +83,7 @@ public class ApiModule {
     @Provides
     @Singleton
     public static OkHttpClient defaultClient(Interceptor loggingInterceptor) {
-        return okHttpClient(loggingInterceptor);
+        return okHttpClient(loggingInterceptor).newBuilder().connectTimeout(60, TimeUnit.SECONDS).build();
     }
 
     @Provides

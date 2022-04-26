@@ -13,11 +13,11 @@
         <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
     </style>
 
-    <style name="Text" >
+    <style name="Text">
         <item name="android:fontFamily">@font/opensans_reg</item>
     </style>
 
-    <style name="Text.Title" >
+    <style name="Text.Title">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/c3</item>
         <item name="android:fontFamily">@font/opensans_bold</item>
@@ -215,16 +215,14 @@
         <item name="colorControlNormal">@color/white</item>
     </style>
 
-    <style name="BlueActionBar"
-        parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+    <style name="BlueActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
         <item name="android:background">@color/colorBlueActionBar</item>
 
         <!-- Support library compatibility -->
         <item name="background">@color/colorBlueActionBar</item>
     </style>
 
-    <style name="WhiteActionBar"
-        parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+    <style name="WhiteActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
         <item name="android:background">@color/colorWhiteActionBar</item>
         <item name="android:titleTextStyle">@style/WhiteActionBarTextStyle</item>
 
@@ -249,8 +247,7 @@
         <item name="editTextStyle">@style/OnboardingPassphraseEditText</item>
     </style>
 
-    <style name="WhiteActionBarTextStyle"
-        parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+    <style name="WhiteActionBarTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textColor">@color/colorBlueDarkTextTitle</item>
     </style>
 
@@ -264,8 +261,7 @@
         <item name="android:fontFamily">@font/opensans_semibold</item>
     </style>
 
-    <style name="LearningMachineDialog" parent="AlertDialog.AppCompat">
-    </style>
+    <style name="LearningMachineDialog" parent="AlertDialog.AppCompat"></style>
 
     <!-- Spec -->
 
@@ -290,7 +286,8 @@
 
     <style name="Material.Light.Subhead" parent="LearningMachineTextView">
         <item name="android:textSize">@dimen/material_light_subhead_text_size</item>
-        <item name="android:lineSpacingExtra">@dimen/material_light_subhead_line_spacing_extra</item>
+        <item name="android:lineSpacingExtra">@dimen/material_light_subhead_line_spacing_extra
+        </item>
         <item name="android:textColor">@color/black_8a</item>
     </style>
 
@@ -304,7 +301,9 @@
 
     <style name="Material.Desktop.Light.Menu" parent="LearningMachineTextView">
         <item name="android:textSize">@dimen/material_desktop_light_menu_text_size</item>
-        <item name="android:lineSpacingExtra">@dimen/material_desktop_light_menu_line_spacing_extra</item>
+        <item name="android:lineSpacingExtra">
+            @dimen/material_desktop_light_menu_line_spacing_extra
+        </item>
         <item name="android:textColor">@color/black_de</item>
     </style>
 
@@ -326,7 +325,8 @@
 
     <style name="Material.Light.Caption" parent="LearningMachineTextView">
         <item name="android:textSize">@dimen/material_light_caption_text_size</item>
-        <item name="android:lineSpacingExtra">@dimen/material_light_caption_line_spacing_extra</item>
+        <item name="android:lineSpacingExtra">@dimen/material_light_caption_line_spacing_extra
+        </item>
         <item name="android:textColor">@color/black_de</item>
     </style>
 
@@ -341,17 +341,26 @@
 
     <style name="Settings.Header" parent="LearningMachineTextView.Medium">
         <item name="android:textSize">@dimen/fragment_settings_header_text_size</item>
-        <item name="android:lineSpacingExtra">@dimen/fragment_settings_header_line_spacing_extra</item>
+        <item name="android:lineSpacingExtra">@dimen/fragment_settings_header_line_spacing_extra
+        </item>
         <item name="android:textColor">?colorAccent</item>
-        <item name="android:paddingStart">@dimen/fragment_add_issuer_linear_layout_padding_horizontal</item>
-        <item name="android:paddingEnd">@dimen/fragment_add_issuer_linear_layout_padding_horizontal</item>
+        <item name="android:paddingStart">
+            @dimen/fragment_add_issuer_linear_layout_padding_horizontal
+        </item>
+        <item name="android:paddingEnd">
+            @dimen/fragment_add_issuer_linear_layout_padding_horizontal
+        </item>
     </style>
 
     <style name="Settings.TextView" parent="TextStyle">
         <item name="android:paddingTop">@dimen/fragment_settings_textview_padding_top</item>
         <item name="android:paddingBottom">@dimen/fragment_settings_textview_padding_bottom</item>
-        <item name="android:paddingStart">@dimen/fragment_add_issuer_linear_layout_padding_horizontal</item>
-        <item name="android:paddingEnd">@dimen/fragment_add_issuer_linear_layout_padding_horizontal</item>
+        <item name="android:paddingStart">
+            @dimen/fragment_add_issuer_linear_layout_padding_horizontal
+        </item>
+        <item name="android:paddingEnd">
+            @dimen/fragment_add_issuer_linear_layout_padding_horizontal
+        </item>
         <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
 
@@ -376,6 +385,7 @@
         <item name="android:background">@color/white</item>
         <item name="android:textColor">@color/black</item>
     </style>
+
     <style name="Widget.AppTheme.ActionBar.Fullscreen" parent="Widget.AppCompat.ActionBar">
         <item name="android:background">@color/black_overlay</item>
     </style>

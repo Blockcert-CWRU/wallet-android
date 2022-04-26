@@ -22,7 +22,10 @@ public class BlockCertAdapter implements JsonSerializer<BlockCert>, JsonDeserial
             return context.serialize(src, BlockCertV12.class);
         } else if (src instanceof BlockCertV11) {
             return context.serialize(src, BlockCertV11.class);
+        } else if (src instanceof BlockCertV20) {
+            return context.serialize(src, BlockCertV20.class);
         }
+
         return null;
     }
 
