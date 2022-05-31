@@ -190,7 +190,7 @@ public class ApiModule {
     private static Retrofit retrofitForDashBoardShareService(OkHttpClient client, Gson gson) {
         return new Retrofit.Builder()
                 .client(client)
-                .baseUrl("https://abdcde.free.beeceptor.com")
+                .baseUrl("")
 
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(

@@ -48,13 +48,10 @@ import com.learningmachine.android.app.util.DialogUtils;
 import com.learningmachine.android.app.util.FileUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.UUID;
 
 import javax.inject.Inject;
 
-import okhttp3.Interceptor;
-import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -83,6 +80,8 @@ public class CertificateFragment extends LMFragment {
     private final String dashboardEndpointURL = "https://localhost:8800/share/certificate";
     private FragmentCertificateBinding mBinding;
     private String mCertUuid;
+    private final String mobileRedirectUrl =
+            "https://hatters.dataswift.io/services/login?application_id=tv-s-sejutakgdatapassport&redirect_uri=exp://192.168.2.12:19000/";
 
     public CertificateFragment() {
     }
@@ -132,6 +131,7 @@ public class CertificateFragment extends LMFragment {
                     return true;
                 case R.id.fragment_certificate_dashboard_share_menu_item:
                     Timber.i("Share Certificate to Dashboard tapped on the Certificate display");
+//                    authenticatePDA();
                     shareCertificateToDashboard();
                     shareSuccessfulLoadScreen();
                     return true;
@@ -274,6 +274,13 @@ public class CertificateFragment extends LMFragment {
         }
     }
 
+    //Method for PDA Authentication
+    public void authenticatePDA() {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mobileRedirectUrl));
+        // Android displays a system message.So here there is no need for try-catch.
+        startActivity(Intent.createChooser(intent, "Browse with"));
+    }
+
     private void shareCertificate() {
         String certUuid = requireArguments().getString(ARG_CERTIFICATE_UUID);
         mCertificateManager.getCertificate(certUuid)
@@ -324,7 +331,7 @@ public class CertificateFragment extends LMFragment {
         // builder and passing our base url
         Retrofit retrofit = new Retrofit.Builder()
                 .client(ApiModule.defaultClient(ApiModule.loggingInterceptor()))
-                .baseUrl("https://158b-71-73-76-133.ngrok.io")
+                .baseUrl(dashboardEndpointURL)
                 // as we are sending data in json format so
                 // we have to add Gson converter factory
                 .addConverterFactory(GsonConverterFactory.create(blockCertParser.mGson))
@@ -342,24 +349,18 @@ public class CertificateFragment extends LMFragment {
         call.enqueue(new Callback<DashboardRequestBody>() {
             @Override
             public void onResponse(@NonNull Call<DashboardRequestBody> call, @NonNull Response<DashboardRequestBody> response) {
-
                 // we are getting response from our body
                 // and passing it to our modal class.
                 // on below line we are getting our data from modal class and adding it to our string.
                 System.out.println("Response" + response);
-
             }
 
             @Override
             public void onFailure(Call<DashboardRequestBody> call, Throwable t) {
                 Timber.i("Failure");
-
             }
         });
     }
-
-
-
 
     private void showShareTypeDialog() {
         Timber.i("Showing share certificate dialog for " + mCertUuid);
@@ -382,7 +383,6 @@ public class CertificateFragment extends LMFragment {
                 },
                 (dialogContent) -> {},
                 (dialogContent) -> Timber.i("Share dialog cancelled"));
-
     }
 
     private void shareCertificateTypeResult(boolean shareFile) {
@@ -430,9 +430,7 @@ public class CertificateFragment extends LMFragment {
         startActivity(intent);
     }
 
-
     private void showFailureDialog(int errorId) {
-
         DialogUtils.showAlertDialog( this,
                 R.drawable.ic_dialog_failure,
                 getResources().getString(R.string.cert_verification_failure_title),
