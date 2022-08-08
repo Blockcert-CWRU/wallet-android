@@ -9,8 +9,10 @@ public class LMConstants {
     public static final String WALLET_PASSPHRASE = "";
     public static final int WALLET_CREATION_TIME_SECONDS = 0;
 
-    public static final String BASE_PDA_USERNAME = "Enter your PDA Username";
+    //Default PDA Username
+    public static final String BASE_PDA_USERNAME = "iamishaangupta";
     public static final String BASE_URL = "https://certificates.learningmachine.com";
+    //Default PDA URL
     public static final String BASE_PDA_URL = "https://" + BASE_PDA_USERNAME + ".hubofallthings.net/api/v2.6/data/";
     public static final String VERSION_BASE_URL = "https://www.blockcerts.org";
 

@@ -1,6 +1,7 @@
 package com.learningmachine.android.app.ui.cert;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -80,8 +81,6 @@ public class CertificateFragment extends LMFragment {
     private final String dashboardEndpointURL = "https://localhost:8800/share/certificate";
     private FragmentCertificateBinding mBinding;
     private String mCertUuid;
-    private final String mobileRedirectUrl =
-            "https://hatters.dataswift.io/services/login?application_id=tv-s-sejutakgdatapassport&redirect_uri=exp://192.168.2.12:19000/";
 
     public CertificateFragment() {
     }
@@ -109,11 +108,20 @@ public class CertificateFragment extends LMFragment {
                         throwable -> Timber.e(throwable, "Issuer has no analytics url."));
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_certificate, container, false);
+        View view = inflater.inflate(R.layout.fragment_certificate, container, false);
         setAllItemsChecked();
+
+        /**
+         * Enable the PDALoginActivity via Intent to enable PDA Authentication
+         * Set the appropriate <data> tag in the CertificateActivity in AndroidManifest.xml
+         */
+//        Intent intent = new Intent(getActivity(), PDALoginActivity.class);
+//        startActivity(intent);
         mBinding.certBottomNavigation.setOnNavigationItemSelectedListener(item -> {
             setAllItemsChecked();
             switch (item.getItemId()) {
@@ -131,14 +139,12 @@ public class CertificateFragment extends LMFragment {
                     return true;
                 case R.id.fragment_certificate_dashboard_share_menu_item:
                     Timber.i("Share Certificate to Dashboard tapped on the Certificate display");
-//                    authenticatePDA();
                     shareCertificateToDashboard();
                     shareSuccessfulLoadScreen();
                     return true;
             }
             return false;
         });
-        setupWebView();
 
         setBottomIconsSize(28);
 
@@ -274,12 +280,6 @@ public class CertificateFragment extends LMFragment {
         }
     }
 
-    //Method for PDA Authentication
-    public void authenticatePDA() {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mobileRedirectUrl));
-        // Android displays a system message.So here there is no need for try-catch.
-        startActivity(Intent.createChooser(intent, "Browse with"));
-    }
 
     private void shareCertificate() {
         String certUuid = requireArguments().getString(ARG_CERTIFICATE_UUID);
@@ -301,20 +301,20 @@ public class CertificateFragment extends LMFragment {
         mCertificateManager.getCertificate(certUuid)
                 .compose(bindToMainThread())
                 .subscribe(certificateRecord -> {
-                        String cert = null;
-                        try {
-                            cert = FileUtils.getCertificateFileJSON(requireContext(), mCertUuid);
-                            BlockCertParser blockCertParser = new BlockCertParser();
-                            blockCert[0] = blockCertParser.fromJson(cert);
-                            Timber.i(cert);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        DashboardRequestBody dashboardRequestBody =
-                                new DashboardRequestBody(cert, UUID.randomUUID().toString());
-                        postData(dashboardRequestBody);
-                        //dashboardShareService.sendCert(blockCert[0]);
-                        Timber.i("Certificate POST request made");
+                    String cert = null;
+                    try {
+                        cert = FileUtils.getCertificateFileJSON(requireContext(), mCertUuid);
+                        BlockCertParser blockCertParser = new BlockCertParser();
+                        blockCert[0] = blockCertParser.fromJson(cert);
+                        Timber.i(cert);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    DashboardRequestBody dashboardRequestBody =
+                            new DashboardRequestBody(cert, UUID.randomUUID().toString());
+                    postData(dashboardRequestBody);
+                    //dashboardShareService.sendCert(blockCert[0]);
+                    Timber.i("Certificate POST request made");
                 }, throwable -> Timber.e(throwable, "Unable to share certificate"));
     }
 
