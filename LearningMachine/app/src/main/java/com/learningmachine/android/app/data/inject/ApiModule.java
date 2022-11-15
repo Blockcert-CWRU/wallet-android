@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapterFactory;
 import com.learningmachine.android.app.LMConstants;
+import com.learningmachine.android.app.data.cert.BlockCert;
+import com.learningmachine.android.app.data.cert.BlockCertAdapter;
 import com.learningmachine.android.app.data.store.pda.PDACertificateStoreService;
 import com.learningmachine.android.app.data.store.pda.PDAIndexService;
 import com.learningmachine.android.app.data.store.pda.PDAIssuerStoreService;
@@ -77,6 +79,7 @@ public class ApiModule {
         for (TypeAdapterFactory factory : ServiceLoader.load(TypeAdapterFactory.class)) {
             builder.registerTypeAdapterFactory(factory);
         }
+        builder.registerTypeAdapter(BlockCert.class, new BlockCertAdapter());
         return builder.create();
     }
 
