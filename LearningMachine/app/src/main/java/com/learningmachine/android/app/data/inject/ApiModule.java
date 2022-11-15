@@ -200,6 +200,7 @@ public class ApiModule {
 
     private static OkHttpClient okHttpClient(Interceptor... interceptors) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        builder.interceptors().add(loggingInterceptor());
         Stream.of(interceptors).forEach(builder::addInterceptor);
         return builder.build();
     }

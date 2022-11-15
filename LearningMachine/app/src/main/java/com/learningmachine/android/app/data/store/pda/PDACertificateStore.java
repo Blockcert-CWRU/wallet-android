@@ -4,6 +4,7 @@ import com.learningmachine.android.app.data.cert.BlockCert;
 import com.learningmachine.android.app.data.model.CertificateRecord;
 import com.learningmachine.android.app.data.store.CertificateStore;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,9 @@ import javax.inject.Singleton;
 
 import dagger.assisted.Assisted;
 import dagger.assisted.AssistedInject;
+import retrofit2.HttpException;
 import rx.Observable;
+import rx.Subscriber;
 import timber.log.Timber;
 
 @Singleton
@@ -61,7 +64,30 @@ public class PDACertificateStore implements CertificateStore {
         System.out.println("=========================================================");
         Timber.i("PDA CertificateStore: Save method invoked");
         System.out.println("=========================================================");
-        return mStoreService.save(contentType, authToken, cert);
+        Observable<Void> r = mStoreService.save(contentType, authToken, cert);
+        r.subscribe(new Subscriber<Void>() {
+            @Override
+            public void onCompleted() {
+                Timber.i("completed");
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                String err = null;
+                try {
+                    err = ((HttpException)e).response().errorBody().string();
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+                Timber.i("err: " + err);
+            }
+
+            @Override
+            public void onNext(Void myResponseObject) {
+                Timber.i("next");
+            }
+        });
+        return r;
     }
 
     @Override
