@@ -10,7 +10,8 @@ public class LMConstants {
     public static final int WALLET_CREATION_TIME_SECONDS = 0;
 
     public static final String BASE_URL = "https://certificates.learningmachine.com";
-    public static final String BASE_PDA_URL = "https://iamishaangupta.hubofallthings.net/api/v2.6/data/";
+    public static final String BASE_PDA_URL = "https://bbm38wyv.hubat.net/api/v2.6/data/";
+    public static final String DASHBOARD_SERVER_URL = "http://10.0.2.2:5000"; // Note that 10.0.2.2 is PC localhost (actual localhost wont work because device is emulated).
     public static final String VERSION_BASE_URL = "https://www.blockcerts.org";
 
     public static final String BLOCKCHAIN_SERVICE_URL = "https://blockchain.info/";

@@ -40,6 +40,7 @@ import com.learningmachine.android.app.data.model.CertificateRecord;
 import com.learningmachine.android.app.data.model.IssuerRecord;
 import com.learningmachine.android.app.databinding.FragmentCertificateBinding;
 import com.learningmachine.android.app.dialog.AlertDialogFragment;
+import com.learningmachine.android.app.LMConstants;
 import com.learningmachine.android.app.ui.LMFragment;
 import com.learningmachine.android.app.ui.share.DashboardRequestBody;
 import com.learningmachine.android.app.ui.share.DashboardShareService;
@@ -324,7 +325,7 @@ public class CertificateFragment extends LMFragment {
         // builder and passing our base url
         Retrofit retrofit = new Retrofit.Builder()
                 .client(ApiModule.defaultClient(ApiModule.loggingInterceptor()))
-                .baseUrl("https://158b-71-73-76-133.ngrok.io")
+                .baseUrl(LMConstants.DASHBOARD_SERVER_URL)
                 // as we are sending data in json format so
                 // we have to add Gson converter factory
                 .addConverterFactory(GsonConverterFactory.create(blockCertParser.mGson))
