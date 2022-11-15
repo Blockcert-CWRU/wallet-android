@@ -12,6 +12,7 @@ public class BlockCertParser {
     public BlockCertParser() {
         mGson = new GsonBuilder()
                 .registerTypeAdapter(BlockCert.class, new BlockCertAdapter())
+                .excludeFieldsWithoutExposeAnnotation()
                 .create();
     }
 

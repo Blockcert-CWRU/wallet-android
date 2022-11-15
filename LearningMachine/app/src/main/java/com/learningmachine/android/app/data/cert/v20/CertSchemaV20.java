@@ -78,8 +78,8 @@ class CertSchemaV20 {
      * An image representative of the entity. In Blockcerts this is typically a data URI (https://en.wikipedia.org/wiki/Data_URI_scheme) embedded as a base-64 encoded PNG image, but it may also be a URI where the image may be found.
      * 
      */
-    @SerializedName("image")
-    @Expose
+//    @SerializedName("image")
+//    @Expose
     private String image;
     /**
      * Defined by `evidence` property of https://w3id.org/openbadges#Assertion

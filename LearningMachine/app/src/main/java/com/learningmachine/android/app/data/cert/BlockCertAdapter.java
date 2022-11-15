@@ -23,7 +23,12 @@ public class BlockCertAdapter implements JsonSerializer<BlockCert>, JsonDeserial
         } else if (src instanceof BlockCertV11) {
             return context.serialize(src, BlockCertV11.class);
         } else if (src instanceof BlockCertV20) {
-            return context.serialize(src, BlockCertV20.class);
+            JsonElement jsonElement = context.serialize(src, BlockCertV20.class);
+            // Fall 2022 xLab change: remove unnecessary fields to reduce size to avoid 413 response:
+            JsonObject jsonObject = jsonElement.getAsJsonObject();
+            jsonObject.get("badge").getAsJsonObject().remove("image");
+            jsonObject.remove("mDocumentNode");
+            return jsonObject;
         }
 
         return null;
